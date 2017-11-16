@@ -1,0 +1,531 @@
+<!DOCTYPE HTML">
+<HTML>
+ <HEAD>
+  <TITLE>Leg_3DoF_floating_base</TITLE>
+  <META NAME="generator" CONTENT="wxMaxima">
+  <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    displayAlign: "left",
+    context: "MathJax"
+  })
+</script>
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
+</script>
+  <link rel="stylesheet" type="text/css" href="Leg_3DoF_floating_base_htmlimg/Leg_3DoF_floating_base.css"/>
+ </HEAD>
+ <BODY>
+
+<!-- ***************************************************** -->
+<!--          Created with wxMaxima version 16.12.2         -->
+<!-- ***************************************************** -->
+<noscript><div class="error message">    Please enable JavaScript in order to get a 2d display of the equations embedded in this web page.</div></noscript>\(      \DeclareMathOperator{\abs}{abs}
+      \newcommand{\ensuremath}[1]{\mbox{$#1$}}
+\)
+
+<!-- Text cell -->
+
+
+<P CLASS="comment">
+Calculate the dynamics of the 3-DoF leg: Forward kinematics, Jacobian, Inertia matrix, gravity vector,<BR>using the Euler-Lagrange method.<BR>
+</P>
+
+
+<!-- Title cell -->
+
+
+<P CLASS="title">
+Forward kinematics
+</P>
+
+
+<!-- Text cell -->
+
+
+<P CLASS="comment">
+We first define the forward kinematics for 3 masses, located at the CoM of the lower leg, the CoM of the<BR>upper leg, and the CoM of the body (above the hip joint).<BR>
+</P>
+
+
+<!-- Text cell -->
+
+
+<P CLASS="comment">
+This file derives the floating-base version, with the floating base fixed on the foot and located at the<BR>CoM of the foot, with a position denoted by (x,y) in the x-y plane and angle theta w.r.t the x-axis.<BR>
+</P>
+
+
+<!-- Text cell -->
+
+
+<P CLASS="comment">
+Define the configuration vector q:<BR>
+</P>
+
+
+<!-- Code cell -->
+
+
+<TABLE><TR><TD>
+  <SPAN CLASS="prompt">
+(%i6)	
+  </SPAN></TD>
+  <TD><SPAN CLASS="input">
+<span class="code_function">depends</span>(<span class="code_variable">x1</span>,<span class="code_variable">t</span>)<span class="code_endofline">;</span> <span class="code_function">depends</span>(<span class="code_variable">y1</span>,<span class="code_variable">t</span>)<span class="code_endofline">;</span> <span class="code_function">depends</span>(<span class="code_variable">theta1</span>, <span class="code_variable">t</span>)<span class="code_endofline">;</span> <span class="code_function">depends</span>(<span class="code_variable">q1</span>, <span class="code_variable">t</span>)<span class="code_endofline">;</span> <span class="code_function">depends</span>(<span class="code_variable">q2</span>, <span class="code_variable">t</span>)<span class="code_endofline">;</span> <span class="code_function">depends</span>(<span class="code_variable">q3</span>, <span class="code_variable">t</span>)<span class="code_endofline">;</span>  </SPAN></TD>
+</TR></TABLE>
+\[\tag{\% o1} [\operatorname{x1}(t)]\]
+\[\tag{\% o2} [\operatorname{y1}(t)]\]
+\[\tag{\% o3} [\operatorname{theta1}(t)]\]
+\[\tag{\% o4} [\operatorname{q1}(t)]\]
+\[\tag{\% o5} [\operatorname{q2}(t)]\]
+\[\tag{\% o6} [\operatorname{q3}(t)]\]
+
+
+<!-- Code cell -->
+
+
+<TABLE><TR><TD>
+  <SPAN CLASS="prompt">
+(%i7)	
+  </SPAN></TD>
+  <TD><SPAN CLASS="input">
+<span class="code_function">q</span>(<span class="code_variable">t</span>)<span class="code_operator">:</span><span class="code_operator">=</span> [<span class="code_variable">x1</span>, <span class="code_variable">y1</span>, <span class="code_variable">theta1</span>, <span class="code_variable">q1</span>, <span class="code_variable">q2</span>, <span class="code_variable">q3</span>]<span class="code_endofline">;</span>  </SPAN></TD>
+</TR></TABLE>
+\[\tag{\% o7} \operatorname{q}(t):=[\mathit{x1},\mathit{y1},\mathit{theta1},\mathit{q1},\mathit{q2},\mathit{q3}]\]
+
+
+<!-- Code cell -->
+
+
+<TABLE><TR><TD>
+  <SPAN CLASS="prompt">
+(%i8)	
+  </SPAN></TD>
+  <TD><SPAN CLASS="input">
+<span class="code_variable">q</span><span class="code_operator">:</span> <span class="code_function">matrix</span>([<span class="code_variable">x1</span>],[<span class="code_variable">y1</span>],[<span class="code_variable">theta1</span>],[<span class="code_variable">q1</span>],[<span class="code_variable">q2</span>],[<span class="code_variable">q3</span>])<span class="code_endofline">;</span>  </SPAN></TD>
+</TR></TABLE>
+\[\tag{q}\begin{pmatrix}\mathit{x1}\\
+\mathit{y1}\\
+\mathit{theta1}\\
+\mathit{q1}\\
+\mathit{q2}\\
+\mathit{q3}\end{pmatrix}\]
+
+
+<!-- Text cell -->
+
+
+<P CLASS="comment">
+Forward kinematics:<BR>fwdKin(q) = [x1, y1, theta1, x2, y2, theta2, x3, y3, theta3, x4, y4, theta4]<BR>
+</P>
+
+
+<!-- Code cell -->
+
+
+<TABLE><TR><TD>
+  <SPAN CLASS="prompt">
+(%i9)	
+  </SPAN></TD>
+  <TD><SPAN CLASS="input">
+<span class="code_variable">fwdKin</span><span class="code_operator">:</span> <span class="code_function">matrix</span>(<BR>
+ &nbsp;&nbsp;&nbsp;[<span class="code_variable">x1</span>],<BR>
+ &nbsp;&nbsp;&nbsp;[<span class="code_variable">y1</span>],<BR>
+ &nbsp;&nbsp;&nbsp;[<span class="code_variable">theta1</span>],<BR>
+ &nbsp;&nbsp;&nbsp;[<span class="code_variable">x1</span> <span class="code_operator">-</span> <span class="code_variable">r1</span> <span class="code_operator">*</span> <span class="code_function">cos</span>(<span class="code_variable">theta1</span>) <span class="code_operator">-</span> <span class="code_variable">r2</span> <span class="code_operator">*</span> <span class="code_function">sin</span>(<span class="code_variable">theta1</span> <span class="code_operator">+</span> <span class="code_variable">q1</span>)],<BR>
+ &nbsp;&nbsp;&nbsp;[<span class="code_variable">y1</span> <span class="code_operator">-</span> <span class="code_variable">r1</span> <span class="code_operator">*</span> <span class="code_function">sin</span>(<span class="code_variable">theta1</span>) <span class="code_operator">+</span> <span class="code_variable">r2</span> <span class="code_operator">*</span> <span class="code_function">cos</span>(<span class="code_variable">theta1</span> <span class="code_operator">+</span> <span class="code_variable">q1</span>)],<BR>
+ &nbsp;&nbsp;&nbsp;[<span class="code_variable">theta1</span> <span class="code_operator">+</span> <span class="code_variable">q1</span>],<BR>
+ &nbsp;&nbsp;&nbsp;[<span class="code_variable">x1</span> <span class="code_operator">-</span> <span class="code_variable">r1</span> <span class="code_operator">*</span> <span class="code_function">cos</span>(<span class="code_variable">theta1</span>) <span class="code_operator">-</span> <span class="code_variable">l2</span> <span class="code_operator">*</span> <span class="code_function">sin</span>(<span class="code_variable">theta1</span> <span class="code_operator">+</span> <span class="code_variable">q1</span>) <span class="code_operator">-</span> <span class="code_variable">r3</span> <span class="code_operator">*</span> <span class="code_function">sin</span>(<span class="code_variable">theta1</span> <span class="code_operator">+</span> <span class="code_variable">q1</span> <span class="code_operator">+</span> <span class="code_variable">q2</span>)],<BR>
+ &nbsp;&nbsp;&nbsp;[<span class="code_variable">y1</span> <span class="code_operator">-</span> <span class="code_variable">r1</span> <span class="code_operator">*</span> <span class="code_function">sin</span>(<span class="code_variable">theta1</span>) <span class="code_operator">+</span> <span class="code_variable">l2</span> <span class="code_operator">*</span> <span class="code_function">cos</span>(<span class="code_variable">theta1</span> <span class="code_operator">+</span> <span class="code_variable">q1</span>) <span class="code_operator">+</span> <span class="code_variable">r3</span> <span class="code_operator">*</span> <span class="code_function">cos</span>(<span class="code_variable">theta1</span> <span class="code_operator">+</span> <span class="code_variable">q1</span> <span class="code_operator">+</span> <span class="code_variable">q2</span>)],<BR>
+ &nbsp;&nbsp;&nbsp;[<span class="code_variable">theta1</span> <span class="code_operator">+</span> <span class="code_variable">q1</span> <span class="code_operator">+</span> <span class="code_variable">q2</span>],<BR>
+ &nbsp;&nbsp;&nbsp;[<span class="code_variable">x1</span> <span class="code_operator">-</span> <span class="code_variable">r1</span> <span class="code_operator">*</span> <span class="code_function">cos</span>(<span class="code_variable">theta1</span>) <span class="code_operator">-</span> <span class="code_variable">l2</span> <span class="code_operator">*</span> <span class="code_function">sin</span>(<span class="code_variable">theta1</span> <span class="code_operator">+</span> <span class="code_variable">q1</span>) <span class="code_operator">-</span> <span class="code_variable">l3</span> <span class="code_operator">*</span> <span class="code_function">sin</span>(<span class="code_variable">theta1</span> <span class="code_operator">+</span> <span class="code_variable">q1</span> <span class="code_operator">+</span> <span class="code_variable">q2</span>) <span class="code_operator">-</span> <span class="code_variable">r4</span> <span class="code_operator">*</span> <span class="code_function">sin</span>(<span class="code_variable">theta1</span> <span class="code_operator">+</span> <span class="code_variable">q1</span> <span class="code_operator">+</span> <span class="code_variable">q2</span> <span class="code_operator">+</span> <span class="code_variable">q3</span>)],<BR>
+ &nbsp;&nbsp;&nbsp;[<span class="code_variable">y1</span> <span class="code_operator">-</span> <span class="code_variable">r1</span> <span class="code_operator">*</span> <span class="code_function">sin</span>(<span class="code_variable">theta1</span>) <span class="code_operator">+</span> <span class="code_variable">l2</span> <span class="code_operator">*</span> <span class="code_function">cos</span>(<span class="code_variable">theta1</span> <span class="code_operator">+</span> <span class="code_variable">q1</span>) <span class="code_operator">+</span> <span class="code_variable">l3</span> <span class="code_operator">*</span> <span class="code_function">cos</span>(<span class="code_variable">theta1</span> <span class="code_operator">+</span> <span class="code_variable">q1</span> <span class="code_operator">+</span> <span class="code_variable">q2</span>) <span class="code_operator">+</span> <span class="code_variable">r4</span> <span class="code_operator">*</span> <span class="code_function">cos</span>(<span class="code_variable">theta1</span> <span class="code_operator">+</span> <span class="code_variable">q1</span> <span class="code_operator">+</span> <span class="code_variable">q2</span> <span class="code_operator">+</span> <span class="code_variable">q3</span>)],<BR>
+ &nbsp;&nbsp;&nbsp;[<span class="code_variable">theta1</span> <span class="code_operator">+</span> <span class="code_variable">q1</span> <span class="code_operator">+</span> <span class="code_variable">q2</span> <span class="code_operator">+</span> <span class="code_variable">q3</span>]<BR>
+)<span class="code_endofline">;</span>  </SPAN></TD>
+</TR></TABLE>
+\[\tag{fwdKin}\begin{pmatrix}\mathit{x1}\\
+\mathit{y1}\\
+\mathit{theta1}\\
+\mathit{x1}-\mathit{r2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\\
+\mathit{y1}+\mathit{r2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \sin{\left( \mathit{theta1}\right) }\\
+\mathit{theta1}+\mathit{q1}\\
+\mathit{x1}-\mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\\
+\mathit{y1}+\mathit{r3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }+\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \sin{\left( \mathit{theta1}\right) }\\
+\mathit{theta1}+\mathit{q2}+\mathit{q1}\\
+\mathit{x1}-\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\\
+\mathit{y1}+\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }+\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }+\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \sin{\left( \mathit{theta1}\right) }\\
+\mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\end{pmatrix}\]
+
+
+<!-- Title cell -->
+
+
+<P CLASS="title">
+Jacobians
+</P>
+
+
+<!-- Text cell -->
+
+
+<P CLASS="comment">
+The Jacobian is defined as the forward kinematics derived w.r.t. the configuration vector q:<BR>
+</P>
+
+
+<!-- Code cell -->
+
+
+<TABLE><TR><TD>
+  <SPAN CLASS="prompt">
+(%i10)	
+  </SPAN></TD>
+  <TD><SPAN CLASS="input">
+<span class="code_variable">J</span><span class="code_operator">:</span> <span class="code_function">addcol</span>(<span class="code_function">diff</span>(<span class="code_variable">fwdKin</span>, <span class="code_variable">x1</span>), <span class="code_function">diff</span>(<span class="code_variable">fwdKin</span>, <span class="code_variable">y1</span>), <span class="code_function">diff</span>(<span class="code_variable">fwdKin</span>, <span class="code_variable">theta1</span>), <span class="code_function">diff</span>(<span class="code_variable">fwdKin</span>, <span class="code_variable">q1</span>), <span class="code_function">diff</span>(<span class="code_variable">fwdKin</span>, <span class="code_variable">q2</span>), <span class="code_function">diff</span>(<span class="code_variable">fwdKin</span>, <span class="code_variable">q3</span>))<span class="code_endofline">;</span>  </SPAN></TD>
+</TR></TABLE>
+\[\tag{J}\begin{pmatrix}1 & 0 & 0 & 0 & 0 & 0\\
+0 & 1 & 0 & 0 & 0 & 0\\
+0 & 0 & 1 & 0 & 0 & 0\\
+1 & 0 & \mathit{r1}\, \sin{\left( \mathit{theta1}\right) }-\mathit{r2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) } & -\mathit{r2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) } & 0 & 0\\
+0 & 1 & -\mathit{r2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) } & -\mathit{r2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) } & 0 & 0\\
+0 & 0 & 1 & 1 & 0 & 0\\
+1 & 0 & -\mathit{r3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }+\mathit{r1}\, \sin{\left( \mathit{theta1}\right) } & -\mathit{r3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) } & -\mathit{r3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) } & 0\\
+0 & 1 & -\mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) } & -\mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) } & -\mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) } & 0\\
+0 & 0 & 1 & 1 & 1 & 0\\
+1 & 0 & -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }+\mathit{r1}\, \sin{\left( \mathit{theta1}\right) } & -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) } & -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) } & -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\\
+0 & 1 & -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) } & -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) } & -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) } & -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\\
+0 & 0 & 1 & 1 & 1 & 1\end{pmatrix}\]
+
+
+<!-- Text cell -->
+
+
+<P CLASS="comment">
+Let's also get the end-effector Jacobians:<BR>
+</P>
+
+
+<!-- Text cell -->
+
+
+<P CLASS="comment">
+Starting with the ground reaction forces (GRF). This is the back- and frontside of the foot, i.e. [x_grf1; y_grf1; x_grf2; y_grf2]:<BR>
+</P>
+
+
+<!-- Text cell -->
+
+
+<P CLASS="comment">
+TODO THIS MAY NEED TO BE CHANGED, ANKLE JOINT IS NOT AT THE END OF THE FOOT<BR>
+</P>
+
+
+<!-- Code cell -->
+
+
+<TABLE><TR><TD>
+  <SPAN CLASS="prompt">
+(%i11)	
+  </SPAN></TD>
+  <TD><SPAN CLASS="input">
+<span class="code_variable">fwdKin_GRF</span><span class="code_operator">:</span> <span class="code_function">matrix</span>(<BR>
+ &nbsp;&nbsp;&nbsp;[<span class="code_variable">x1</span> <span class="code_operator">-</span> <span class="code_variable">r1</span> <span class="code_operator">*</span> <span class="code_function">cos</span>(<span class="code_variable">theta1</span>)],<BR>
+ &nbsp;&nbsp;&nbsp;[<span class="code_variable">y1</span> <span class="code_operator">-</span> <span class="code_variable">r1</span> <span class="code_operator">*</span> <span class="code_function">sin</span>(<span class="code_variable">theta1</span>)],<BR>
+ &nbsp;&nbsp;&nbsp;[<span class="code_variable">x1</span> <span class="code_operator">+</span> (<span class="code_variable">l1</span> <span class="code_operator">-</span> <span class="code_variable">r1</span>) <span class="code_operator">*</span> <span class="code_function">cos</span>(<span class="code_variable">theta1</span>)],<BR>
+ &nbsp;&nbsp;&nbsp;[<span class="code_variable">y1</span> <span class="code_operator">+</span> (<span class="code_variable">l1</span> <span class="code_operator">-</span> <span class="code_variable">r1</span>) <span class="code_operator">*</span> <span class="code_function">sin</span>(<span class="code_variable">theta1</span>)]<BR>
+)<span class="code_endofline">;</span>  </SPAN></TD>
+</TR></TABLE>
+\[\tag{fwdKin\_ GRF}\begin{pmatrix}\mathit{x1}-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\\
+\mathit{y1}-\mathit{r1}\, \sin{\left( \mathit{theta1}\right) }\\
+\mathit{x1}+\left( \mathit{l1}-\mathit{r1}\right) \, \cos{\left( \mathit{theta1}\right) }\\
+\mathit{y1}+\left( \mathit{l1}-\mathit{r1}\right) \, \sin{\left( \mathit{theta1}\right) }\end{pmatrix}\]
+
+
+<!-- Code cell -->
+
+
+<TABLE><TR><TD>
+  <SPAN CLASS="prompt">
+(%i12)	
+  </SPAN></TD>
+  <TD><SPAN CLASS="input">
+<span class="code_variable">J_GRF</span><span class="code_operator">:</span> <span class="code_function">addcol</span>(<span class="code_function">diff</span>(<span class="code_variable">fwdKin_GRF</span>, <span class="code_variable">x1</span>), <span class="code_function">diff</span>(<span class="code_variable">fwdKin_GRF</span>, <span class="code_variable">y1</span>), <span class="code_function">diff</span>(<span class="code_variable">fwdKin_GRF</span>, <span class="code_variable">theta1</span>), <span class="code_function">diff</span>(<span class="code_variable">fwdKin_GRF</span>, <span class="code_variable">q1</span>), <span class="code_function">diff</span>(<span class="code_variable">fwdKin_GRF</span>, <span class="code_variable">q2</span>), <span class="code_function">diff</span>(<span class="code_variable">fwdKin_GRF</span>, <span class="code_variable">q3</span>))<span class="code_endofline">;</span>  </SPAN></TD>
+</TR></TABLE>
+\[\tag{J\_ GRF}\begin{pmatrix}1 & 0 & \mathit{r1}\, \sin{\left( \mathit{theta1}\right) } & 0 & 0 & 0\\
+0 & 1 & -\mathit{r1}\, \cos{\left( \mathit{theta1}\right) } & 0 & 0 & 0\\
+1 & 0 & -\left( \mathit{l1}-\mathit{r1}\right) \, \sin{\left( \mathit{theta1}\right) } & 0 & 0 & 0\\
+0 & 1 & \left( \mathit{l1}-\mathit{r1}\right) \, \cos{\left( \mathit{theta1}\right) } & 0 & 0 & 0\end{pmatrix}\]
+
+
+<!-- Text cell -->
+
+
+<P CLASS="comment">
+And secondly an X-Y disturbance force on the trunk:<BR>
+</P>
+
+
+<!-- Code cell -->
+
+
+<TABLE><TR><TD>
+  <SPAN CLASS="prompt">
+(%i13)	
+  </SPAN></TD>
+  <TD><SPAN CLASS="input">
+<span class="code_variable">fwdKin_trunk</span><span class="code_operator">:</span> <span class="code_function">matrix</span>(<BR>
+ &nbsp;&nbsp;&nbsp;[<span class="code_variable">x1</span> <span class="code_operator">-</span> <span class="code_variable">r1</span> <span class="code_operator">*</span> <span class="code_function">cos</span>(<span class="code_variable">theta1</span>) <span class="code_operator">-</span> <span class="code_variable">l2</span> <span class="code_operator">*</span> <span class="code_function">sin</span>(<span class="code_variable">theta1</span> <span class="code_operator">+</span> <span class="code_variable">q1</span>) <span class="code_operator">-</span> <span class="code_variable">l3</span> <span class="code_operator">*</span> <span class="code_function">sin</span>(<span class="code_variable">theta1</span> <span class="code_operator">+</span> <span class="code_variable">q1</span> <span class="code_operator">+</span> <span class="code_variable">q2</span>) <span class="code_operator">-</span> <span class="code_variable">r4</span> <span class="code_operator">*</span> <span class="code_function">sin</span>(<span class="code_variable">theta1</span> <span class="code_operator">+</span> <span class="code_variable">q1</span> <span class="code_operator">+</span> <span class="code_variable">q2</span> <span class="code_operator">+</span> <span class="code_variable">q3</span>)],<BR>
+ &nbsp;&nbsp;&nbsp;[<span class="code_variable">y1</span> <span class="code_operator">-</span> <span class="code_variable">r1</span> <span class="code_operator">*</span> <span class="code_function">sin</span>(<span class="code_variable">theta1</span>) <span class="code_operator">+</span> <span class="code_variable">l2</span> <span class="code_operator">*</span> <span class="code_function">cos</span>(<span class="code_variable">theta1</span> <span class="code_operator">+</span> <span class="code_variable">q1</span>) <span class="code_operator">+</span> <span class="code_variable">l3</span> <span class="code_operator">*</span> <span class="code_function">cos</span>(<span class="code_variable">theta1</span> <span class="code_operator">+</span> <span class="code_variable">q1</span> <span class="code_operator">+</span> <span class="code_variable">q2</span>) <span class="code_operator">+</span> <span class="code_variable">r4</span> <span class="code_operator">*</span> <span class="code_function">cos</span>(<span class="code_variable">theta1</span> <span class="code_operator">+</span> <span class="code_variable">q1</span> <span class="code_operator">+</span> <span class="code_variable">q2</span> <span class="code_operator">+</span> <span class="code_variable">q3</span>)],<BR>
+ &nbsp;&nbsp;&nbsp;[<span class="code_variable">theta1</span> <span class="code_operator">+</span> <span class="code_variable">q1</span> <span class="code_operator">+</span> <span class="code_variable">q2</span> <span class="code_operator">+</span> <span class="code_variable">q3</span>]<BR>
+)<span class="code_endofline">;</span>  </SPAN></TD>
+</TR></TABLE>
+\[\tag{fwdKin\_ trunk}\begin{pmatrix}\mathit{x1}-\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\\
+\mathit{y1}+\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }+\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }+\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \sin{\left( \mathit{theta1}\right) }\\
+\mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\end{pmatrix}\]
+
+
+<!-- Code cell -->
+
+
+<TABLE><TR><TD>
+  <SPAN CLASS="prompt">
+(%i14)	
+  </SPAN></TD>
+  <TD><SPAN CLASS="input">
+<span class="code_variable">J_trunk</span><span class="code_operator">:</span> <span class="code_function">addcol</span>(<span class="code_function">diff</span>(<span class="code_variable">fwdKin_trunk</span>, <span class="code_variable">x1</span>), <span class="code_function">diff</span>(<span class="code_variable">fwdKin_trunk</span>, <span class="code_variable">y1</span>), <span class="code_function">diff</span>(<span class="code_variable">fwdKin_trunk</span>, <span class="code_variable">theta1</span>), <span class="code_function">diff</span>(<span class="code_variable">fwdKin_trunk</span>, <span class="code_variable">q1</span>), <span class="code_function">diff</span>(<span class="code_variable">fwdKin_trunk</span>, <span class="code_variable">q2</span>), <span class="code_function">diff</span>(<span class="code_variable">fwdKin_trunk</span>, <span class="code_variable">q3</span>))<span class="code_endofline">;</span>  </SPAN></TD>
+</TR></TABLE>
+\[\tag{J\_ trunk}\begin{pmatrix}1 & 0 & -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }+\mathit{r1}\, \sin{\left( \mathit{theta1}\right) } & -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) } & -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) } & -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\\
+0 & 1 & -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) } & -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) } & -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) } & -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\\
+0 & 0 & 1 & 1 & 1 & 1\end{pmatrix}\]
+
+
+<!-- Text cell -->
+
+
+<P CLASS="comment">
+which can be used for interaction forces on the trunk using J_trunk^T * [Fx,Fy]. J_trunk is also known as Je in the MATLAB code.<BR>
+</P>
+
+
+<!-- Title cell -->
+
+
+<P CLASS="title">
+Cartesian velocities &amp; accelerations
+</P>
+
+
+<!-- Text cell -->
+
+
+<P CLASS="comment">
+We have x_d = J * theta_d, where theta_d = [x1d, y1d, theta1d, q1d, q2d, q3d]^T. Thus, the Cartesian velocities are given by<BR>performing the multiplication:<BR>
+</P>
+
+
+<!-- Code cell -->
+
+
+<TABLE><TR><TD>
+  <SPAN CLASS="prompt">
+(%i15)	
+  </SPAN></TD>
+  <TD><SPAN CLASS="input">
+<span class="code_variable">fwdKin_vel</span><span class="code_operator">:</span> <span class="code_variable">J</span> . <span class="code_function">diff</span>(<span class="code_variable">q</span>, <span class="code_variable">t</span>)<span class="code_endofline">;</span>  </SPAN></TD>
+</TR></TABLE>
+\[\tag{fwdKin\_ vel}\begin{pmatrix}\frac{d}{d t} \mathit{x1}\\
+\frac{d}{d t} \mathit{y1}\\
+\frac{d}{d t} \mathit{theta1}\\
+\frac{d}{d t} \mathit{x1}+\left( \frac{d}{d t} \mathit{theta1}\right) \, \left( \mathit{r1}\, \sin{\left( \mathit{theta1}\right) }-\mathit{r2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\right) -\left( \frac{d}{d t} \mathit{q1}\right) \, \mathit{r2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\\
+\frac{d}{d t} \mathit{y1}+\left( \frac{d}{d t} \mathit{theta1}\right) \, \left( -\mathit{r2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\right) -\left( \frac{d}{d t} \mathit{q1}\right) \, \mathit{r2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }\\
+\frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q1}\\
+\frac{d}{d t} \mathit{x1}+\left( \frac{d}{d t} \mathit{theta1}\right) \, \left( -\mathit{r3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }+\mathit{r1}\, \sin{\left( \mathit{theta1}\right) }\right) +\left( \frac{d}{d t} \mathit{q1}\right) \, \left( -\mathit{r3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\right) -\left( \frac{d}{d t} \mathit{q2}\right) \, \mathit{r3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\\
+\frac{d}{d t} \mathit{y1}+\left( \frac{d}{d t} \mathit{theta1}\right) \, \left( -\mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\right) +\left( \frac{d}{d t} \mathit{q1}\right) \, \left( -\mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }\right) -\left( \frac{d}{d t} \mathit{q2}\right) \, \mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\\
+\frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\\
+\frac{d}{d t} \mathit{x1}+\left( \frac{d}{d t} \mathit{theta1}\right) \, \left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }+\mathit{r1}\, \sin{\left( \mathit{theta1}\right) }\right) +\left( \frac{d}{d t} \mathit{q1}\right) \, \left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\right) +\left( \frac{d}{d t} \mathit{q2}\right) \, \left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\right) -\left( \frac{d}{d t} \mathit{q3}\right) \, \mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\\
+\frac{d}{d t} \mathit{y1}+\left( \frac{d}{d t} \mathit{theta1}\right) \, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\right) +\left( \frac{d}{d t} \mathit{q1}\right) \, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }\right) +\left( \frac{d}{d t} \mathit{q2}\right) \, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\right) -\left( \frac{d}{d t} \mathit{q3}\right) \, \mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\\
+\frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q3}+\frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\end{pmatrix}\]
+
+
+<!-- Text cell -->
+
+
+<P CLASS="comment">
+And accelerations:<BR>
+</P>
+
+
+<!-- Code cell -->
+
+
+<TABLE><TR><TD>
+  <SPAN CLASS="prompt">
+(%i16)	
+  </SPAN></TD>
+  <TD><SPAN CLASS="input">
+<span class="code_variable">fwdKin_acc</span><span class="code_operator">:</span> <span class="code_function">diff</span>(<span class="code_variable">fwdKin_vel</span>, <span class="code_variable">t</span>)<span class="code_endofline">;</span>  </SPAN></TD>
+</TR></TABLE>
+\[\tag{fwdKin\_ acc}\begin{pmatrix}\frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{x1}\\
+\frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{y1}\\
+\frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{theta1}\\
+\frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{x1}+\left( \frac{d}{d t} \mathit{theta1}\right) \, \left( \mathit{r2}\, \left( \frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q1}\right) \, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }+\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\, \left( \frac{d}{d t} \mathit{theta1}\right) \right) +\left( \frac{d}{d t} \mathit{q1}\right) \, \mathit{r2}\, \left( \frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q1}\right) \, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }+\left( \frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{theta1}\right) \, \left( \mathit{r1}\, \sin{\left( \mathit{theta1}\right) }-\mathit{r2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\right) -\left( \frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q1}\right) \, \mathit{r2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\\
+\frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{y1}+\left( \frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{theta1}\right) \, \left( -\mathit{r2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\right) -\left( \frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q1}\right) \, \mathit{r2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }+\left( \frac{d}{d t} \mathit{theta1}\right) \, \left( \mathit{r1}\, \sin{\left( \mathit{theta1}\right) }\, \left( \frac{d}{d t} \mathit{theta1}\right) -\mathit{r2}\, \left( \frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q1}\right) \, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\right) -\left( \frac{d}{d t} \mathit{q1}\right) \, \mathit{r2}\, \left( \frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q1}\right) \, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\\
+\frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{theta1}+\frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q1}\\
+\frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{x1}+\left( \frac{d}{d t} \mathit{theta1}\right) \, \left( \mathit{r3}\, \left( \frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }+\mathit{l2}\, \left( \frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q1}\right) \, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }+\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\, \left( \frac{d}{d t} \mathit{theta1}\right) \right) +\left( \frac{d}{d t} \mathit{q1}\right) \, \left( \mathit{r3}\, \left( \frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }+\mathit{l2}\, \left( \frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q1}\right) \, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }\right) +\left( \frac{d}{d t} \mathit{q2}\right) \, \mathit{r3}\, \left( \frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }+\left( \frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{theta1}\right) \, \left( -\mathit{r3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }+\mathit{r1}\, \sin{\left( \mathit{theta1}\right) }\right) +\left( \frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q1}\right) \, \left( -\mathit{r3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\right) -\left( \frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q2}\right) \, \mathit{r3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\\
+\frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{y1}+\left( \frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{theta1}\right) \, \left( -\mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\right) +\left( \frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q1}\right) \, \left( -\mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }\right) -\left( \frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q2}\right) \, \mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }+\left( \frac{d}{d t} \mathit{theta1}\right) \, \left( -\mathit{r3}\, \left( \frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \left( \frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q1}\right) \, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }+\mathit{r1}\, \sin{\left( \mathit{theta1}\right) }\, \left( \frac{d}{d t} \mathit{theta1}\right) \right) +\left( \frac{d}{d t} \mathit{q1}\right) \, \left( -\mathit{r3}\, \left( \frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \left( \frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q1}\right) \, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\right) -\left( \frac{d}{d t} \mathit{q2}\right) \, \mathit{r3}\, \left( \frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\\
+\frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{theta1}+\frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q2}+\frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q1}\\
+\frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{x1}+\left( \frac{d}{d t} \mathit{theta1}\right) \, \left( \mathit{r4}\, \left( \frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q3}+\frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }+\mathit{l3}\, \left( \frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }+\mathit{l2}\, \left( \frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q1}\right) \, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }+\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\, \left( \frac{d}{d t} \mathit{theta1}\right) \right) +\left( \frac{d}{d t} \mathit{q1}\right) \, \left( \mathit{r4}\, \left( \frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q3}+\frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }+\mathit{l3}\, \left( \frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }+\mathit{l2}\, \left( \frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q1}\right) \, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }\right) +\left( \frac{d}{d t} \mathit{q2}\right) \, \left( \mathit{r4}\, \left( \frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q3}+\frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }+\mathit{l3}\, \left( \frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\right) +\left( \frac{d}{d t} \mathit{q3}\right) \, \mathit{r4}\, \left( \frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q3}+\frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }+\left( \frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{theta1}\right) \, \left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }+\mathit{r1}\, \sin{\left( \mathit{theta1}\right) }\right) +\left( \frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q1}\right) \, \left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\right) +\left( \frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q2}\right) \, \left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\right) -\left( \frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q3}\right) \, \mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\\
+\frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{y1}+\left( \frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{theta1}\right) \, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\right) +\left( \frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q1}\right) \, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }\right) +\left( \frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q2}\right) \, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\right) -\left( \frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q3}\right) \, \mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }+\left( \frac{d}{d t} \mathit{theta1}\right) \, \left( -\mathit{r4}\, \left( \frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q3}+\frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \left( \frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \left( \frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q1}\right) \, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }+\mathit{r1}\, \sin{\left( \mathit{theta1}\right) }\, \left( \frac{d}{d t} \mathit{theta1}\right) \right) +\left( \frac{d}{d t} \mathit{q1}\right) \, \left( -\mathit{r4}\, \left( \frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q3}+\frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \left( \frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \left( \frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q1}\right) \, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\right) +\left( \frac{d}{d t} \mathit{q2}\right) \, \left( -\mathit{r4}\, \left( \frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q3}+\frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \left( \frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\right) -\left( \frac{d}{d t} \mathit{q3}\right) \, \mathit{r4}\, \left( \frac{d}{d t} \mathit{theta1}+\frac{d}{d t} \mathit{q3}+\frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\\
+\frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{theta1}+\frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q3}+\frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q2}+\frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q1}\end{pmatrix}\]
+
+
+<!-- Title cell -->
+
+
+<P CLASS="title">
+Inertia matrix
+</P>
+
+
+<!-- Text cell -->
+
+
+<P CLASS="comment">
+Define the nominal inertia matrix Mc, and use the Jacobian to calculate the inertia matrix M:<BR>
+</P>
+
+
+<!-- Code cell -->
+
+
+<TABLE><TR><TD>
+  <SPAN CLASS="prompt">
+(%i17)	
+  </SPAN></TD>
+  <TD><SPAN CLASS="input">
+<span class="code_function">load</span>(<span class="code_string">&quot;</span><span class="code_string">diag</span><span class="code_string">&quot;</span>)<span class="code_endofline">;</span>  </SPAN></TD>
+</TR></TABLE>
+\[\tag{\% o17} /usr/share/maxima/5.38.1/share/contrib/diag.mac\]
+
+
+<!-- Code cell -->
+
+
+<TABLE><TR><TD>
+  <SPAN CLASS="prompt">
+(%i18)	
+  </SPAN></TD>
+  <TD><SPAN CLASS="input">
+<span class="code_variable">Mc</span><span class="code_operator">:</span> <span class="code_function">diag</span>([<span class="code_variable">m1</span>, <span class="code_variable">m1</span>, <span class="code_variable">J1</span>, <span class="code_variable">m2</span>, <span class="code_variable">m2</span>, <span class="code_variable">J2</span>, <span class="code_variable">m3</span>, <span class="code_variable">m3</span>, <span class="code_variable">J3</span>, <span class="code_variable">m4</span>, <span class="code_variable">m4</span>, <span class="code_variable">J4</span>])<span class="code_endofline">;</span>  </SPAN></TD>
+</TR></TABLE>
+\[\tag{Mc}\begin{pmatrix}\mathit{m1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & \mathit{m1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & \mathit{J1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & \mathit{m2} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & \mathit{m2} & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & \mathit{J2} & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & \mathit{m3} & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & \mathit{m3} & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \mathit{J3} & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \mathit{m4} & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \mathit{m4} & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \mathit{J4}\end{pmatrix}\]
+
+
+<!-- Code cell -->
+
+
+<TABLE><TR><TD>
+  <SPAN CLASS="prompt">
+(%i19)	
+  </SPAN></TD>
+  <TD><SPAN CLASS="input">
+<span class="code_variable">M</span><span class="code_operator">:</span> <span class="code_function">transpose</span>(<span class="code_variable">J</span>) . <span class="code_variable">Mc</span> . <span class="code_variable">J</span><span class="code_endofline">;</span>  </SPAN></TD>
+</TR></TABLE>
+\[\tag{M}\begin{pmatrix}\mathit{m4}+\mathit{m3}+\mathit{m2}+\mathit{m1} & 0 & \mathit{m4}\, \left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }+\mathit{r1}\, \sin{\left( \mathit{theta1}\right) }\right) +\mathit{m3}\, \left( -\mathit{r3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }+\mathit{r1}\, \sin{\left( \mathit{theta1}\right) }\right) +\mathit{m2}\, \left( \mathit{r1}\, \sin{\left( \mathit{theta1}\right) }-\mathit{r2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\right)  & \mathit{m4}\, \left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\right) +\mathit{m3}\, \left( -\mathit{r3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\right) -\mathit{m2}\, \mathit{r2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) } & \mathit{m4}\, \left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\right) -\mathit{m3}\, \mathit{r3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) } & -\mathit{m4}\, \mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\\
+0 & \mathit{m4}+\mathit{m3}+\mathit{m2}+\mathit{m1} & \mathit{m4}\, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\right) +\mathit{m3}\, \left( -\mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\right) +\mathit{m2}\, \left( -\mathit{r2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\right)  & \mathit{m4}\, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }\right) +\mathit{m3}\, \left( -\mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }\right) -\mathit{m2}\, \mathit{r2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) } & \mathit{m4}\, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\right) -\mathit{m3}\, \mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) } & -\mathit{m4}\, \mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\\
+\mathit{m4}\, \left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }+\mathit{r1}\, \sin{\left( \mathit{theta1}\right) }\right) +\mathit{m3}\, \left( -\mathit{r3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }+\mathit{r1}\, \sin{\left( \mathit{theta1}\right) }\right) +\mathit{m2}\, \left( \mathit{r1}\, \sin{\left( \mathit{theta1}\right) }-\mathit{r2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\right)  & \mathit{m4}\, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\right) +\mathit{m3}\, \left( -\mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\right) +\mathit{m2}\, \left( -\mathit{r2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\right)  & \mathit{m4}\, {{\left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\right) }^{2}}+\mathit{m4}\, {{\left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }+\mathit{r1}\, \sin{\left( \mathit{theta1}\right) }\right) }^{2}}+\mathit{m3}\, {{\left( -\mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\right) }^{2}}+\mathit{m3}\, {{\left( -\mathit{r3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }+\mathit{r1}\, \sin{\left( \mathit{theta1}\right) }\right) }^{2}}+\mathit{m2}\, {{\left( -\mathit{r2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\right) }^{2}}+\mathit{m2}\, {{\left( \mathit{r1}\, \sin{\left( \mathit{theta1}\right) }-\mathit{r2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\right) }^{2}}+\mathit{J4}+\mathit{J3}+\mathit{J2}+\mathit{J1} & \mathit{m4}\, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }\right) \, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\right) +\mathit{m4}\, \left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\right) \, \left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }+\mathit{r1}\, \sin{\left( \mathit{theta1}\right) }\right) +\mathit{m3}\, \left( -\mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }\right) \, \left( -\mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\right) +\mathit{m3}\, \left( -\mathit{r3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\right) \, \left( -\mathit{r3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }+\mathit{r1}\, \sin{\left( \mathit{theta1}\right) }\right) -\mathit{m2}\, \mathit{r2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }\, \left( -\mathit{r2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\right) -\mathit{m2}\, \mathit{r2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\, \left( \mathit{r1}\, \sin{\left( \mathit{theta1}\right) }-\mathit{r2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\right) +\mathit{J4}+\mathit{J3}+\mathit{J2} & \mathit{m4}\, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\right) \, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\right) +\mathit{m4}\, \left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\right) \, \left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }+\mathit{r1}\, \sin{\left( \mathit{theta1}\right) }\right) -\mathit{m3}\, \mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\, \left( -\mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\right) -\mathit{m3}\, \mathit{r3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\, \left( -\mathit{r3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }+\mathit{r1}\, \sin{\left( \mathit{theta1}\right) }\right) +\mathit{J4}+\mathit{J3} & -\mathit{m4}\, \mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\right) -\mathit{m4}\, \mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\, \left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }+\mathit{r1}\, \sin{\left( \mathit{theta1}\right) }\right) +\mathit{J4}\\
+\mathit{m4}\, \left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\right) +\mathit{m3}\, \left( -\mathit{r3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\right) -\mathit{m2}\, \mathit{r2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) } & \mathit{m4}\, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }\right) +\mathit{m3}\, \left( -\mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }\right) -\mathit{m2}\, \mathit{r2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) } & \mathit{m4}\, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }\right) \, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\right) +\mathit{m4}\, \left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\right) \, \left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }+\mathit{r1}\, \sin{\left( \mathit{theta1}\right) }\right) +\mathit{m3}\, \left( -\mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }\right) \, \left( -\mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\right) +\mathit{m3}\, \left( -\mathit{r3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\right) \, \left( -\mathit{r3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }+\mathit{r1}\, \sin{\left( \mathit{theta1}\right) }\right) -\mathit{m2}\, \mathit{r2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }\, \left( -\mathit{r2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\right) -\mathit{m2}\, \mathit{r2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\, \left( \mathit{r1}\, \sin{\left( \mathit{theta1}\right) }-\mathit{r2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\right) +\mathit{J4}+\mathit{J3}+\mathit{J2} & \mathit{m4}\, {{\left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }\right) }^{2}}+\mathit{m4}\, {{\left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\right) }^{2}}+\mathit{m3}\, {{\left( -\mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }\right) }^{2}}+\mathit{m3}\, {{\left( -\mathit{r3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\right) }^{2}}+\mathit{m2}\, {{\mathit{r2}}^{2}}\, {{\sin{\left( \mathit{theta1}+\mathit{q1}\right) }}^{2}}+\mathit{m2}\, {{\mathit{r2}}^{2}}\, {{\cos{\left( \mathit{theta1}+\mathit{q1}\right) }}^{2}}+\mathit{J4}+\mathit{J3}+\mathit{J2} & \mathit{m4}\, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\right) \, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }\right) +\mathit{m4}\, \left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\right) \, \left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\right) -\mathit{m3}\, \mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\, \left( -\mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }\right) -\mathit{m3}\, \mathit{r3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\, \left( -\mathit{r3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\right) +\mathit{J4}+\mathit{J3} & -\mathit{m4}\, \mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }\right) -\mathit{m4}\, \mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\, \left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\right) +\mathit{J4}\\
+\mathit{m4}\, \left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\right) -\mathit{m3}\, \mathit{r3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) } & \mathit{m4}\, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\right) -\mathit{m3}\, \mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) } & \mathit{m4}\, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\right) \, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\right) +\mathit{m4}\, \left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\right) \, \left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }+\mathit{r1}\, \sin{\left( \mathit{theta1}\right) }\right) -\mathit{m3}\, \mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\, \left( -\mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\right) -\mathit{m3}\, \mathit{r3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\, \left( -\mathit{r3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }+\mathit{r1}\, \sin{\left( \mathit{theta1}\right) }\right) +\mathit{J4}+\mathit{J3} & \mathit{m4}\, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\right) \, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }\right) +\mathit{m4}\, \left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\right) \, \left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\right) -\mathit{m3}\, \mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\, \left( -\mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }\right) -\mathit{m3}\, \mathit{r3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\, \left( -\mathit{r3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\right) +\mathit{J4}+\mathit{J3} & \mathit{m4}\, {{\left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\right) }^{2}}+\mathit{m4}\, {{\left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\right) }^{2}}+\mathit{m3}\, {{\mathit{r3}}^{2}}\, {{\sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }}^{2}}+\mathit{m3}\, {{\mathit{r3}}^{2}}\, {{\cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }}^{2}}+\mathit{J4}+\mathit{J3} & -\mathit{m4}\, \mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\right) -\mathit{m4}\, \mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\, \left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\right) +\mathit{J4}\\
+-\mathit{m4}\, \mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) } & -\mathit{m4}\, \mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) } & -\mathit{m4}\, \mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\right) -\mathit{m4}\, \mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\, \left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }+\mathit{r1}\, \sin{\left( \mathit{theta1}\right) }\right) +\mathit{J4} & -\mathit{m4}\, \mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }\right) -\mathit{m4}\, \mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\, \left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{theta1}+\mathit{q1}\right) }\right) +\mathit{J4} & -\mathit{m4}\, \mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\right) -\mathit{m4}\, \mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\, \left( -\mathit{r4}\, \cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \cos{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\right) +\mathit{J4} & \mathit{m4}\, {{\mathit{r4}}^{2}}\, {{\sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }}^{2}}+\mathit{m4}\, {{\mathit{r4}}^{2}}\, {{\cos{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }}^{2}}+\mathit{J4}\end{pmatrix}\]
+
+
+<!-- Text cell -->
+
+
+<P CLASS="comment">
+In practice we calculate M and M^-1 numerically.<BR>
+</P>
+
+
+<!-- Title cell -->
+
+
+<P CLASS="title">
+Gravitational vector
+</P>
+
+
+<!-- Text cell -->
+
+
+<P CLASS="comment">
+For the dynamics equations we have qdd = M(q)^-1 * [tau + G(q)] = M(q)^-1 * Q, where Q is the<BR>generalised force.<BR>Q = Jv' * F + Jw' tau_c, i.e. forces and torques. We have only external forces (gravity).<BR>We define Gc:<BR>
+</P>
+
+
+<!-- Code cell -->
+
+
+<TABLE><TR><TD>
+  <SPAN CLASS="prompt">
+(%i20)	
+  </SPAN></TD>
+  <TD><SPAN CLASS="input">
+<span class="code_variable">Gc</span><span class="code_operator">:</span> <span class="code_function">transpose</span>(<span class="code_function">matrix</span>([<span class="code_number">0</span>, <span class="code_operator">-</span><span class="code_variable">m1</span><span class="code_operator">*</span><span class="code_variable">g</span>, <span class="code_number">0</span>, <span class="code_number">0</span>, <span class="code_operator">-</span><span class="code_variable">m2</span><span class="code_operator">*</span><span class="code_variable">g</span>, <span class="code_number">0</span>, <span class="code_number">0</span>, <span class="code_operator">-</span><span class="code_variable">m3</span><span class="code_operator">*</span><span class="code_variable">g</span>, <span class="code_number">0</span>, <span class="code_number">0</span>, <span class="code_operator">-</span><span class="code_variable">m4</span><span class="code_operator">*</span><span class="code_variable">g</span>, <span class="code_number">0</span>]))<span class="code_endofline">;</span>  </SPAN></TD>
+</TR></TABLE>
+\[\tag{Gc}\begin{pmatrix}0\\
+-g\, \mathit{m1}\\
+0\\
+0\\
+-g\, \mathit{m2}\\
+0\\
+0\\
+-g\, \mathit{m3}\\
+0\\
+0\\
+-g\, \mathit{m4}\\
+0\end{pmatrix}\]
+
+
+<!-- Text cell -->
+
+
+<P CLASS="comment">
+and calculate the generalised gravitational force using the Jacobian:<BR>
+</P>
+
+
+<!-- Code cell -->
+
+
+<TABLE><TR><TD>
+  <SPAN CLASS="prompt">
+(%i21)	
+  </SPAN></TD>
+  <TD><SPAN CLASS="input">
+<span class="code_variable">G</span><span class="code_operator">:</span> <span class="code_function">transpose</span>(<span class="code_variable">J</span>) . <span class="code_variable">Gc</span><span class="code_endofline">;</span>  </SPAN></TD>
+</TR></TABLE>
+\[\tag{G}\begin{pmatrix}0\\
+-g\, \mathit{m4}-g\, \mathit{m3}-g\, \mathit{m2}-g\, \mathit{m1}\\
+-g\, \mathit{m4}\, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\right) -g\, \mathit{m3}\, \left( -\mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\right) -g\, \mathit{m2}\, \left( -\mathit{r2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }-\mathit{r1}\, \cos{\left( \mathit{theta1}\right) }\right) \\
+-g\, \mathit{m4}\, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }\right) -g\, \mathit{m3}\, \left( -\mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }\right) +g\, \mathit{m2}\, \mathit{r2}\, \sin{\left( \mathit{theta1}+\mathit{q1}\right) }\\
+g\, \mathit{m3}\, \mathit{r3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }-g\, \mathit{m4}\, \left( -\mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l3}\, \sin{\left( \mathit{theta1}+\mathit{q2}+\mathit{q1}\right) }\right) \\
+g\, \mathit{m4}\, \mathit{r4}\, \sin{\left( \mathit{theta1}+\mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\end{pmatrix}\]
+
+ <HR>
+ <SMALL> Created with <A HREF="http://wxmaxima.sourceforge.net/">wxMaxima</A>.</SMALL>
+ </BODY>
+</HTML>

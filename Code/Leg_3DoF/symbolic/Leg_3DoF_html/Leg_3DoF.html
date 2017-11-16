@@ -1,0 +1,401 @@
+<!DOCTYPE HTML">
+<HTML>
+ <HEAD>
+  <TITLE>Leg_3DoF</TITLE>
+  <META NAME="generator" CONTENT="wxMaxima">
+  <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    displayAlign: "left",
+    context: "MathJax"
+  })
+</script>
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
+</script>
+  <link rel="stylesheet" type="text/css" href="Leg_3DoF_htmlimg/Leg_3DoF.css"/>
+ </HEAD>
+ <BODY>
+
+<!-- ***************************************************** -->
+<!--          Created with wxMaxima version 16.12.2         -->
+<!-- ***************************************************** -->
+<noscript><div class="error message">    Please enable JavaScript in order to get a 2d display of the equations embedded in this web page.</div></noscript>\(      \DeclareMathOperator{\abs}{abs}
+      \newcommand{\ensuremath}[1]{\mbox{$#1$}}
+\)
+
+<!-- Text cell -->
+
+
+<P CLASS="comment">
+Calculate the dynamics of the 3-DoF leg: Forward kinematics, Jacobian, Inertia matrix, gravity vector,<BR>using the Euler-Lagrange method.<BR>
+</P>
+
+
+<!-- Title cell -->
+
+
+<P CLASS="title">
+Forward kinematics
+</P>
+
+
+<!-- Text cell -->
+
+
+<P CLASS="comment">
+We first define the forward kinematics for 3 masses, located at the CoM of the lower leg, the CoM of the<BR>upper leg, and the CoM of the body (above the hip joint).<BR>
+</P>
+
+
+<!-- Text cell -->
+
+
+<P CLASS="comment">
+Define the configuration vector q:<BR>
+</P>
+
+
+<!-- Code cell -->
+
+
+<TABLE><TR><TD>
+  <SPAN CLASS="prompt">
+(%i3)	
+  </SPAN></TD>
+  <TD><SPAN CLASS="input">
+<span class="code_function">depends</span>(<span class="code_variable">q1</span>, <span class="code_variable">t</span>)<span class="code_endofline">;</span> <span class="code_function">depends</span>(<span class="code_variable">q2</span>, <span class="code_variable">t</span>)<span class="code_endofline">;</span> <span class="code_function">depends</span>(<span class="code_variable">q3</span>, <span class="code_variable">t</span>)<span class="code_endofline">;</span>  </SPAN></TD>
+</TR></TABLE>
+\[\tag{\% o1} [\operatorname{q1}(t)]\]
+\[\tag{\% o2} [\operatorname{q2}(t)]\]
+\[\tag{\% o3} [\operatorname{q3}(t)]\]
+
+
+<!-- Code cell -->
+
+
+<TABLE><TR><TD>
+  <SPAN CLASS="prompt">
+(%i4)	
+  </SPAN></TD>
+  <TD><SPAN CLASS="input">
+<span class="code_function">q</span>(<span class="code_variable">t</span>)<span class="code_operator">:</span><span class="code_operator">=</span> [<span class="code_variable">q1</span>, <span class="code_variable">q2</span>, <span class="code_variable">q3</span>]<span class="code_endofline">;</span>  </SPAN></TD>
+</TR></TABLE>
+\[\tag{\% o4} \operatorname{q}(t):=[\mathit{q1},\mathit{q2},\mathit{q3}]\]
+
+
+<!-- Code cell -->
+
+
+<TABLE><TR><TD>
+  <SPAN CLASS="prompt">
+(%i5)	
+  </SPAN></TD>
+  <TD><SPAN CLASS="input">
+<span class="code_variable">q</span><span class="code_operator">:</span> <span class="code_function">matrix</span>([<span class="code_variable">q1</span>],[<span class="code_variable">q2</span>],[<span class="code_variable">q3</span>])<span class="code_endofline">;</span>  </SPAN></TD>
+</TR></TABLE>
+\[\tag{q}\begin{pmatrix}\mathit{q1}\\
+\mathit{q2}\\
+\mathit{q3}\end{pmatrix}\]
+
+
+<!-- Text cell -->
+
+
+<P CLASS="comment">
+And the forward kinematics:<BR>fwdKin(q) = [x1, y1, theta1, x2, y2, theta2, x3, y3, theta3]<BR>
+</P>
+
+
+<!-- Code cell -->
+
+
+<TABLE><TR><TD>
+  <SPAN CLASS="prompt">
+(%i6)	
+  </SPAN></TD>
+  <TD><SPAN CLASS="input">
+<span class="code_variable">fwdKin</span><span class="code_operator">:</span> <span class="code_function">matrix</span>(<BR>
+ &nbsp;&nbsp;&nbsp;[<span class="code_operator">-</span>(<span class="code_number">1</span><span class="code_operator">/</span><span class="code_number">2</span>) <span class="code_operator">*</span> <span class="code_variable">l1</span> <span class="code_operator">*</span> <span class="code_function">sin</span>(<span class="code_variable">q1</span>)],<BR>
+ &nbsp;&nbsp;&nbsp;[(<span class="code_number">1</span><span class="code_operator">/</span><span class="code_number">2</span>) <span class="code_operator">*</span> <span class="code_variable">l1</span> <span class="code_operator">*</span> <span class="code_function">cos</span>(<span class="code_variable">q1</span>)],<BR>
+ &nbsp;&nbsp;&nbsp;[<span class="code_variable">q1</span>],<BR>
+ &nbsp;&nbsp;&nbsp;[<span class="code_operator">-</span><span class="code_variable">l1</span> <span class="code_operator">*</span> <span class="code_function">sin</span>(<span class="code_variable">q1</span>) <span class="code_operator">-</span> (<span class="code_number">1</span><span class="code_operator">/</span><span class="code_number">2</span>) <span class="code_operator">*</span> <span class="code_variable">l2</span> <span class="code_operator">*</span> <span class="code_function">sin</span>(<span class="code_variable">q1</span> <span class="code_operator">+</span> <span class="code_variable">q2</span>)],<BR>
+ &nbsp;&nbsp;&nbsp;[<span class="code_variable">l1</span> <span class="code_operator">*</span> <span class="code_function">cos</span>(<span class="code_variable">q1</span>) <span class="code_operator">+</span> (<span class="code_number">1</span><span class="code_operator">/</span><span class="code_number">2</span>) <span class="code_operator">*</span> <span class="code_variable">l2</span> <span class="code_operator">*</span> <span class="code_function">cos</span>(<span class="code_variable">q1</span> <span class="code_operator">+</span> <span class="code_variable">q2</span>)],<BR>
+ &nbsp;&nbsp;&nbsp;[<span class="code_variable">q1</span> <span class="code_operator">+</span> <span class="code_variable">q2</span>],<BR>
+ &nbsp;&nbsp;&nbsp;[<span class="code_operator">-</span><span class="code_variable">l1</span> <span class="code_operator">*</span> <span class="code_function">sin</span>(<span class="code_variable">q1</span>) <span class="code_operator">-</span> <span class="code_variable">l2</span> <span class="code_operator">*</span> <span class="code_function">sin</span>(<span class="code_variable">q1</span> <span class="code_operator">+</span> <span class="code_variable">q2</span>) <span class="code_operator">-</span> <span class="code_variable">l3</span> <span class="code_operator">*</span> <span class="code_function">sin</span>(<span class="code_variable">q1</span> <span class="code_operator">+</span> <span class="code_variable">q2</span> <span class="code_operator">+</span> <span class="code_variable">q3</span>)],<BR>
+ &nbsp;&nbsp;&nbsp;[<span class="code_variable">l1</span> <span class="code_operator">*</span> <span class="code_function">cos</span>(<span class="code_variable">q1</span>) <span class="code_operator">+</span> <span class="code_variable">l2</span> <span class="code_operator">*</span> <span class="code_function">cos</span>(<span class="code_variable">q1</span> <span class="code_operator">+</span> <span class="code_variable">q2</span>) <span class="code_operator">+</span> <span class="code_variable">l3</span> <span class="code_operator">*</span> <span class="code_function">cos</span>(<span class="code_variable">q1</span> <span class="code_operator">+</span> <span class="code_variable">q2</span> <span class="code_operator">+</span> <span class="code_variable">q3</span>)],<BR>
+ &nbsp;&nbsp;&nbsp;[<span class="code_variable">q1</span> <span class="code_operator">+</span> <span class="code_variable">q2</span> <span class="code_operator">+</span> <span class="code_variable">q3</span>]<BR>
+)<span class="code_endofline">;</span>  </SPAN></TD>
+</TR></TABLE>
+\[\tag{fwdKin}\begin{pmatrix}-\frac{\mathit{l1}\, \sin{\left( \mathit{q1}\right) }}{2}\\
+\frac{\mathit{l1}\, \cos{\left( \mathit{q1}\right) }}{2}\\
+\mathit{q1}\\
+-\frac{\mathit{l2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) }}{2}-\mathit{l1}\, \sin{\left( \mathit{q1}\right) }\\
+\frac{\mathit{l2}\, \cos{\left( \mathit{q2}+\mathit{q1}\right) }}{2}+\mathit{l1}\, \cos{\left( \mathit{q1}\right) }\\
+\mathit{q2}+\mathit{q1}\\
+-\mathit{l3}\, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) }-\mathit{l1}\, \sin{\left( \mathit{q1}\right) }\\
+\mathit{l3}\, \cos{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }+\mathit{l2}\, \cos{\left( \mathit{q2}+\mathit{q1}\right) }+\mathit{l1}\, \cos{\left( \mathit{q1}\right) }\\
+\mathit{q3}+\mathit{q2}+\mathit{q1}\end{pmatrix}\]
+
+
+<!-- Title cell -->
+
+
+<P CLASS="title">
+Jacobian, Cartesian velocities and accelerations
+</P>
+
+
+<!-- Text cell -->
+
+
+<P CLASS="comment">
+The Jacobian is defined as the forward kinematics derived w.r.t. the configuration vector q:<BR>
+</P>
+
+
+<!-- Code cell -->
+
+
+<TABLE><TR><TD>
+  <SPAN CLASS="prompt">
+(%i7)	
+  </SPAN></TD>
+  <TD><SPAN CLASS="input">
+<span class="code_variable">J</span><span class="code_operator">:</span> <span class="code_function">addcol</span>(<span class="code_function">diff</span>(<span class="code_variable">fwdKin</span>, <span class="code_variable">q1</span>), <span class="code_function">diff</span>(<span class="code_variable">fwdKin</span>, <span class="code_variable">q2</span>), <span class="code_function">diff</span>(<span class="code_variable">fwdKin</span>, <span class="code_variable">q3</span>))<span class="code_endofline">;</span>  </SPAN></TD>
+</TR></TABLE>
+\[\tag{J}\begin{pmatrix}-\frac{\mathit{l1}\, \cos{\left( \mathit{q1}\right) }}{2} & 0 & 0\\
+-\frac{\mathit{l1}\, \sin{\left( \mathit{q1}\right) }}{2} & 0 & 0\\
+1 & 0 & 0\\
+-\frac{\mathit{l2}\, \cos{\left( \mathit{q2}+\mathit{q1}\right) }}{2}-\mathit{l1}\, \cos{\left( \mathit{q1}\right) } & -\frac{\mathit{l2}\, \cos{\left( \mathit{q2}+\mathit{q1}\right) }}{2} & 0\\
+-\frac{\mathit{l2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) }}{2}-\mathit{l1}\, \sin{\left( \mathit{q1}\right) } & -\frac{\mathit{l2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) }}{2} & 0\\
+1 & 1 & 0\\
+-\mathit{l3}\, \cos{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{q2}+\mathit{q1}\right) }-\mathit{l1}\, \cos{\left( \mathit{q1}\right) } & -\mathit{l3}\, \cos{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{q2}+\mathit{q1}\right) } & -\mathit{l3}\, \cos{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\\
+-\mathit{l3}\, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) }-\mathit{l1}\, \sin{\left( \mathit{q1}\right) } & -\mathit{l3}\, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) } & -\mathit{l3}\, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\\
+1 & 1 & 1\end{pmatrix}\]
+
+
+<!-- Text cell -->
+
+
+<P CLASS="comment">
+Let's also get the end-effector Jacobian:<BR>
+</P>
+
+
+<!-- Code cell -->
+
+
+<TABLE><TR><TD>
+  <SPAN CLASS="prompt">
+(%i8)	
+  </SPAN></TD>
+  <TD><SPAN CLASS="input">
+<span class="code_variable">J_endEffector</span><span class="code_operator">:</span> <span class="code_function">submatrix</span>(<span class="code_number">1</span>,<span class="code_number">2</span>,<span class="code_number">3</span>,<span class="code_number">4</span>,<span class="code_number">5</span>,<span class="code_number">6</span>,<span class="code_number">9</span>,<span class="code_variable">J</span>)<span class="code_endofline">;</span>  </SPAN></TD>
+</TR></TABLE>
+\[\tag{J\_ endEffector}\begin{pmatrix}-\mathit{l3}\, \cos{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{q2}+\mathit{q1}\right) }-\mathit{l1}\, \cos{\left( \mathit{q1}\right) } & -\mathit{l3}\, \cos{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{q2}+\mathit{q1}\right) } & -\mathit{l3}\, \cos{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\\
+-\mathit{l3}\, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) }-\mathit{l1}\, \sin{\left( \mathit{q1}\right) } & -\mathit{l3}\, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) } & -\mathit{l3}\, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\end{pmatrix}\]
+
+
+<!-- Text cell -->
+
+
+<P CLASS="comment">
+which can be used for interaction forces on the trunk using J_endEffector^T * [Fx,Fy].<BR>
+</P>
+
+
+<!-- Text cell -->
+
+
+<P CLASS="comment">
+We have x_d = J * theta_d, where theta_d = [q1d, q2d, q3d]^T. Thus, the Cartesian velocities are given by<BR>performing the multiplication:<BR>
+</P>
+
+
+<!-- Code cell -->
+
+
+<TABLE><TR><TD>
+  <SPAN CLASS="prompt">
+(%i9)	
+  </SPAN></TD>
+  <TD><SPAN CLASS="input">
+<span class="code_variable">fwdKin_vel</span><span class="code_operator">:</span> <span class="code_variable">J</span> . <span class="code_function">diff</span>(<span class="code_variable">q</span>, <span class="code_variable">t</span>)<span class="code_endofline">;</span>  </SPAN></TD>
+</TR></TABLE>
+\[\tag{fwdKin\_ vel}\begin{pmatrix}-\frac{\mathit{l1}\, \cos{\left( \mathit{q1}\right) }\, \left( \frac{d}{d t} \mathit{q1}\right) }{2}\\
+-\frac{\mathit{l1}\, \sin{\left( \mathit{q1}\right) }\, \left( \frac{d}{d t} \mathit{q1}\right) }{2}\\
+\frac{d}{d t} \mathit{q1}\\
+\left( \frac{d}{d t} \mathit{q1}\right) \, \left( -\frac{\mathit{l2}\, \cos{\left( \mathit{q2}+\mathit{q1}\right) }}{2}-\mathit{l1}\, \cos{\left( \mathit{q1}\right) }\right) -\frac{\mathit{l2}\, \left( \frac{d}{d t} \mathit{q2}\right) \, \cos{\left( \mathit{q2}+\mathit{q1}\right) }}{2}\\
+\left( \frac{d}{d t} \mathit{q1}\right) \, \left( -\frac{\mathit{l2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) }}{2}-\mathit{l1}\, \sin{\left( \mathit{q1}\right) }\right) -\frac{\mathit{l2}\, \left( \frac{d}{d t} \mathit{q2}\right) \, \sin{\left( \mathit{q2}+\mathit{q1}\right) }}{2}\\
+\frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\\
+\left( \frac{d}{d t} \mathit{q1}\right) \, \left( -\mathit{l3}\, \cos{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{q2}+\mathit{q1}\right) }-\mathit{l1}\, \cos{\left( \mathit{q1}\right) }\right) +\left( \frac{d}{d t} \mathit{q2}\right) \, \left( -\mathit{l3}\, \cos{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{q2}+\mathit{q1}\right) }\right) -\mathit{l3}\, \left( \frac{d}{d t} \mathit{q3}\right) \, \cos{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\\
+\left( \frac{d}{d t} \mathit{q1}\right) \, \left( -\mathit{l3}\, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) }-\mathit{l1}\, \sin{\left( \mathit{q1}\right) }\right) +\left( \frac{d}{d t} \mathit{q2}\right) \, \left( -\mathit{l3}\, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) }\right) -\mathit{l3}\, \left( \frac{d}{d t} \mathit{q3}\right) \, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\\
+\frac{d}{d t} \mathit{q3}+\frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\end{pmatrix}\]
+
+
+<!-- Text cell -->
+
+
+<P CLASS="comment">
+And accelerations:<BR>
+</P>
+
+
+<!-- Code cell -->
+
+
+<TABLE><TR><TD>
+  <SPAN CLASS="prompt">
+(%i10)	
+  </SPAN></TD>
+  <TD><SPAN CLASS="input">
+<span class="code_variable">fwdKin_acc</span><span class="code_operator">:</span> <span class="code_function">diff</span>(<span class="code_variable">fwdKin_vel</span>, <span class="code_variable">t</span>)<span class="code_endofline">;</span>  </SPAN></TD>
+</TR></TABLE>
+\[\tag{fwdKin\_ acc}\begin{pmatrix}\frac{\mathit{l1}\, \sin{\left( \mathit{q1}\right) }\, {{\left( \frac{d}{d t} \mathit{q1}\right) }^{2}}}{2}-\frac{\mathit{l1}\, \cos{\left( \mathit{q1}\right) }\, \left( \frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q1}\right) }{2}\\
+-\frac{\mathit{l1}\, \sin{\left( \mathit{q1}\right) }\, \left( \frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q1}\right) }{2}-\frac{\mathit{l1}\, \cos{\left( \mathit{q1}\right) }\, {{\left( \frac{d}{d t} \mathit{q1}\right) }^{2}}}{2}\\
+\frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q1}\\
+\left( \frac{d}{d t} \mathit{q1}\right) \, \left( \frac{\mathit{l2}\, \left( \frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \sin{\left( \mathit{q2}+\mathit{q1}\right) }}{2}+\mathit{l1}\, \sin{\left( \mathit{q1}\right) }\, \left( \frac{d}{d t} \mathit{q1}\right) \right) +\frac{\mathit{l2}\, \left( \frac{d}{d t} \mathit{q2}\right) \, \left( \frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \sin{\left( \mathit{q2}+\mathit{q1}\right) }}{2}+\left( \frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q1}\right) \, \left( -\frac{\mathit{l2}\, \cos{\left( \mathit{q2}+\mathit{q1}\right) }}{2}-\mathit{l1}\, \cos{\left( \mathit{q1}\right) }\right) -\frac{\mathit{l2}\, \left( \frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q2}\right) \, \cos{\left( \mathit{q2}+\mathit{q1}\right) }}{2}\\
+\left( \frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q1}\right) \, \left( -\frac{\mathit{l2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) }}{2}-\mathit{l1}\, \sin{\left( \mathit{q1}\right) }\right) -\frac{\mathit{l2}\, \left( \frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q2}\right) \, \sin{\left( \mathit{q2}+\mathit{q1}\right) }}{2}+\left( \frac{d}{d t} \mathit{q1}\right) \, \left( -\frac{\mathit{l2}\, \left( \frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \cos{\left( \mathit{q2}+\mathit{q1}\right) }}{2}-\mathit{l1}\, \cos{\left( \mathit{q1}\right) }\, \left( \frac{d}{d t} \mathit{q1}\right) \right) -\frac{\mathit{l2}\, \left( \frac{d}{d t} \mathit{q2}\right) \, \left( \frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \cos{\left( \mathit{q2}+\mathit{q1}\right) }}{2}\\
+\frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q2}+\frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q1}\\
+\left( \frac{d}{d t} \mathit{q1}\right) \, \left( \mathit{l3}\, \left( \frac{d}{d t} \mathit{q3}+\frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }+\mathit{l2}\, \left( \frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \sin{\left( \mathit{q2}+\mathit{q1}\right) }+\mathit{l1}\, \sin{\left( \mathit{q1}\right) }\, \left( \frac{d}{d t} \mathit{q1}\right) \right) +\left( \frac{d}{d t} \mathit{q2}\right) \, \left( \mathit{l3}\, \left( \frac{d}{d t} \mathit{q3}+\frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }+\mathit{l2}\, \left( \frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \sin{\left( \mathit{q2}+\mathit{q1}\right) }\right) +\mathit{l3}\, \left( \frac{d}{d t} \mathit{q3}\right) \, \left( \frac{d}{d t} \mathit{q3}+\frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }+\left( \frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q1}\right) \, \left( -\mathit{l3}\, \cos{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{q2}+\mathit{q1}\right) }-\mathit{l1}\, \cos{\left( \mathit{q1}\right) }\right) +\left( \frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q2}\right) \, \left( -\mathit{l3}\, \cos{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{q2}+\mathit{q1}\right) }\right) -\mathit{l3}\, \left( \frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q3}\right) \, \cos{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\\
+\left( \frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q1}\right) \, \left( -\mathit{l3}\, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) }-\mathit{l1}\, \sin{\left( \mathit{q1}\right) }\right) +\left( \frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q2}\right) \, \left( -\mathit{l3}\, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) }\right) -\mathit{l3}\, \left( \frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q3}\right) \, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }+\left( \frac{d}{d t} \mathit{q1}\right) \, \left( -\mathit{l3}\, \left( \frac{d}{d t} \mathit{q3}+\frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \cos{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \left( \frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \cos{\left( \mathit{q2}+\mathit{q1}\right) }-\mathit{l1}\, \cos{\left( \mathit{q1}\right) }\, \left( \frac{d}{d t} \mathit{q1}\right) \right) +\left( \frac{d}{d t} \mathit{q2}\right) \, \left( -\mathit{l3}\, \left( \frac{d}{d t} \mathit{q3}+\frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \cos{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \left( \frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \cos{\left( \mathit{q2}+\mathit{q1}\right) }\right) -\mathit{l3}\, \left( \frac{d}{d t} \mathit{q3}\right) \, \left( \frac{d}{d t} \mathit{q3}+\frac{d}{d t} \mathit{q2}+\frac{d}{d t} \mathit{q1}\right) \, \cos{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\\
+\frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q3}+\frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q2}+\frac{{{d}^{2}}}{d {{t}^{2}}} \mathit{q1}\end{pmatrix}\]
+
+
+<!-- Title cell -->
+
+
+<P CLASS="title">
+Inertia matrix
+</P>
+
+
+<!-- Text cell -->
+
+
+<P CLASS="comment">
+Define the nominal inertia matrix Mc, and use the Jacobian to calculate the inertia matrix M:<BR>
+</P>
+
+
+<!-- Code cell -->
+
+
+<TABLE><TR><TD>
+  <SPAN CLASS="prompt">
+(%i11)	
+  </SPAN></TD>
+  <TD><SPAN CLASS="input">
+<span class="code_function">load</span>(<span class="code_string">&quot;</span><span class="code_string">diag</span><span class="code_string">&quot;</span>)<span class="code_endofline">;</span>  </SPAN></TD>
+</TR></TABLE>
+\[\tag{\% o11} /usr/share/maxima/5.38.1/share/contrib/diag.mac\]
+
+
+<!-- Code cell -->
+
+
+<TABLE><TR><TD>
+  <SPAN CLASS="prompt">
+(%i12)	
+  </SPAN></TD>
+  <TD><SPAN CLASS="input">
+<span class="code_variable">Mc</span><span class="code_operator">:</span> <span class="code_function">diag</span>([<span class="code_variable">m1</span>, <span class="code_variable">m1</span>, <span class="code_variable">J1</span>, <span class="code_variable">m2</span>, <span class="code_variable">m2</span>, <span class="code_variable">J2</span>, <span class="code_variable">m3</span>, <span class="code_variable">m3</span>, <span class="code_variable">J3</span>])<span class="code_endofline">;</span>  </SPAN></TD>
+</TR></TABLE>
+\[\tag{Mc}\begin{pmatrix}\mathit{m1} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & \mathit{m1} & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & \mathit{J1} & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & \mathit{m2} & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & \mathit{m2} & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & \mathit{J2} & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & \mathit{m3} & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & \mathit{m3} & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & \mathit{J3}\end{pmatrix}\]
+
+
+<!-- Code cell -->
+
+
+<TABLE><TR><TD>
+  <SPAN CLASS="prompt">
+(%i13)	
+  </SPAN></TD>
+  <TD><SPAN CLASS="input">
+<span class="code_variable">M</span><span class="code_operator">:</span> <span class="code_function">transpose</span>(<span class="code_variable">J</span>) . <span class="code_variable">Mc</span> . <span class="code_variable">J</span><span class="code_endofline">;</span>  </SPAN></TD>
+</TR></TABLE>
+\[\tag{M}\begin{pmatrix}\mathit{m3}\, {{\left( -\mathit{l3}\, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) }-\mathit{l1}\, \sin{\left( \mathit{q1}\right) }\right) }^{2}}+\mathit{m3}\, {{\left( -\mathit{l3}\, \cos{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{q2}+\mathit{q1}\right) }-\mathit{l1}\, \cos{\left( \mathit{q1}\right) }\right) }^{2}}+\mathit{m2}\, {{\left( -\frac{\mathit{l2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) }}{2}-\mathit{l1}\, \sin{\left( \mathit{q1}\right) }\right) }^{2}}+\mathit{m2}\, {{\left( -\frac{\mathit{l2}\, \cos{\left( \mathit{q2}+\mathit{q1}\right) }}{2}-\mathit{l1}\, \cos{\left( \mathit{q1}\right) }\right) }^{2}}+\frac{{{\mathit{l1}}^{2}}\, \mathit{m1}\, {{\sin{\left( \mathit{q1}\right) }}^{2}}}{4}+\frac{{{\mathit{l1}}^{2}}\, \mathit{m1}\, {{\cos{\left( \mathit{q1}\right) }}^{2}}}{4}+\mathit{J3}+\mathit{J2}+\mathit{J1} & \mathit{m3}\, \left( -\mathit{l3}\, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) }\right) \, \left( -\mathit{l3}\, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) }-\mathit{l1}\, \sin{\left( \mathit{q1}\right) }\right) +\mathit{m3}\, \left( -\mathit{l3}\, \cos{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{q2}+\mathit{q1}\right) }\right) \, \left( -\mathit{l3}\, \cos{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{q2}+\mathit{q1}\right) }-\mathit{l1}\, \cos{\left( \mathit{q1}\right) }\right) -\frac{\mathit{l2}\, \mathit{m2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) }\, \left( -\frac{\mathit{l2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) }}{2}-\mathit{l1}\, \sin{\left( \mathit{q1}\right) }\right) }{2}-\frac{\mathit{l2}\, \mathit{m2}\, \cos{\left( \mathit{q2}+\mathit{q1}\right) }\, \left( -\frac{\mathit{l2}\, \cos{\left( \mathit{q2}+\mathit{q1}\right) }}{2}-\mathit{l1}\, \cos{\left( \mathit{q1}\right) }\right) }{2}+\mathit{J3}+\mathit{J2} & -\mathit{l3}\, \mathit{m3}\, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\, \left( -\mathit{l3}\, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) }-\mathit{l1}\, \sin{\left( \mathit{q1}\right) }\right) -\mathit{l3}\, \mathit{m3}\, \cos{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\, \left( -\mathit{l3}\, \cos{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{q2}+\mathit{q1}\right) }-\mathit{l1}\, \cos{\left( \mathit{q1}\right) }\right) +\mathit{J3}\\
+\mathit{m3}\, \left( -\mathit{l3}\, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) }\right) \, \left( -\mathit{l3}\, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) }-\mathit{l1}\, \sin{\left( \mathit{q1}\right) }\right) +\mathit{m3}\, \left( -\mathit{l3}\, \cos{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{q2}+\mathit{q1}\right) }\right) \, \left( -\mathit{l3}\, \cos{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{q2}+\mathit{q1}\right) }-\mathit{l1}\, \cos{\left( \mathit{q1}\right) }\right) -\frac{\mathit{l2}\, \mathit{m2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) }\, \left( -\frac{\mathit{l2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) }}{2}-\mathit{l1}\, \sin{\left( \mathit{q1}\right) }\right) }{2}-\frac{\mathit{l2}\, \mathit{m2}\, \cos{\left( \mathit{q2}+\mathit{q1}\right) }\, \left( -\frac{\mathit{l2}\, \cos{\left( \mathit{q2}+\mathit{q1}\right) }}{2}-\mathit{l1}\, \cos{\left( \mathit{q1}\right) }\right) }{2}+\mathit{J3}+\mathit{J2} & \mathit{m3}\, {{\left( -\mathit{l3}\, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) }\right) }^{2}}+\mathit{m3}\, {{\left( -\mathit{l3}\, \cos{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{q2}+\mathit{q1}\right) }\right) }^{2}}+\frac{{{\mathit{l2}}^{2}}\, \mathit{m2}\, {{\sin{\left( \mathit{q2}+\mathit{q1}\right) }}^{2}}}{4}+\frac{{{\mathit{l2}}^{2}}\, \mathit{m2}\, {{\cos{\left( \mathit{q2}+\mathit{q1}\right) }}^{2}}}{4}+\mathit{J3}+\mathit{J2} & -\mathit{l3}\, \mathit{m3}\, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\, \left( -\mathit{l3}\, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) }\right) -\mathit{l3}\, \mathit{m3}\, \cos{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\, \left( -\mathit{l3}\, \cos{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{q2}+\mathit{q1}\right) }\right) +\mathit{J3}\\
+-\mathit{l3}\, \mathit{m3}\, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\, \left( -\mathit{l3}\, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) }-\mathit{l1}\, \sin{\left( \mathit{q1}\right) }\right) -\mathit{l3}\, \mathit{m3}\, \cos{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\, \left( -\mathit{l3}\, \cos{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{q2}+\mathit{q1}\right) }-\mathit{l1}\, \cos{\left( \mathit{q1}\right) }\right) +\mathit{J3} & -\mathit{l3}\, \mathit{m3}\, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\, \left( -\mathit{l3}\, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) }\right) -\mathit{l3}\, \mathit{m3}\, \cos{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\, \left( -\mathit{l3}\, \cos{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \cos{\left( \mathit{q2}+\mathit{q1}\right) }\right) +\mathit{J3} & {{\mathit{l3}}^{2}}\, \mathit{m3}\, {{\sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }}^{2}}+{{\mathit{l3}}^{2}}\, \mathit{m3}\, {{\cos{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }}^{2}}+\mathit{J3}\end{pmatrix}\]
+
+
+<!-- Text cell -->
+
+
+<P CLASS="comment">
+In practice we calculate M and M^-1 numerically.<BR>
+</P>
+
+
+<!-- Title cell -->
+
+
+<P CLASS="title">
+Gravitational vector
+</P>
+
+
+<!-- Text cell -->
+
+
+<P CLASS="comment">
+For the dynamics equations we have qdd = M(q)^-1 * [tau + G(q)] = M(q)^-1 * Q, where Q is the<BR>generalised force.<BR>Q = Jv' * F + Jw' tau_c, i.e. forces and torques. We have only external forces (gravity).<BR>We define Gc:<BR>
+</P>
+
+
+<!-- Code cell -->
+
+
+<TABLE><TR><TD>
+  <SPAN CLASS="prompt">
+(%i14)	
+  </SPAN></TD>
+  <TD><SPAN CLASS="input">
+<span class="code_variable">Gc</span><span class="code_operator">:</span> <span class="code_function">transpose</span>(<span class="code_function">matrix</span>([<span class="code_number">0</span>, <span class="code_operator">-</span><span class="code_variable">m1</span><span class="code_operator">*</span><span class="code_variable">g</span>, <span class="code_number">0</span>, <span class="code_number">0</span>, <span class="code_operator">-</span><span class="code_variable">m2</span><span class="code_operator">*</span><span class="code_variable">g</span>, <span class="code_number">0</span>, <span class="code_number">0</span>, <span class="code_operator">-</span><span class="code_variable">m3</span><span class="code_operator">*</span><span class="code_variable">g</span>, <span class="code_number">0</span>]))<span class="code_endofline">;</span>  </SPAN></TD>
+</TR></TABLE>
+\[\tag{Gc}\begin{pmatrix}0\\
+-g\, \mathit{m1}\\
+0\\
+0\\
+-g\, \mathit{m2}\\
+0\\
+0\\
+-g\, \mathit{m3}\\
+0\end{pmatrix}\]
+
+
+<!-- Text cell -->
+
+
+<P CLASS="comment">
+and calculate the generalised force using the Jacobian:<BR>
+</P>
+
+
+<!-- Code cell -->
+
+
+<TABLE><TR><TD>
+  <SPAN CLASS="prompt">
+(%i15)	
+  </SPAN></TD>
+  <TD><SPAN CLASS="input">
+<span class="code_variable">G</span><span class="code_operator">:</span> <span class="code_function">transpose</span>(<span class="code_variable">J</span>) . <span class="code_variable">Gc</span><span class="code_endofline">;</span>  </SPAN></TD>
+</TR></TABLE>
+\[\tag{G}\begin{pmatrix}-g\, \mathit{m3}\, \left( -\mathit{l3}\, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) }-\mathit{l1}\, \sin{\left( \mathit{q1}\right) }\right) -g\, \mathit{m2}\, \left( -\frac{\mathit{l2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) }}{2}-\mathit{l1}\, \sin{\left( \mathit{q1}\right) }\right) +\frac{g\, \mathit{l1}\, \mathit{m1}\, \sin{\left( \mathit{q1}\right) }}{2}\\
+\frac{g\, \mathit{l2}\, \mathit{m2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) }}{2}-g\, \mathit{m3}\, \left( -\mathit{l3}\, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }-\mathit{l2}\, \sin{\left( \mathit{q2}+\mathit{q1}\right) }\right) \\
+g\, \mathit{l3}\, \mathit{m3}\, \sin{\left( \mathit{q3}+\mathit{q2}+\mathit{q1}\right) }\end{pmatrix}\]
+
+ <HR>
+ <SMALL> Created with <A HREF="http://wxmaxima.sourceforge.net/">wxMaxima</A>.</SMALL>
+ </BODY>
+</HTML>

@@ -1,0 +1,187 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 16.04.2 ] */
+
+/* [wxMaxima: comment start ]
+Calculate the dynamics of the 3-DoF leg: Forward kinematics, Jacobian, Inertia matrix, gravity vector,
+using the Euler-Lagrange method.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: title   start ]
+Forward kinematics
+   [wxMaxima: title   end   ] */
+
+/* [wxMaxima: comment start ]
+We first define the forward kinematics for 3 masses, located at the CoM of the lower leg, the CoM of the
+upper leg, and the CoM of the body (above the hip joint).
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+This file derives the floating-base version, with the floating base fixed on the foot and located at the
+CoM of the foot, with a position denoted by (x,y) in the x-y plane and angle theta w.r.t the x-axis.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Define the configuration vector q:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+depends(x1,t); depends(y1,t); depends(theta1, t); depends(q1, t); depends(q2, t); depends(q3, t);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+q(t):= [x1, y1, theta1, q1, q2, q3];
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+q: matrix([x1],[y1],[theta1],[q1],[q2],[q3]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Forward kinematics:
+fwdKin(q) = [x1, y1, theta1, x2, y2, theta2, x3, y3, theta3, x4, y4, theta4]
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+fwdKin: matrix(
+    [x1],
+    [y1],
+    [theta1],
+    [x1 - r1 * cos(theta1) - r2 * sin(theta1 + q1)],
+    [y1 - r1 * sin(theta1) + r2 * cos(theta1 + q1)],
+    [theta1 + q1],
+    [x1 - r1 * cos(theta1) - l2 * sin(theta1 + q1) - r3 * sin(theta1 + q1 + q2)],
+    [y1 - r1 * sin(theta1) + l2 * cos(theta1 + q1) + r3 * cos(theta1 + q1 + q2)],
+    [theta1 + q1 + q2],
+    [x1 - r1 * cos(theta1) - l2 * sin(theta1 + q1) - l3 * sin(theta1 + q1 + q2) - r4 * sin(theta1 + q1 + q2 + q3)],
+    [y1 - r1 * sin(theta1) + l2 * cos(theta1 + q1) + l3 * cos(theta1 + q1 + q2) + r4 * cos(theta1 + q1 + q2 + q3)],
+    [theta1 + q1 + q2 + q3]
+);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: title   start ]
+Jacobians
+   [wxMaxima: title   end   ] */
+
+/* [wxMaxima: comment start ]
+The Jacobian is defined as the forward kinematics derived w.r.t. the configuration vector q:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+J: addcol(diff(fwdKin, x1), diff(fwdKin, y1), diff(fwdKin, theta1), diff(fwdKin, q1), diff(fwdKin, q2), diff(fwdKin, q3));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Let's also get the end-effector Jacobians:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Starting with the ground reaction forces (GRF). This is the back- and frontside of the foot, i.e. [x_grf1; y_grf1; x_grf2; y_grf2]:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+TODO THIS MAY NEED TO BE CHANGED, ANKLE JOINT IS NOT AT THE END OF THE FOOT
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+fwdKin_GRF: matrix(
+    [x1 - r1 * cos(theta1)],
+    [y1 - r1 * sin(theta1)],
+    [x1 + (l1 - r1) * cos(theta1)],
+    [y1 + (l1 - r1) * sin(theta1)]
+);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+J_GRF: addcol(diff(fwdKin_GRF, x1), diff(fwdKin_GRF, y1), diff(fwdKin_GRF, theta1), diff(fwdKin_GRF, q1), diff(fwdKin_GRF, q2), diff(fwdKin_GRF, q3));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+And secondly an X-Y disturbance force on the trunk:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+fwdKin_trunk: matrix(
+    [x1 - r1 * cos(theta1) - l2 * sin(theta1 + q1) - l3 * sin(theta1 + q1 + q2) - r4 * sin(theta1 + q1 + q2 + q3)],
+    [y1 - r1 * sin(theta1) + l2 * cos(theta1 + q1) + l3 * cos(theta1 + q1 + q2) + r4 * cos(theta1 + q1 + q2 + q3)],
+    [theta1 + q1 + q2 + q3]
+);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+J_trunk: addcol(diff(fwdKin_trunk, x1), diff(fwdKin_trunk, y1), diff(fwdKin_trunk, theta1), diff(fwdKin_trunk, q1), diff(fwdKin_trunk, q2), diff(fwdKin_trunk, q3));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+which can be used for interaction forces on the trunk using J_trunk^T * [Fx,Fy]. J_trunk is also known as Je in the MATLAB code.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: title   start ]
+Cartesian velocities & accelerations
+   [wxMaxima: title   end   ] */
+
+/* [wxMaxima: comment start ]
+We have x_d = J * theta_d, where theta_d = [x1d, y1d, theta1d, q1d, q2d, q3d]^T. Thus, the Cartesian velocities are given by
+performing the multiplication:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+fwdKin_vel: J . diff(q, t);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+And accelerations:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+fwdKin_acc: diff(fwdKin_vel, t);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: title   start ]
+Inertia matrix
+   [wxMaxima: title   end   ] */
+
+/* [wxMaxima: comment start ]
+Define the nominal inertia matrix Mc, and use the Jacobian to calculate the inertia matrix M:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+load("diag");
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+Mc: diag([m1, m1, J1, m2, m2, J2, m3, m3, J3, m4, m4, J4]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+M: transpose(J) . Mc . J;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+In practice we calculate M and M^-1 numerically.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: title   start ]
+Gravitational vector
+   [wxMaxima: title   end   ] */
+
+/* [wxMaxima: comment start ]
+For the dynamics equations we have qdd = M(q)^-1 * [tau + G(q)] = M(q)^-1 * Q, where Q is the
+generalised force.
+Q = Jv' * F + Jw' tau_c, i.e. forces and torques. We have only external forces (gravity).
+We define Gc:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Gc: transpose(matrix([0, -m1*g, 0, 0, -m2*g, 0, 0, -m3*g, 0, 0, -m4*g, 0]));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+and calculate the generalised gravitational force using the Jacobian:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+G: transpose(J) . Gc;
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

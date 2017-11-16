@@ -1,0 +1,173 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 13.04.2 ] */
+
+/* [wxMaxima: title   start ]
+ACA dynamics with voltage inputs
+   [wxMaxima: title   end   ] */
+
+/* [wxMaxima: comment start ]
+In this file, the ACA dynamics are defined from the associated Bond graph.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: title   start ]
+Linear dynamics
+   [wxMaxima: title   end   ] */
+
+/* [wxMaxima: comment start ]
+Define states:
+x = [i1; i2; x1_d; p_d; dL_pb; dL_p]
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Derivatives:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+i1_d: H_1^-1 * (v1 - d_e1 * i1 - r_m1 * k_t1 * x1_d);
+i2_d: H_2^-1 * (v2 - d_e2 * i2 - r_m2 * k_t2 * p_d);
+x1_dd: r_m1^-1 * I_m1^-1 * (k_t1 * i1 - r_m1 * d_m1 * x1_d - r_m1^-1 * (d_pb * dL_pb_d + k_pb * dL_pb));
+p_dd: r_m2^-1 * I_m2^-1 * (k_t2 * i2 - r_m2 * d_m2 * p_d - r_m2^-1 * F_p);
+dL_pb_d: x1_d - q_d;
+dL_p_d: p_d - r * q_d;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ratsimp(x1_dd);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ratsimp(p_dd);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Substitute expression for dL_pb_d into x1_dd:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+x1_dd: ratsimp(subst(['dL_pb_d=dL_pb_d], x1_dd));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Notice the use of the single quote ' to prevent evaluation of the first dL_pb_d.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: title   start ]
+Linear ESB elastic element
+   [wxMaxima: title   end   ] */
+
+/* [wxMaxima: comment start ]
+For a linear (bidirectional) implementation of the ESB elastic element we replace F_p in p_dd:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+F_p_linear: d_p * dL_p_d + k_p * dL_p;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ratsimp(subst([F_p = F_p_linear], p_dd));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: title   start ]
+Nonlinear ESB elastic element
+   [wxMaxima: title   end   ] */
+
+/* [wxMaxima: comment start ]
+We define the nonlinear ESB elastic element force as a spring-damper with unidirectional spring:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+F_p (dL_p, dL_p_d) := if dL_p<=0 then d_p * dL_p_d else d_p * dL_p_d + k_p * dL_p;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+And substitute into p_dd:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ratsimp(subst(['F_p = F_p], p_dd));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Or define it as a separate nonlinear term that 'overrides' the linear spring force, and leaves
+the damping force intact:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+F_p_alt (dL_p, dL_p_d) := if dL_p<=0 then - k_p * dL_p else 0;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+in which case the linear dynamics should be implemented with a linear spring-damper for the
+ESB elastic element. This can be useful for having a linear model for analysis.
+
+The complete dynamics then become x_d = A * x + B * u + f(x) where f(x) contains
+F_p_alt(), and possibly other nonlinear terms.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: title   start ]
+Inputs
+   [wxMaxima: title   end   ] */
+
+/* [wxMaxima: comment start ]
+The inputs are u = [v1, v2, q_d].
+That is, the input voltages v1, v2, and the joint velocity q_d.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: title   start ]
+Outputs
+   [wxMaxima: title   end   ] */
+
+/* [wxMaxima: comment start ]
+The torque output is defined as the sum of PB and ESB torques:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+tau_pb: k_pb * dL_pb + d_pb * dL_pb_d;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+tau_p: r * F_p;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+tau: tau_pb + tau_p;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Which for the linear case is:
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ratsimp(subst([F_p = F_p_linear], tau));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+And for the nonlinear case (substituting the nonlinear function):
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+subst([F_p = F_p (dL_p, dL_p_d)], tau);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: title   start ]
+Generalised description using actuation topology
+   [wxMaxima: title   end   ] */
+
+/* [wxMaxima: comment start ]
+Describing the dynamics as a function of q_d \in R^N, that is the N-DoF joint velocities, through the
+actuation topology matrix T, can be done as follows.
+
+Define the topology matrix T \in R^MxN, from which T_i is the i'th row, corresponding to this i'th
+actuator. Define T_pb,i as the corresponding PB topology vector, which is the corresponding row
+from T_pb \in R^MxN. Usually, T_pb = -I (identity matrix).
+
+Then, dL_pb_d = x1_d + T_pb,i * q_d and dL_p_d = p_d + T_i * q_d, and the output torques are
+given by tau_pb = -T_pb,i^T * (k_pb * dL_pb + d_pb * dL_pb_d) and
+tau_p = -T_i^T * (k_p * dL_p + d_p * dL_p_d).
+
+It is trivial to obtain the full N-DoF elastic element elongations and joint torques by using the full
+matrices T and T_pb combined with diagonal stiffness matrices.
+   [wxMaxima: comment end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$
