@@ -322,18 +322,17 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
                 stop = 1;
             end
             
-            % Stop simulation if the y-component of velocity of the body is
-            % negative (highest point reached)
+%             % Stop simulation if the y-component of velocity of the body is
+%             % negative (highest point reached)
             
-            q = x(18+1:18+6);
-            q_d = x(18+7:18+12);         
-            
-            [ ~, y_d, ~ ] = this.model.leg.calc_fwdKin_vel_named(q, q_d, 'body');
-            if y_d < -0.8
-%                 disp(['t = ',num2str(t)]);disp('y_d = ');disp(y_d);
-                disp('Negative vertical trunk velocity: highest point reached. Stopping simulation.');
-                stop = 1;
-            end
+%             q = x(this.model.a1.N+this.model.a2.N+this.model.a3.N+1:this.model.a1.N+this.model.a2.N+this.model.a3.N+6)';
+%             q_d = x(this.model.a1.N+this.model.a2.N+this.model.a3.N+7:this.model.a1.N+this.model.a2.N+this.model.a3.N+12)';         
+%             
+%             [ ~, y_d, ~ ] = this.model.leg.calc_fwdKin_vel_named(this, q, q_d, 'body');
+%             if y_d < 0
+%                 disp('Negative vertical trunk velocity: highest point reached. Stopping simulation.');
+%                 stop = 1;
+%             end
             
             % Draw every n seconds
             n = inf;%0.1; % inf for no plots

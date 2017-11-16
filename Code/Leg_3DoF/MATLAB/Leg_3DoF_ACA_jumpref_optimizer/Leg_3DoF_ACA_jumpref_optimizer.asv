@@ -479,7 +479,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             figure
             hold on
             for k = 1:length(this.list.f)
-                bluefade = [0 1/length(this.list.f)*k 0];
+                bluefade = [0 1/length(this.list.f)*k 1];
                 plot(this.params.t,this.list.q_rec(4,(k-1)*length(this.params.t)+1:k*length(this.params.t)),'Color',bluefade)
             end
             hold off
@@ -492,17 +492,15 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             
             % Plot evolution of criteria
             figure 
-            subplot(3,1,1)
+            subplot(3,1)
             plot(1:length(this.list.J_performance),this.list.J_performance,'o');
             title('Performance criterium');xlabel('Objective function evaluation');ylabel('Performance criterium value');            
         
-            subplot(3,1,2)
-            plot(1:length(this.list.J_stability),this.list.J_stability,'o');
-            title('Stability criterium');xlabel('Objective function evaluation');ylabel('Stability criterium value');                    
+            subplot(3,1)
+            plot(1:length(this.list.J_performance),this.list.J_performance,'o');
+            title('Performance criterium');xlabel('Objective function evaluation');ylabel('Performance criterium value');                    
         
-            subplot(3,1,3)
-            plot(1:length(this.list.J_torque),this.list.J_torque,'o');
-            title('Torque criterium');xlabel('Objective function evaluation');ylabel('Torque criterium value');                    
+        
         
         end
         %____________________________
