@@ -455,10 +455,10 @@ classdef Leg_3DoF_ACA_jumpref < handle
 %             this.setInitialStates(q_0, q_d_0);
             
             % Timing stages, time span in seconds
-            stg1 = 0.4; stg2 = 0.2; stg3 = 0.2; stg4 = 0.1; stg5 = 0.2; 
+            stg1 = 0.2; stg2 = 0.4; stg3 = 0.4; stg4 = 0.1; stg5 = 0.2; 
          
             % Stage 0
-            if (0<t) & (t<=stg1)                    
+            if (0<=t) & (t<=stg1)                    
                     q_ref(2,:)  = 0;
                     q_ref(3,:)  = 0;
                     q_ref(4,:)  = -0.6; 

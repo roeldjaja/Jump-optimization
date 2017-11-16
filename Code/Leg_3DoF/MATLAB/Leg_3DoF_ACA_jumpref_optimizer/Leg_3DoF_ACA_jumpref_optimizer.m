@@ -279,7 +279,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.sim.model.ref.random.q_ref = this.data.q_rec;   
             this.sim.model.ref.random.q_d_ref = this.data.q_d_rec;
              
-            this.sim.run(0); %%%%%%%%!!!!!!!!!!!!!!!!!!!!!!!!!!
+            this.sim.run(1); %%%%%%%%!!!!!!!!!!!!!!!!!!!!!!!!!!
             
            % Check if leg has fallen over  
            if this.sim.outFun(this.sim.data.t,this.sim.data.x_leg) ==1 % This does not work
@@ -452,7 +452,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
         %__________________________________________________________________________
         function plot(this) 
                        
-            % Plot original and latest reconstructed trajectories
+            % Plot original and solution trajectories
             figure
             plot(this.params.t, this.data.qinit(:,4)',this.params.t,this.data.q_res(4,:),'--')
             title('q_1');legend('Original','Solution');xlabel('s');ylabel('rad');
@@ -525,6 +525,79 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             % Run simulation with new q_ref 
             this.sim.model.ref.random.q_ref = this.data.q_res;   
             this.sim.model.ref.random.q_d_ref = this.data.q_d_res;
+            fprintf('\n');disp('Resimulating for optimal solution');
+            this.sim.run(1);
+            fprintf('\n');disp('Rerun animation with this.sim.animate');
+        end
+        %__________________________________________________________________
+        %
+        function plotlatest(this)
+            figure
+            plot(this.params.t, this.data.qinit(:,4)',this.params.t,this.data.q_rec(4,:),'--')
+            title('q_1');legend('Original','Latest');xlabel('s');ylabel('rad');
+
+            figure
+            plot(this.params.t, this.data.qinit(:,5)',this.params.t,this.data.q_rec(5,:),'--')
+            title('q_2');legend('Original','Latest');xlabel('s');ylabel('rad');
+
+            figure
+            plot(this.params.t, this.data.qinit(:,6)',this.params.t,this.data.q_rec(6,:),'--')
+            title('q_3');legend('Original','Latest');xlabel('s');ylabel('rad');
+        end
+        %__________________________________________________________________
+        %
+        function animatelatest(this)
+
+            % Calculate velocities
+            t = this.params.t;
+            
+            % Cartesian reference
+            x_hip       = this.sim.model.ref.x_hip_bias + ...
+                            this.sim.model.ref.x_hip_amp * sin(this.sim.model.ref.x_hip_freq * t + this.sim.model.ref.x_hip_phase);
+            y_hip       = this.sim.model.ref.y_hip_bias + ...
+                            this.sim.model.ref.y_hip_amp * sin(this.sim.model.ref.y_hip_freq * t + this.sim.model.ref.y_hip_phase);
+
+            % Calculate current desired beta, r as a function of time
+            beta        = atan2(-x_hip, y_hip);
+            r           = sqrt(x_hip.^2 + y_hip.^2);
+            
+            % Shorthand
+            xx = x_hip;
+            y = y_hip;
+
+            % Cartesian derivatives
+            dxdt        = this.sim.model.ref.x_hip_amp * this.sim.model.ref.x_hip_freq * ...
+                            cos(this.sim.model.ref.x_hip_freq * t + this.sim.model.ref.x_hip_phase);
+            dydt        = this.sim.model.ref.y_hip_amp * this.sim.model.ref.x_hip_freq * ...
+                            cos(this.sim.model.ref.y_hip_freq * t + this.sim.model.ref.y_hip_phase);
+
+            % Partial derivatives
+            drdx        = xx ./ sqrt(xx.^2 + y.^2);
+            drdy        = y ./ sqrt(xx.^2 + y.^2);
+            dbdx        = -1 ./ (y + (xx.^2)./y);
+            dbdy        = xx ./ (xx.^2 + y.^2);
+            dq4dr       = 1 ./ (this.sim.model.leg.params.l2 * sqrt(4 - (r.^2 ./ this.sim.model.leg.params.l2^2)));
+            dq4db       = 1;
+            dq5dr       = -2 ./ (this.sim.model.leg.params.l2 * sqrt(4 - (r.^2 ./ this.sim.model.leg.params.l2^2)));
+            dq5db       = 0;
+
+            % Intermediate results
+            drdt        = drdx .* dxdt + drdy .* dydt;
+            dbdt        = dbdx .* dxdt + dbdy .* dydt;
+
+            % Calculate joint velocities
+            % Leg: q = [x1, y1, theta, q1, q2, q3]
+            this.data.q_d_rec         = zeros(6,length(t));
+            this.data.q_d_rec(1,:)    = 0;
+            this.data.q_d_rec(2,:)    = 0;
+            this.data.q_d_rec(3,:)    = 0;
+            this.data.q_d_rec(4,:)    = dq4dr .* drdt + dq4db .* dbdt;
+            this.data.q_d_rec(5,:)    = dq5dr .* drdt + dq5db .* dbdt;
+            this.data.q_d_rec(6,:)    = -(this.data.q_d_rec(4,:) + this.data.q_d_rec(5,:));
+            
+            % Run simulation with new q_ref 
+            this.sim.model.ref.random.q_ref = this.data.q_rec;   
+            this.sim.model.ref.random.q_d_ref = this.data.q_d_rec;
             fprintf('\n');disp('Resimulating for optimal solution');
             this.sim.run(1);
             fprintf('\n');disp('Rerun animation with this.sim.animate');
