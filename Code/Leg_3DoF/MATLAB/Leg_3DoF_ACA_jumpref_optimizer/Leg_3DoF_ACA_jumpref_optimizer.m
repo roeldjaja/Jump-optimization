@@ -343,7 +343,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             
 
              % Performance index CoM height
-             J_performance = 1*CoM_y^2;
+             J_performance = 50*CoM_y^2;
              fprintf('\n');disp(['J_performance = ',num2str(J_performance)]);
              
              % Stability function CoM 

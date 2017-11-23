@@ -125,13 +125,13 @@ For the performance of the leg we distinguish two different objectives:
 	$$
 	\item Jumping to a certain height efficiently, where the maximum $y$-coordinate reached by the centre of mass of the leg is bound to an equality constraint and the energy use is defined as the power used for the jump:
 	$$
-	J_{performane} = P^2
+	J_{performane} = -P^2
 	$$
 	Here, $P$ is defined as \textbf{define P}
 \end{enumerate}
 
 \textit{Torque}\\
-The active torque $\tau_a$ is to be bounded within the maximum and minimum deliverable torque $ [\ubar \tau_{a} \, \bar \tau_{a}]$. This is enforced by the penalty function:  
+The active torque $\tau_a$ is to be bounded within the maximum and minimum deliverable torque $ [\ubar \tau_{a} \, \bar \tau_{a}]$. This is enforced by means of a penalty function:  
 $$
 J_{torque}=\sum_{0}^{t_f} (\ubar \tau_{a}-\tau_a)^T (\ubar \tau_{a}-\tau_a) + (\tau_a - \bar \tau_{a})^T (\tau_a - \bar \tau_{a})
 $$
