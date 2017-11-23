@@ -1,6 +1,16 @@
 classdef Leg_3DoF_ACA_jumpref_optimizer < handle
-    % Leg_3DoF_ACA_optimizer Class for optimization of ESB parameters of the
+    % Leg_3DoF_ACA_jumpref_optimizer Class for optimization of the trajectory of the
     % 3-DoF leg actuated by Asymmetric Compliant Actuators (ACAs)
+    
+    % Run optimization with this.run, 
+    % Afterwards animate with this.sim.animate or this.animatesolution(resimulates)
+    % Plot optimization data with this.plot
+    
+    % TODO: 'Leg has fallen over' check returns matrix dimension error FIX
+    
+    % TODO: Tune objective constants
+    % TODO: Refine and/or smoothen initial trajectory to yield better control points
+    % TODO: prepare parameters to work with multiple optimization execution file
     
     %__________________________________________________________________
     % Properties
@@ -49,17 +59,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.params.tn = this.params.n*3;
             
             
-            % Listed iteration data
-            
-            this.list.q_rec =           [];
-            this.list.J_performance =   [];
-            this.list.J_stability =     [];
-            this.list.J_torque =        [];
-            this.list.f =               [];
-            this.list.CoM_x =           [];
-            this.list.CoM_y =           [];
-            this.list.q_rec =           [];
-            
+
             % Status
             disp('Initialized Leg_3DoF_ACA_jumpref_optimizer with default parameters.');
         end
@@ -67,14 +67,26 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
         %__________________________________________________________________
         % Run simulation (tn variables, SQP fmincon)
         function [] = run(this) 
-        tic
+        
+        % Listed iteration data
+            
+        this.list.q_rec =           [];
+        this.list.J_performance =   [];
+        this.list.J_stability =     [];
+        this.list.J_torque =        [];
+        this.list.f =               [];
+        this.list.CoM_x =           [];
+        this.list.CoM_y =           [];
+        this.list.q_rec =           [];
+        this.list.F_GRF =           [];
+            
         %Use q_ref from model for initial simulation
         this.sim.model.ref.use_random = 0; 
             
         % Run initial simulation with initial with q_init  
         disp('Initial simulation')
-        this.sim.run(1);    
-        
+        this.sim.run(0);  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+      
         % Recreate q_init matrix COULD LOAD MAT FILE INSTEAD OF SIM RUN
         t = this.params.t;
         n = this.params.n;
@@ -88,7 +100,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
         % cp_init = [n x 4] corresponding to [q1 q2 q3 theta1]
         % reshaped to a [4*n,4] vector corresonding to [q1.. q2.. q3.. th..]'
         this.data.qinit = q_init;
-        
+      
         fprintf('\n');disp(['Total number of control points: ',num2str(tn)]);
         disp(['Number of control points per joint: ',num2str(n)]);fprintf('\n');
         
@@ -98,7 +110,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
         cp_init(:,3) = q_init(1:this.params.cpres:end,6); % q3
         
         cp_init = reshape(cp_init,[1,tn]); %Reshape to one long row
-        
+
         % Downscale time to control point time tcp
         tcp = t(1:this.params.cpres:end);
         
@@ -155,9 +167,9 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                     tcp(end),tcp(end)];
             
             % Least squares fit for the weights of a spline
-            s1 = fastBSpline.lsqspline(knots,2,tcp,cp(:,1)); %fastBSpline.lsqspline(knots,order,x,y);
-            s2 = fastBSpline.lsqspline(knots,2,tcp,cp(:,2)); %fastBSpline.lsqspline(knots,order,x,y);
-            s3 = fastBSpline.lsqspline(knots,2,tcp,cp(:,3)); %fastBSpline.lsqspline(knots,order,x,y);
+            s1 = fastBSpline.pspline(knots,2,tcp,cp(:,1),0.1); %fastBSpline.pspline(knots,order,x,y,smoothing penalty);
+            s2 = fastBSpline.pspline(knots,2,tcp,cp(:,2),0.1); %fastBSpline.pspline(knots,order,x,y,smoothing penalty);
+            s3 = fastBSpline.pspline(knots,2,tcp,cp(:,3),0.1); %fastBSpline.pspline(knots,order,x,y,smoothing penalty);
             
             % Reconstructed q-values
             q1      = s1.evalAt(t);         %[1 x length(t) ]
@@ -165,7 +177,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             q3      = s3.evalAt(t);
 
             this.data.q_res = [zeros(1,length(t));zeros(1,length(t));zeros(1,length(t));q1;q2;q3]; 
-        toc
+        
         end 
         
         %__________________________________________________________________
@@ -199,12 +211,12 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                     tcp(end),tcp(end)];
             
             % Least squares fit for the weights of a spline
-            s1 = fastBSpline.lsqspline(knots,2,tcp,cp(:,1)); %fastBSpline.lsqspline(knots,order,x,y);
-            s2 = fastBSpline.lsqspline(knots,2,tcp,cp(:,2)); %fastBSpline.lsqspline(knots,order,x,y);
-            s3 = fastBSpline.lsqspline(knots,2,tcp,cp(:,3)); %fastBSpline.lsqspline(knots,order,x,y);
+            s1 = fastBSpline.pspline(knots,2,tcp,cp(:,1),0.01); %fastBSpline.pspline(knots,order,x,y,smoothing penalty);
+            s2 = fastBSpline.pspline(knots,2,tcp,cp(:,2),0.01); %fastBSpline.pspline(knots,order,x,y,smoothing penalty);
+            s3 = fastBSpline.pspline(knots,2,tcp,cp(:,3),0.01); %fastBSpline.pspline(knots,order,x,y,smoothing penalty);
             
             % Reconstructed q-values
-            q1      = s1.evalAt(t);         %[1 x length(t) ]
+            q1      = s1.evalAt(t);        %[1 x length(t) ]
             q2      = s2.evalAt(t);          
             q3      = s3.evalAt(t);
 
@@ -276,25 +288,32 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.data.q_d_rec(4,:)    = dq4dr .* drdt + dq4db .* dbdt;
             this.data.q_d_rec(5,:)    = dq5dr .* drdt + dq5db .* dbdt;
             this.data.q_d_rec(6,:)    = -(this.data.q_d_rec(4,:) + this.data.q_d_rec(5,:));
-
+            
             % Run simulation with new q_ref 
             this.sim.model.ref.random.q_ref = this.data.q_rec;   
             this.sim.model.ref.random.q_d_ref = this.data.q_d_rec;
              
-            try
-            this.sim.run(0); %%%%%%%%!!!!!!!!!!!!!!!!!!!!!!!!!!
-            catch
-                f = NaN;  
-                ('\n');disp(['Error in simulation, ignoring function evaluation: f = NaN', num2str(length(this.list.f)+1)]);('\n');
-            end
             
-           % Check if leg has fallen over  
-%            if this.sim.outFun(this.sim.data.t,this.sim.data.x_leg) ==1 % This does not work
-%                % If so, skip current iteration  
-%                f = NaN;  disp('Leg has fallen over: f = NaN')
-%            % If not, continue
-%            elseif this.sim.outFun(this.sim.data.t,this.sim.data.x_leg) ==0    
-
+            ME = [];
+%             try
+            this.sim.run(0); %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            
+%             % Skip iteration if a joint limit (or other) error still occurs 
+%             catch ME
+%             end
+%             if ~isempty(ME)
+%                 f = NaN;  
+%                 ('\n');disp(['Error in simulation, ignoring function evaluation: f = NaN , for ', num2str(length(this.list.f)+1)]);('\n');
+%             else
+            
+            %Check if leg has fallen over  
+            if this.sim.outFun(this.sim.data.t,this.sim.data.x_leg) ==1 % This does not work
+               %If so, skip current iteration  
+               f = NaN;  disp('Leg has fallen over: f = NaN')
+            %If not, continue
+            elseif this.sim.outFun(this.sim.data.t,this.sim.data.x_leg) ==0    
+            else
+               
 %             xxx = this.sim.data.x_leg;   
 %            N = this.sim.model.leg.N;
 %           theta1 = xxx(end-this.sim.model.leg.N+3);                
@@ -314,12 +333,12 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
              fprintf('\n');disp(['J_performance = ',num2str(J_performance)]);
              
              % Stability function CoM 
-             J_stability = 1e3*CoM_x^2; 
+             J_stability = 1e2*(CoM_x-0.04)^2; 
              disp(['J_stability = ',num2str(J_stability)]);
-             
+
              % Penalty function tau
              tau_max = 0.085*0.80*30; %k_t1 * r_m1 *i_1_max (ACA_test_params)
-             tau_lb = [-tau_max; -tau_max; -tau_max]; %TOO HIGH, TEST VALUES
+             tau_lb = [-tau_max; -tau_max; -tau_max]; 
              tau_ub = [tau_max; tau_max; tau_max];
              tau = tau_IK';    
              Jk = zeros(1,length(tau));  % Preallocate
@@ -332,7 +351,9 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
              % Objective function 
              f = -J_performance + J_torque + J_stability; 
              fprintf('\n');disp(['Evaluation succeeded: f = ',num2str(f)]);
-             disp(['CoM height = ',num2str(CoM_y)]);fprintf('\n'); 
+             disp(['Evaluation ',num2str(length(this.list.f)+1)]);('\n');fprintf('\n');
+             disp(['Final CoM x coordinate = ',num2str(CoM_x)]);
+             disp(['Max CoM height = ',num2str(CoM_y)]);fprintf('\n'); 
              
             % Add function values to list
             this.list.q_rec = [this.list.q_rec this.data.q_rec];
@@ -343,9 +364,10 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.list.CoM_x = [this.list.CoM_x CoM_x];
             this.list.CoM_y = [this.list.CoM_y CoM_y];
             end
-            
+            end
+            end
              
-        end
+%         end
                 
         
         %__________________________________________________________________
@@ -356,33 +378,27 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
         % Get simulation data
         tau         = this.sim.data.tau';
 
-        % Recreate q_ref matrix
+        % Timesteps
         t = 0:this.sim.params.Ts:this.sim.params.tspan(2);
         
-        % Insert actual rec data
-        q_ref = this.data.q_rec';
-        q_d_ref = this.data.q_d_rec';
-       
-
-        % IK for q_ref %%% TODO calculate for actual q
+        % IK 
         
         %Preallocate
         qp_dd_t_act = zeros(length(t),6);
        
-        for k=1:length(t)           %TODO qref to x to qleg makes no sense
+        
+        
+        for k=1:length(t)           
             % State and input
-            x = [q_ref(k,:)'; q_d_ref(k,:)'];
+            % Retrieve x(t) from all states sim.data.xlist made during simulation
+            x = this.sim.data.xlist(k,:); %[1 x 30]
+            q_leg = x(18+1:18+6)';       % 6x1
+            q_leg_d = x(18+7:18+12)';    % 6x1 
             u(:,k) = [tau(k,1); tau(k,2); tau(k,3)];
 
             % No ext forces
             Fe = zeros(3,1);
-
-            % Ground Force F_GRF
-            % Leg: q = [x1, y1, theta, q1, q2, q3]
-            % Leg: x = [q; q_d]
-            q_leg   = x(1 : this.sim.model.leg.N/2); %#ok<*NASGU>
-            q_leg_d = x(this.sim.model.leg.N/2 + 1 : this.sim.model.leg.N);
-
+            
             % Build ground reaction force (GRF)
             % The floor is a spring-damper in the y-direction, and
             % viscous+Coulomb friction in the x-direction.
@@ -397,6 +413,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
              F_toe_y     = 0;
              floor_K     = this.sim.model.leg.params.floor_K;
              floor_D     = this.sim.model.leg.params.floor_D;
+             
                 if (y_heel <= 0)
                     F_ankle_y   = floor_K * (0.0 - y_heel) + max(0, floor_D * (0.0 - y_ankle_d));
                     coulomb     = -this.sim.model.leg.params.coulomb * tanh(500*x_ankle_d);
@@ -409,8 +426,11 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 end
 
                 F_GRF = [F_ankle_x; F_ankle_y; F_toe_x; F_toe_y];
-
-
+            
+            % Make list of ground forces 
+            this.list.F_GRF = [this.list.F_GRF F_GRF];
+            
+            x = [q_leg;q_leg_d];
             % State evaluation to obtain active joint accelerations
              x_d = this.sim.model.leg.dx(t(k), x, u(:,k), F_GRF, Fe); %x_d     = [q_d; q_dd];
 
@@ -420,7 +440,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             % Inverse formulation
 
             % M-matrices with  M = [Mpp Mpa ; Map Maa]
-            M  = this.sim.model.leg.calc_M(q_ref(k,:)); %6x6
+            M  = this.sim.model.leg.calc_M(q_leg'); %6x6
             Mpp = M(1:3,1:3);
             Mpa = M(1:3,4:6);
             Map = M(4:6,1:3);
@@ -433,13 +453,13 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             
 
             % Other terms
-            G = this.sim.model.leg.calc_G(q_ref(k,:)'); 
-            C = this.sim.model.leg.calc_C(q_ref(k,:)',q_d_ref(k,:)'); %
-            J_GRF   = this.sim.model.leg.calc_J_GRF(q_ref(k,:)');
+            G = this.sim.model.leg.calc_G(q_leg); 
+            C = this.sim.model.leg.calc_C(q_leg,q_leg_d); %
+            J_GRF   = this.sim.model.leg.calc_J_GRF(q_leg);
             D = this.sim.model.leg.params.d; 
             
             % Inverse formulation
-            qp_dd_t_act(k,:) = Ma \ ( -Mb * qa_dd + G - D .* q_d_ref(k,:)' - C * q_d_ref(k,:)' + J_GRF' * F_GRF ); 
+            qp_dd_t_act(k,:) = Ma \ ( -Mb * qa_dd + G - D .* q_leg_d - C * q_leg + J_GRF' * F_GRF ); 
 
         end
         
@@ -447,12 +467,12 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
         
         %CoM x and y
         for k=1:length(t) 
-        [CoM_x(k), CoM_y(k)] = this.sim.model.leg.calc_CoM(q_ref(k,:));
+        [CoM_x(k), CoM_y(k)] = this.sim.model.leg.calc_CoM(q_leg');
         end
         
-        %Last x coordinate CoM
-        CoM_x = mean(CoM_x);
-        disp('CoM x coordinate');disp(CoM_x);
+        %Final x coordinate CoM
+        CoM_x = (CoM_x(end));
+        
         %Largest y coordinate CoM
         this.data.CoM_y = CoM_y(:);
         CoM_y = max(CoM_y);
@@ -462,45 +482,73 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
         function plot(this) 
             % Plots the trajectories of the initial guess and the solution x found by the optimization
             % algorithm           
+            N = length(this.params.t);
+            x = this.sim.data.xlist; %[N x 30]
+            q_leg = x(:,18+1:18+6)';       % 6xN
+            q_leg_d = x(:,18+7:18+12)';    % 6xN 
+            
             
             figure
-            plot(this.params.t, this.data.qinit(:,4)',this.params.t,this.data.q_res(4,:),'--')
-            title('q_1');legend('Original','Solution');xlabel('s');ylabel('rad');
+            plot(this.params.t, this.data.qinit(:,4)',this.params.t,this.data.q_res(4,:),'--',this.params.t,q_leg(4,:))
+            title('q_1');legend('Original reference','Solution reference','Actual trajectory');xlabel('s');ylabel('rad');
             
             figure
-            plot(this.params.t, this.data.qinit(:,5)',this.params.t,this.data.q_res(5,:),'--')
-            title('q_2');legend('Original','Solution');xlabel('s');ylabel('rad');
+            plot(this.params.t, this.data.qinit(:,5)',this.params.t,this.data.q_res(5,:),'--',this.params.t,q_leg(5,:))
+            title('q_2');legend('Original reference','Solution reference','Actual trajectory');xlabel('s');ylabel('rad');
             
             figure
-            plot(this.params.t, this.data.qinit(:,6)',this.params.t,this.data.q_res(6,:),'--')
-            title('q_3');legend('Original','Solution');xlabel('s');ylabel('rad');
+            plot(this.params.t, this.data.qinit(:,6)',this.params.t,this.data.q_res(6,:),'--',this.params.t,q_leg(6,:))
+            title('q_3');legend('Original reference','Solution reference','Actual trajectory');xlabel('s');ylabel('rad');
             
-            % Plot all trajectories
+            
+            % Plot all q1 refferences
             figure
             hold on
             for k = 1:length(this.list.f)
-                bluefade = [0 1/length(this.list.f)*k 1];
+                bluefade = [0 1/length(this.list.f)*k 0];
                 plot(this.params.t,this.list.q_rec(4,(k-1)*length(this.params.t)+1:k*length(this.params.t)),'Color',bluefade)
             end
             hold off
-            title('q_1');legend('Final trajectory');xlabel('s');ylabel('rad');
+            title('q_1');legend('Final reference');xlabel('s');ylabel('rad');
+            
+            % Plot all q2 refferences
+            figure
+            hold on
+            for k = 1:length(this.list.f)
+                bluefade = [0 1/length(this.list.f)*k 0];
+                plot(this.params.t,this.list.q_rec(5,(k-1)*length(this.params.t)+1:k*length(this.params.t)),'Color',bluefade)
+            end
+            hold off
+            title('q_2');legend('Final reference');xlabel('s');ylabel('rad');
+            
+            % Plot all q3 refferences
+            figure
+            hold on
+            for k = 1:length(this.list.f)
+                bluefade = [0 1/length(this.list.f)*k 0];
+                plot(this.params.t,this.list.q_rec(6,(k-1)*length(this.params.t)+1:k*length(this.params.t)),'Color',bluefade)
+            end
+            hold off
+            title('q_3');legend('Final reference');xlabel('s');ylabel('rad');
             
             % Plot evolution of f  (would be nicer to plot iterations instead of evaluations)
             figure
-            plot(1:length(this.list.f),this.list.f,'o');
+            plot(1:length(this.list.f),this.list.f,'.');
             title('Function evolution');xlabel('Objective function evaluation');ylabel('Function value');
             
             % Plot evolution of criteria
             figure 
-            subplot(3,1)
-            plot(1:length(this.list.J_performance),this.list.J_performance,'o');
+            subplot(3,1,1)
+            plot(1:length(this.list.J_performance),this.list.J_performance,'.');
             title('Performance criterium');xlabel('Objective function evaluation');ylabel('Performance criterium value');            
         
-            subplot(3,1)
-            plot(1:length(this.list.J_performance),this.list.J_performance,'o');
-            title('Performance criterium');xlabel('Objective function evaluation');ylabel('Performance criterium value');                    
+            subplot(3,1,2)
+            plot(1:length(this.list.J_stability),this.list.J_stability,'.');
+            title('Stability criterium');xlabel('Objective function evaluation');ylabel('Stability criterium value');                    
         
-        
+            subplot(3,1,3)
+            plot(1:length(this.list.J_torque),this.list.J_torque,'.');
+            title('Torque criterium');xlabel('Objective function evaluation');ylabel('Torque criterium value');                    
         
         end
         %____________________________
@@ -564,7 +612,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
         end
         %__________________________________________________________________
         %
-        function plotlatest(this)
+        function plotlatest(this) 
             figure
             plot(this.params.t, this.data.qinit(:,4)',this.params.t,this.data.q_rec(4,:),'--')
             title('q_1');legend('Original','Latest');xlabel('s');ylabel('rad');
@@ -631,7 +679,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             % Run simulation with new q_ref 
             this.sim.model.ref.random.q_ref = this.data.q_rec;   
             this.sim.model.ref.random.q_d_ref = this.data.q_d_rec;
-            fprintf('\n');disp('Resimulating for optimal solution');
+            fprintf('\n');disp('Resimulating latest');
             this.sim.run(1);
             fprintf('\n');disp('Rerun animation with this.sim.animate');
         end

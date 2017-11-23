@@ -63,6 +63,8 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
         %__________________________________________________________________
         % Run simulation
         function [] = run(this, interactive)
+            %Set list to save all states
+            this.data.xlist = [];
             % Default arguments
             if (~exist('interactive', 'var'))
                 interactive = 1; % Interactive on by default
@@ -80,16 +82,16 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
                             this.params.tspan(2);	% Timestep array (can be used instead of tspan for speed)
             
             % Initial conditions x0
-            x0      = [ this.model.a1.x0; this.model.a2.x0; ...
+            this.params.x0      = [ this.model.a1.x0; this.model.a2.x0; ...
                         this.model.a3.x0; this.model.leg.x0   ];
             
             % Simulate
             disp(['Simulating for ' num2str(this.params.tspan(2),'%3.1f') ' s...']);
             tic
-            x = this.ode4int(@(t,x) this.model.dx_ode(t,x), this.params.t, x0, @(t,x) this.outFun(t, x));
+            x = this.ode4int(@(t,x) this.model.dx_ode(t,x), this.params.t, this.params.x0, @(t,x) this.outFun(t, x));
             toc
             t = this.params.t;
-
+            
             % Get state derivatives, outputs and inputs over state evolution
             % Get references as well
             disp('Reprocessing states to obtain outputs, inputs, and references..');
@@ -299,6 +301,7 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
             
             % Set result
             Y = Y.';
+            this.data.xlist = [this.data.xlist;Y];
         end
         
         %__________________________________________________________________
@@ -325,16 +328,16 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
             % Stop simulation if the y-component of velocity of the body is
             % negative (highest point reached)
             
-            q = x(18+1:18+6);
-            q_d = x(18+7:18+12);         
-            
+            q = x(18+1:18+6);       % 6x1
+            q_d = x(18+7:18+12);    % 6x1    
+      
             [ ~, y_d, ~ ] = this.model.leg.calc_fwdKin_vel_named(q, q_d, 'body');
-            if y_d < -0.8
-%                 disp(['t = ',num2str(t)]);disp('y_d = ');disp(y_d);
-                disp('Negative vertical trunk velocity: highest point reached. Stopping simulation.');
+            if y_d < -0.5
+                disp('Trunk velocity: -0.5, highest point reached.');
                 stop = 1;
             end
-            
+             
+
             % Draw every n seconds
             n = inf;%0.1; % inf for no plots
             n = n - mod(n, this.params.Ts); % Round to nearest multiple of Ts

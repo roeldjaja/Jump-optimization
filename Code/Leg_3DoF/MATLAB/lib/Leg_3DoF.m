@@ -575,6 +575,7 @@ classdef Leg_3DoF < handle
         % In this case, if the named point is located on a joint (such as the hip),
         % the angle theta is defined as the angle of the previous link.
         function [ x, y, theta ] = calc_fwdKin_named(this, q, name)
+            
             % Get parameters
             m1      = this.params.m1;
             m2      = this.params.m2;
