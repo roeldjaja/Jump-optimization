@@ -67,6 +67,8 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
         %__________________________________________________________________
         % Run simulation (tn variables, SQP fmincon)
         function [] = run(this) 
+            
+        trun = tic;
         
         % Listed iteration data
             
@@ -177,7 +179,8 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             q3      = s3.evalAt(t);
 
             this.data.q_res = [zeros(1,length(t));zeros(1,length(t));zeros(1,length(t));q1;q2;q3]; 
-        
+        truntime=toc(trun);
+        disp(['Total algorithm time: ',num2str(truntime),' s or ',num2str(truntime/60),' min']);
         end 
         
         %__________________________________________________________________
@@ -295,25 +298,29 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
              
             
             ME = [];
-%             try
+            try
             this.sim.run(0); %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             
-%             % Skip iteration if a joint limit (or other) error still occurs 
-%             catch ME
-%             end
-%             if ~isempty(ME)
-%                 f = NaN;  
-%                 ('\n');disp(['Error in simulation, ignoring function evaluation: f = NaN , for ', num2str(length(this.list.f)+1)]);('\n');
-%             else
-            
-            %Check if leg has fallen over  
-            if this.sim.outFun(this.sim.data.t,this.sim.data.x_leg) ==1 % This does not work
-               %If so, skip current iteration  
-               f = NaN;  disp('Leg has fallen over: f = NaN')
-            %If not, continue
-            elseif this.sim.outFun(this.sim.data.t,this.sim.data.x_leg) ==0    
+            % Skip iteration if a joint limit (or other) error still occurs 
+            catch ME
+            end
+            if ~isempty(ME)
+                f = NaN;  
+                ('\n');disp(['Error in simulation, ignoring function evaluation: f = NaN , for ', num2str(length(this.list.f)+1)]);('\n');
             else
-               
+            
+%             %Check if leg has fallen over  
+%             if this.sim.outFun(this.sim.data.t,this.sim.data.x_leg) ==1 % This does not work
+%                %If so, skip current iteration  
+%                f = NaN;  disp('Leg has fallen over: f = NaN')
+%             %If not, continue
+% %             elseif this.sim.outFun(this.sim.data.t,this.sim.data.x_leg) ==0    
+%             else
+
+
+            [comx,~] = this.sim.model.leg.calc_CoM(q_leg');
+            if 
+            else   
 %             xxx = this.sim.data.x_leg;   
 %            N = this.sim.model.leg.N;
 %           theta1 = xxx(end-this.sim.model.leg.N+3);                
@@ -367,7 +374,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             end
             end
              
-%         end
+        end
                 
         
         %__________________________________________________________________

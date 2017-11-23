@@ -466,9 +466,9 @@ classdef Leg_3DoF_ACA_jumpref < handle
 
              % Stage 2: Hip, knee and ankle extension
             if (stg1<t) & (t<=(stg1+stg2))
-                    q_ref(4,:)  = -0.7 *tf; 
-                    q_ref(5,:)  = 1.5 *tf;
-                    q_ref(6,:)  = -1.2 *tf;
+                    q_ref(4,:)  = -0.7 ; 
+                    q_ref(5,:)  = 1.5 ;
+                    q_ref(6,:)  = -1.2 ;
             end    
             
             

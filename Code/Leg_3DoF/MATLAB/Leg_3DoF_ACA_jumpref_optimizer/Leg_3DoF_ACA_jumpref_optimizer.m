@@ -309,14 +309,14 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 ('\n');disp(['Error in simulation, ignoring function evaluation: f = NaN , for ', num2str(length(this.list.f)+1)]);('\n');
             else
             
-            %Check if leg has fallen over  
-            if this.sim.outFun(this.sim.data.t,this.sim.data.x_leg) ==1 % This does not work
-               %If so, skip current iteration  
-               f = NaN;  disp('Leg has fallen over: f = NaN')
-            %If not, continue
-%             elseif this.sim.outFun(this.sim.data.t,this.sim.data.x_leg) ==0    
-            else
-               
+%             %Check if leg has fallen over  
+%             if this.sim.outFun(this.sim.data.t,this.sim.data.x_leg) ==1 % This does not work
+%                %If so, skip current iteration  
+%                f = NaN;  disp('Leg has fallen over: f = NaN')
+%             %If not, continue
+% %             elseif this.sim.outFun(this.sim.data.t,this.sim.data.x_leg) ==0    
+%             else
+
 %             xxx = this.sim.data.x_leg;   
 %            N = this.sim.model.leg.N;
 %           theta1 = xxx(end-this.sim.model.leg.N+3);                
@@ -368,9 +368,9 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.list.CoM_y = [this.list.CoM_y CoM_y];
             end
             end
-            end
+%             end
              
-%         end
+        end
                 
         
         %__________________________________________________________________
