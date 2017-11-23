@@ -459,7 +459,7 @@ classdef Leg_3DoF_ACA_jumpref < handle
 
             % Stage 1
             if (0<=t) & (t<=stg1)                    
-                    q_ref(4,:)  = -0.7; 
+                    q_ref(4,:)  = -0.5;
                     q_ref(5,:)  = 1.6;
                     q_ref(6,:)  = -1.2;
             end

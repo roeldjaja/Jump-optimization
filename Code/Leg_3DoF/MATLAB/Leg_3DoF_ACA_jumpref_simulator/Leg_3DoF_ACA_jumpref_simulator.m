@@ -331,9 +331,9 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
             q = x(18+1:18+6);       % 6x1
             q_d = x(18+7:18+12);    % 6x1    
       
-            [ ~, y_d, ~ ] = this.model.leg.calc_fwdKin_vel_named(q, q_d, 'body');
+            [ ~, y_d, ~ ] = this.model.leg.calc_fwdKin_vel_named(q, q_d, 'Ankle');
             if y_d < -0.5
-                disp('Trunk velocity: -0.5, highest point reached.');
+                disp('Ankle velocity: -0.5, highest point reached.');
                 stop = 1;
             end
              
