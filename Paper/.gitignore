@@ -1,0 +1,13 @@
+*.aux
+*.log
+*.pdf
+*.gz
+*.zip
+*-blx.bib
+*.bbl
+*.blg
+*.out
+*.run.xml
+*.dvi
+
+!img/*.*
