@@ -704,6 +704,49 @@ classdef Leg_3DoF < handle
         end
         
         %__________________________________________________________________
+                % Calculate the x-y CoM of the leg
+        function [ x_d, y_d ] = calc_CoM_vel(this, q, q_d)
+            % Get parameters
+            m1      = this.params.m1;
+            m2      = this.params.m2;
+            m3      = this.params.m3;
+            m4      = this.params.m4;
+            J1      = this.params.J1;
+            J2      = this.params.J2;
+            J3      = this.params.J3;
+            J4      = this.params.J4;
+            l1      = this.params.l1;
+            l2      = this.params.l2;
+            l3      = this.params.l3;
+            l4      = this.params.l4;
+            r_toe   = this.params.r_toe;
+            r_heel  = this.params.r_heel;
+            r1      = this.params.r1;
+            r2      = this.params.r2;
+            r3      = this.params.r3;
+            r4      = this.params.r4;
+            g       = this.params.g;
+            
+            % Get forward kinematics
+            fwdKin_vel = this.calc_fwdKin_vel(q, q_d);
+            
+            % Get x_d-y_d of each inertia
+            x1_d  = fwdKin_vel(1);
+            y1_d  = fwdKin_vel(2);
+            x2_d  = fwdKin_vel(4);
+            y2_d  = fwdKin_vel(5);
+            x3_d  = fwdKin_vel(7);
+            y3_d  = fwdKin_vel(8);
+            x4_d  = fwdKin_vel(10);
+            y4_d  = fwdKin_vel(11);
+            
+            % Calculate CoM
+            m_tot   = m1 + m2 + m3 + m4;
+            x_d       = (m1 * x1_d + m2 * x2_d + m3 * x3_d + m4 * x4_d) / m_tot;
+            y_d       = (m1 * y1_d + m2 * y2_d + m3 * y3_d + m4 * y4_d) / m_tot;
+        end
+        
+        %__________________________________________________________________
         % Calculates the forward velocity kinematics
         function [ fwdKin_vel ] = calc_fwdKin_vel(this, q, q_d)
             % Get parameters
@@ -763,7 +806,7 @@ classdef Leg_3DoF < handle
                             y1_d + theta1_d * (-r2 * st1q1 - r1 * ct1) - q1_d * r2 * st1q1; ...
                             theta1_d + q1_d; ...
                             x1_d + theta1_d * (-r3 * ct1q12 - l2 * ct1q1 + r1 * st1) + q1_d * (-r3 * ct1q12 - l2 * ct1q1) - q2_d * r3 * ct1q12; ...
-                            y1_d + theta1_d * (-r3 * st1q12 - l2 * st1q1 - r1 * ct1) + q1_d * (-r3 * st1q12 - l3 * st1q1) - q2_2 * r3 * st1q12; ...
+                            y1_d + theta1_d * (-r3 * st1q12 - l2 * st1q1 - r1 * ct1) + q1_d * (-r3 * st1q12 - l3 * st1q1) - q2_d * r3 * st1q12; ...
                             theta1_d + q1_d + q2_d; ...
                             x1_d + theta1_d * (-r4 * ct1q123 - l3 * ct1q12 - l2 * ct1q1 + r1 * st1) + q1_d * (-r4 * ct1q123 - l3 * ct1q12 - l2 * ct1q1) + q2_d * (-r4 * ct1q123 - l3 * ct1q12) - q3_d * r4 * ct1q123; ...
                             y1_d + theta1_d * (-r4 * st1q123 - l3 * st1q12 - l2 * st1q1 - r1 * ct1) + q1_d * (-r4 * st1q123 - l3 * st1q12 - l2 * st1q1) + q2_d * (-r4 * st1q123 - l3 * st1q12) - q3_d * r4 * st1q123; ...
@@ -834,7 +877,7 @@ classdef Leg_3DoF < handle
             
             elseif (strcmpi(name, 'hip'))       % Hip (joint)
                 x_d         = x1_d + theta1_d * (-l3 * ct1q12 - l2 * ct1q1 + r1 * st1) + q1_d * (-l3 * ct1q12 - l2 * ct1q1) - q2_d * l3 * ct1q12;
-                y_d         = y1_d + theta1_d * (-l3 * st1q12 - l2 * st1q1 - r1 * ct1) + q1_d * (-l3 * st1q12 - l3 * st1q1) - q2_2 * l3 * st1q12;
+                y_d         = y1_d + theta1_d * (-l3 * st1q12 - l2 * st1q1 - r1 * ct1) + q1_d * (-l3 * st1q12 - l3 * st1q1) - q2_d * l3 * st1q12;
                 theta_d     = theta1_d + q1_d + q2_d;
                 return;
                 

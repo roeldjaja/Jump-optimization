@@ -31,14 +31,15 @@ Energy Efficient Explosive Motion with Compliant Actuation Arrangements in Artic
 }
 
 
-\author{Wesley Roozing$^{1}$ and Roel Djajadiningrat$^{2}$% <-this % stops a space
+\author{Roel Djajadiningrat$^{1}$ and Wesley Roozing$^{2}$% <-this % stops a space
 \thanks{*Supported by ???}% <-this % stops a space
-\thanks{$^{1}$ Wesley Roozing is with the Department of Advanced Robotics,
+\thanks{$^{1}$ Roel Djajadiningrat is a M.Sc student at the Department of Mechanical Engineering, TU Delft and a visiting student at Istituto Italiano di Tecnologia;
+        {\tt\ r.djajadiningrat@student.tudelft.nl}
+  }%
+\thanks{$^{2}$Wesley Roozing is with the Department of Advanced Robotics,
 	(Fondazione) Istituto Italiano di Tecnologia, via Morego,
-	30, 16163 Genova, Italy ;
-        {\tt\small wesley.roozing@iit.it}}%
-\thanks{$^{2}$Roel Djajadiningrat is M.Sc student at the Department of Mechanical Engineering, TU Delft and a visiting student at Istituto Italiano di Tecnologia.
-    %    {\tt\small b.d.researcher@ieee.org}
+	30, 16163 Genova, Italy.
+        {\tt\small wesley.roozing@iit.it}
     }%
 }
 
@@ -116,7 +117,7 @@ $$
 $$
 Here, $c_1$, $c_2$ and $c_3$ denote scaling constants.\\
 
-\textit{Performance}\\
+\subsubsection{Performance}
 For the performance of the leg we distinguish two different objectives: 
 \begin{enumerate}
 	\item Jumping a maximum height, where the height is defined as the $y$-coordinate of the centre of mass of the leg with respect to the ground:
@@ -130,14 +131,14 @@ For the performance of the leg we distinguish two different objectives:
 	Here, $P$ is defined as \textbf{define P}
 \end{enumerate}
 
-\textit{Torque}\\
+\subsubsection{Torque}
 The active torque $\tau_a$ is to be bounded within the maximum and minimum deliverable torque $ [\ubar \tau_{a} \, \bar \tau_{a}]$. This is enforced by means of a penalty function:  
 $$
 J_{torque}=\sum_{0}^{t_f} (\ubar \tau_{a}-\tau_a)^T (\ubar \tau_{a}-\tau_a) + (\tau_a - \bar \tau_{a})^T (\tau_a - \bar \tau_{a})
 $$
 Here, $t_f$ denotes the last time segment of the motion.\\
 
-\textit{Stability}\\
+\subsubsection{Stability}
 To ensure postural stability a stability criterion is introduced. The leg posture is considered stable when the $x$-coordinate of the centre of mass of the leg is equal to its initial $x$-coordinate, $x=0$, at the end of the motion. This is achieved with the minimization of:
 $$
 J_{stability}  = |x_{CoM}(t_f) - c_4 |^2

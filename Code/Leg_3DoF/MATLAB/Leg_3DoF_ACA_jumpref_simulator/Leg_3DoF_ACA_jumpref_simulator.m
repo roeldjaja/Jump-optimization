@@ -89,6 +89,7 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
             disp(['Simulating for ' num2str(this.params.tspan(2),'%3.1f') ' s...']);
             tic
             x = this.ode4int(@(t,x) this.model.dx_ode(t,x), this.params.t, this.params.x0, @(t,x) this.outFun(t, x));
+
             toc
             t = this.params.t;
             
@@ -325,15 +326,16 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
                 stop = 1;
             end
             
-            % Stop simulation if the y-component of velocity of the body is
-            % negative (highest point reached)
+            % Stop simulation if highest point reached
             
             q = x(18+1:18+6);       % 6x1
             q_d = x(18+7:18+12);    % 6x1    
       
-            [ ~, y_d, ~ ] = this.model.leg.calc_fwdKin_vel_named(q, q_d, 'Ankle');
-            if y_d < -0.5
-                disp('Ankle velocity: -0.5, highest point reached.');
+            [ ~, y_d] = this.model.leg.calc_CoM_vel( q , q_d);
+            [ ~, y_heel, ~ ] = this.model.leg.calc_fwdKin_named( q, 'heel');
+            [ ~, y_toe, ~ ] = this.model.leg.calc_fwdKin_named( q, 'toe');           
+            if (y_d < -0.75 && y_heel > 0.002 && y_toe  > 0.002)
+                disp('CoM vertical velocity: -0.75, highest point reached.');
                 stop = 1;
             end
              
