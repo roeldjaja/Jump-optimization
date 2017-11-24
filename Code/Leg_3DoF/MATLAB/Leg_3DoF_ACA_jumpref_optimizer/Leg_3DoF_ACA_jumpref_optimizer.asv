@@ -394,23 +394,20 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
         tau         = this.sim.data.tau';
 
         % Timesteps
-        % Check whether simulation was cut short and adjust time if so
+        % Check whether simulation was cut short
         x = this.sim.data.xlist;
+assignin('base', 'x', x)
         cutoff = find(~any(x, 2));
-        if isempty(cutoff) ==1
-            t = this.params.t;
-        else
-            t = this.params.t(1:cutoff(1)-1);
-        end
-        
+        tkin = this.params.t(1:cutoff(1)-1);
+tkin(end)
         % IK 
         
         %Preallocate
-        qp_dd_t_act = zeros(length(t),6);
+        qp_dd_t_act = zeros(length(tkin),6);
        
         
         
-        for k=1:length(t)           
+        for k=1:length(tkin)           
             % State and input
             % Retrieve x(t) from all states sim.data.xlist made during simulation
             x = this.sim.data.xlist(k,:); %[1 x 30]
