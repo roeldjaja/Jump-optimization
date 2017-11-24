@@ -56,17 +56,18 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             % Initial guess possible todo load mat file
 %             this.data.qinit = %[initial guess in cp] 
             
-            % Control point parameters FIND APPROPRIATE VALUE
+            % Objective criteria weights
+            this.params.c_perf = 50;
+            this.params.c_stab = 75;
+            this.params.c_torq = 1.8e-9;
             
+            % Control point parameters FIND APPROPRIATE VALUE
             this.params.cpres = 300; %Downscale factor (cp = number of q trajectory points / cpres)
-                                    
             this.params.t = 0:this.sim.params.Ts:this.sim.params.tspan(2);
             this.params.tcp = this.params.t(1:this.params.cpres:end);
             this.params.n = length((this.params.t(1:this.params.cpres:end)));
             this.params.tn = this.params.n*3;
             
-            
-
             % Status
             disp('Initialized Leg_3DoF_ACA_jumpref_optimizer with default parameters.');
         end
@@ -253,10 +254,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             fprintf('\n');disp('Joint q3 limit reached: f = NaN');fprintf('\n');
             else
             
-            % Construct new q_ref matrix (= this.data.qrec)
-            this.sim.model.ref.use_random =1;
-            q_ref = this.data.q_rec; %[6 x length(t)]
-            
+
             % Calculate reference velocities
 
             % Cartesian reference
@@ -307,7 +305,10 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.sim.model.ref.random.q_ref = this.data.q_rec;   
             this.sim.model.ref.random.q_d_ref = this.data.q_d_rec;
              
+            % Use new reference for simulation
+            this.sim.model.ref.use_random =1;
             
+            % Run simulatione and notice simulation error
             ME = [];
             try
             this.sim.run(0); %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -343,11 +344,11 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             
 
              % Performance index CoM height
-             J_performance = 50*CoM_y^2;
+             J_performance = this.params.c_perf*CoM_y^2;
              fprintf('\n');disp(['J_performance = ',num2str(J_performance)]);
              
              % Stability function CoM 
-             J_stability = 50*(CoM_x-0.04)^2; 
+             J_stability = this.params.c_stab*(CoM_x-0.04)^2; 
              disp(['J_stability = ',num2str(J_stability)]);
 
              % Penalty function tau
@@ -359,7 +360,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
              for k = 1:length(tau) 
                  Jk(k) = (tau_lb-tau(:,k))'*(tau_lb-tau(:,k))+(tau(:,k)-tau_ub)'*(tau(:,k)-tau_ub);
              end
-             J_torque = sum(Jk)*1.8e-9;  % to be scaled appropiately 
+             J_torque = this.params.c_torq*sum(Jk);  % to be scaled appropiately 
              disp(['J_torque = ',num2str(J_torque)]);
              
              % Objective function 
@@ -393,12 +394,15 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
         tau         = this.sim.data.tau';
 
         % Timesteps
-        % Check whether simulation was cut short
+        % Check whether simulation was cut short and adjust time if so
         x = this.sim.data.xlist;
-
         cutoff = find(~any(x, 2));
-        t = this.params.t(1:cutoff-1);
-
+        if isempty(cutoff) ==1
+            t = this.params.t;
+        else
+            t = this.params.t(1:cutoff(1)-1);
+        end
+        
         % IK 
         
         %Preallocate
