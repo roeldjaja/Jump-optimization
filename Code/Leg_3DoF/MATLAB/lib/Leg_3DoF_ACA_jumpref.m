@@ -471,8 +471,9 @@ classdef Leg_3DoF_ACA_jumpref < handle
             end  
                    
             % Calculate reference velocities                                     
-            q_d_ref = diff(q_ref')' / this.control.Ts;
-            q_d_ref = [q_d_ref(:,1), q_d_ref]; % Approximate first entry by extrapolation
+            %q_d_ref = diff(q_ref')' / this.control.Ts;
+            %q_d_ref = [q_d_ref(:,1), q_d_ref]; % Approximate first entry by extrapolation
+            q_d_ref = zeros(6,length(t));
             
             
         end

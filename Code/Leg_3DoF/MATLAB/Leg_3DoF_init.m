@@ -18,6 +18,7 @@ addpath(genpath('Leg_3DoF_interactive'));
 addpath(genpath('Leg_3DoF_noAct_simulator'));
 addpath(genpath('Leg_3DoF_ACA_jumpref_simulator'));
 addpath(genpath('Leg_3DoF_ACA_jumpref_optimizer'));
+
 % Dependency on ACA class
-addpath(genpath('.. filesep .. filesep ACA/MATLAB'));
+addpath(genpath(['..' filesep '..' filesep 'ACA/MATLAB']));
 %run('../../ACA/MATLAB/ACA_init.m'); % Does not work
