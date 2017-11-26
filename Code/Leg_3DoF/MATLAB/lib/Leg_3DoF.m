@@ -704,7 +704,7 @@ classdef Leg_3DoF < handle
         end
         
         %__________________________________________________________________
-                % Calculate the x-y CoM of the leg
+        % Calculate the x-y CoM velocity of the leg
         function [ x_d, y_d ] = calc_CoM_vel(this, q, q_d)
             % Get parameters
             m1      = this.params.m1;
@@ -727,10 +727,10 @@ classdef Leg_3DoF < handle
             r4      = this.params.r4;
             g       = this.params.g;
             
-            % Get forward kinematics
+            % Get forward velocity kinematics
             fwdKin_vel = this.calc_fwdKin_vel(q, q_d);
             
-            % Get x_d-y_d of each inertia
+            % Get x-y velocity of each inertia
             x1_d  = fwdKin_vel(1);
             y1_d  = fwdKin_vel(2);
             x2_d  = fwdKin_vel(4);
@@ -740,10 +740,10 @@ classdef Leg_3DoF < handle
             x4_d  = fwdKin_vel(10);
             y4_d  = fwdKin_vel(11);
             
-            % Calculate CoM
+            % Calculate CoM velocity
             m_tot   = m1 + m2 + m3 + m4;
-            x_d       = (m1 * x1_d + m2 * x2_d + m3 * x3_d + m4 * x4_d) / m_tot;
-            y_d       = (m1 * y1_d + m2 * y2_d + m3 * y3_d + m4 * y4_d) / m_tot;
+            x_d     = (m1 * x1_d + m2 * x2_d + m3 * x3_d + m4 * x4_d) / m_tot;
+            y_d     = (m1 * y1_d + m2 * y2_d + m3 * y3_d + m4 * y4_d) / m_tot;
         end
         
         %__________________________________________________________________

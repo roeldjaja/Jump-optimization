@@ -328,18 +328,25 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
             
             % Stop simulation if highest point reached
             
-            q = x(18+1:18+6);       % 6x1
-            q_d = x(18+7:18+12);    % 6x1    
-      
-            [ ~, y_d] = this.model.leg.calc_CoM_vel( q , q_d);
-            [ ~, y_heel, ~ ] = this.model.leg.calc_fwdKin_named( q, 'heel');
-            [ ~, y_toe, ~ ] = this.model.leg.calc_fwdKin_named( q, 'toe');           
-            if (y_d < -0.75 && y_heel > 0.002 && y_toe  > 0.002)
-                disp('CoM vertical velocity: -0.75, highest point reached.');
+            % Margins
+            yVelLimit           = 0;
+            flightPhaseMargin   = 0.02;
+            
+            % Get leg configuration and velocities
+            q                   = x(18+1:18+6);     % 6x1
+            q_d                 = x(18+7:18+12);    % 6x1
+            
+            % Forward kinematics
+            [ ~, y_CoM_d]       = this.model.leg.calc_CoM_vel( q , q_d);
+            [ ~, y_heel, ~ ]    = this.model.leg.calc_fwdKin_named( q, 'heel');
+            [ ~, y_toe, ~ ]     = this.model.leg.calc_fwdKin_named( q, 'toe');
+            
+            % Check for flight phase and negative y-velocity of CoM
+            if (y_CoM_d <= yVelLimit && y_heel > flightPhaseMargin && y_toe  > flightPhaseMargin)
+                disp(['CoM vertical velocity: ' num2str(y_CoM_d) ' (<=' num2str(yVelLimit) '), highest point reached.']);
                 stop = 1;
             end
-             
-
+            
             % Draw every n seconds
             n = inf;%0.1; % inf for no plots
             n = n - mod(n, this.params.Ts); % Round to nearest multiple of Ts
