@@ -19,12 +19,13 @@
 %\usepackage{epsfig} % for postscript graphics files
 %\usepackage{mathptmx} % assumes new font selection scheme installed
 %\usepackage{times} % assumes new font selection scheme installed
-%\usepackage{amsmath} % assumes amsmath package installed
+\usepackage{amsmath} % assumes amsmath package installed
 %\usepackage{amssymb}  % assumes amsmath package installed
 \usepackage{accents}
 \newcommand\ubar[1]{%
 	\underaccent{\bar}{#1}}
 \usepackage{framed}
+\usepackage{eufrak}
 
 \title{\LARGE \bf
 Energy Efficient Explosive Motion with Compliant Actuation Arrangements in Articulated Robots*
@@ -80,10 +81,20 @@ SEA only, mono-articulated, bi-articulated
 \section{Dynamic Model}
 
 \subsection{Forward Dynamics} 
+The four links are connected by the actuated ankle, knee and hip joints, denoted $q_1,q_2,q_3$, with torques $\tau_1,\tau_2,\tau_3$. The links have masses $m_1,m_2,m_3,m_4$ and rotational inertiae $J_1,J_2,J_3,J_4$. Their CoM is assumed to be located on the line connecting the proximal and distal joints at a distance of $r_1,r_2,r_3,r_4$ from the proximal joint for all links except for the foot; the model includes a floating base to allow for realistic modelling of the ground reaction forces (GRF). Together, the configurations of the bodies describe the system:
 $$
-\alpha + \beta = \chi \eqno{(1)}
+x = [x_1,y_1,\theta_1,x_2,y_2,\theta_2, x_3,y_3,\theta_3,x_4,y_4,\theta_4]^T. \eqno{(1)}
 $$
-
+The Euler-Lagrange formulism with generalised coordinates $\mathbf{q} \in \mathfrak{Q} \subset \mathfrak{R}^{N=6}$ is used to derive the dynamic equations for the system:
+$$
+\mathbf{q}=[x_1,y_1,\theta_1,q_1,q_2,q_3]^T \eqno{(2)}
+$$
+leading to:
+$$
+M(\mathbf{q})\mathbf{\ddot q} = \mathbf{\tau + G(q) - C(q,\dot q)\dot q -} D \mathbf{\dot q} + J_{GRF}^T \mathbf{F}_{GRF} \eqno{(3)}
+$$
+Here, the damping matrix is denoted by $D = \text{diag} (0,0,0,d_1,d_2,d_3)$, the generalised actuation forces are denoted by $\tau = [0,0,0,\tau_1,\tau_2,\tau_3]$, the generalised gravitational forces are denoted by $\mathbf{G(q)}$, the Coriolis vector is denoted by $\mathbf{C(q, \dot q)}$ and the generalised inertia matrix is denoted by $M(\mathbf{q})$. The Jacobian for the heal and toe is denoted by $J_{GRF}^T$ and the ground forces in generalised coordinates are subsequently expressed as $J_{GRF}^T \mathbf{F}_{GRF}$. Spring-dampers define $\mathbf{F}_{GRF}$ in the vertical direction and Coulomb and viscous friction define the horizontal component, proportional to the vertical forces.
+ 
 \subsection{Inverse Dynamics}
 more math
 
@@ -139,11 +150,11 @@ $$
 Here, $t_f$ denotes the last time segment of the motion.\\
 
 \subsubsection{Stability}
-To ensure postural stability a stability criterion is introduced. The leg posture is considered stable when the $x$-coordinate of the centre of mass of the leg is equal to its initial $x$-coordinate, $x=0$, at the end of the motion. This is achieved with the minimization of:
+To ensure postural stability a stability criterion is introduced. The leg posture is considered stable when the $x$-coordinate of the centre of mass of the leg is equal to its initial $x$-coordinate, $x=0$, at the end of the motion, i.e. when the centre of mass reaches its maximum height. Also, the motion is assumed to be stable when the mean value of the x-coordinate of the centre of mass equals zero. This is achieved with the minimization of:
 $$
-J_{stability}  = |x_{CoM}(t_f) - c_4 |^2
+J_{stability}  = |x_{CoM}(t_h) + \bar x_{CoM} |^2
 $$
-Here, $c_4$ is a constant.\\
+Here, $t_h$ denotes the point in time where the centre of mass reaches its maximum height.\\
 \subsection{Algorithm}
 
 The objective criteria described above require information concerning the kinematic and dynamic state of the leg. Both forward and inverse dynamic calculations are to be performed while the leg states are set by adjusting the earlier described $B$-spline joint trajectories. This dependence is managed by the optimisation algorithm. The algorithm in words yields:\\
@@ -156,7 +167,7 @@ The objective criteria described above require information concerning the kinema
 	\item[$\diamond$] Run simulation of motion through forward dynamics
 	\item[$\diamond$] Calculate active torques through inverse dynamics
 	\item[$\diamond$] Evaluate objective function\\
-	\item[$\diamond$] Exit if local minimum is reached, \\ else vary control points and repeat $\diamond$ steps
+	\item[$\diamond$] Exit if local minimum is reached, \\ else vary control points and repeat steps with $\diamond$ 
 \end{itemize}
 
 	

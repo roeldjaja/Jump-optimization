@@ -12,9 +12,12 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
     % Stability criterion values        this.list.J_stability      
     % Torque criterion values           this.list.J_torque        
     % Objective function values         this.list.f                
-    % CoM x-coordinates (last)          this.list.CoM_x            
+    % CoM x-coordinates (at max height) this.list.CoM_xh            
     % CoM y coordinates (max)           this.list.CoM_y                        
-    % All evaluation ground forces      this.list.F_GRF            
+    % All evaluation ground forces      this.list.F_GRF  
+    % Control points                    this.list.cp 
+    % Leg state q                       this.list.q_leg 
+    % Leg state q_d                     this.list.q_leg_d 
     
     % TODO: 'Leg has fallen over' check returns matrix dimension error FIX
     
@@ -58,7 +61,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.params.c_stab = 1e3;
             this.params.c_torq = 1/3e6;
             
-            % Control point parameters FIND APPROPRIATE VALUE
+            % Control point parameters 
             this.params.cpres = 300; %Downscale factor (cp = number of q trajectory points / cpres)
             this.params.t = 0:this.sim.params.Ts:this.sim.params.tspan(2);
             this.params.tcp = this.params.t(1:this.params.cpres:end);
@@ -82,7 +85,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.list.J_stability =     [];
             this.list.J_torque =        [];
             this.list.f =               [];
-            this.list.CoM_x =           [];
+            this.list.CoM_xh =          [];
             this.list.CoM_y =           [];
             this.list.q_rec =           [];
             this.list.F_GRF =           [];
@@ -92,6 +95,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             t = this.params.t;
             n = this.params.n;
             tn = this.params.tn;
+            Ts = this.sim.params.Ts;
             
             % Initial guess possible todo load mat file
             load('q_init','q_init')
@@ -136,12 +140,14 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             ub(2*n+1:3*n) = this.sim.model.leg.params.q_limits(3,2);    %ub q3
             
             % Optimization options
-            options = optimoptions( 'fmincon',...
+            options = optimoptions( 'fmincon',...           
                                     'Display','iter',...
-                                    'Algorithm','sqp',...
-                                    'TypicalX',[-0.3 -0.65 0.8 0.1 1.6 1.5 0.6 0.2 -1.2 -1 -0.4 0.1],...
-                                    'DiffMinChange',0.01);  
-            
+                                    'Algorithm','interior-point',...
+                                    'InitTrustRegionRadius',1,...
+                                    'DiffMaxChange',0.7);  
+                                    %'TypicalX',[-0.3 -0.65 0.8 0.1 1.6 1.5 0.6 0.2 -1.2 -1 -0.4 0.1],...
+                                    % 'FinDiffRelStep',1e-3,...
+                                    
             % Optimization
             [x, fval, exitflag, output, lambda] = fmincon(@(x)this.jumphigh_obj(x),x0,A,b,Aeq,beq,lb,ub,@(x)this.jumpcon(x),options);
             
@@ -172,6 +178,20 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             q3      = s3.evalAt(t);
             
             this.data.q_res = [zeros(1,length(t));zeros(1,length(t));zeros(1,length(t));q1;q2;q3];
+            
+            % Calculate reference velocities
+            % Create spline derivative object using fastBSpline function
+            s1_d = s1.dx;
+            s2_d = s2.dx;
+            s3_d = s3.dx;
+                
+            q1_d = s1_d.evalAt(t);
+            q2_d = s2_d.evalAt(t);
+            q3_d = s3_d.evalAt(t);
+                            
+            this.data.q_d_res = [zeros(1,length(t));zeros(1,length(t));zeros(1,length(t));q1_d;q2_d;q3_d];
+
+            % Stop timer
             truntime=toc(trun);
             disp(['Total algorithm time: ',num2str(truntime),' s or ',num2str(truntime/60),' min']);
         end
@@ -191,7 +211,9 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             %             this.data.x = [this.data.x x];
             
             % Assignment of design variables
+            Ts = this.sim.params.Ts;
             n = this.params.n;
+            
             cp(:,1) = x(1:n);       %q1
             cp(:,2) = x(n+1:2*n);   %q2
             cp(:,3) = x(2*n+1:3*n); %q3
@@ -280,7 +302,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                         
                         
                         % IK, return tau active and maximum CoM-y and mean CoM-x
-                        [tau_IK,CoM_x,CoM_y] = this.Calc_IK();
+                        [tau_IK,CoM_xh,CoM_xm, CoM_xf, CoM_y] = this.Calc_IK();
                         
                         
                         
@@ -289,7 +311,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                         fprintf('\n');disp(['J_performance = ',num2str(J_performance)]);
                         
                         % Stability function CoM
-                        J_stability = this.params.c_stab*(CoM_x)^2;
+                        J_stability = this.params.c_stab*(CoM_xh + CoM_xm + CoM_xf)^2;
                         disp(['J_stability = ',num2str(J_stability)]);
                         
                         % Penalty function tau
@@ -301,14 +323,14 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                         for k = 1:length(tau)
                             Jk(k) = (tau_lb-tau(:,k))'*(tau_lb-tau(:,k))+(tau(:,k)-tau_ub)'*(tau(:,k)-tau_ub);
                         end
-                        J_torque = this.params.c_torq* sum(Jk)/length(tau);  % to be scaled appropiately
+                        J_torque = this.params.c_torq* sum(Jk)/length(tau);  
                         disp(['J_torque = ',num2str(J_torque)]);
                         
                         % Objective function
                         f = -J_performance + J_torque + J_stability;
                         fprintf('\n');disp(['Evaluation succeeded: f = ',num2str(f)]);
                         disp(['Evaluation ',num2str(length(this.list.f)+1)]);('\n');fprintf('\n');
-                        disp(['Final CoM x coordinate = ',num2str(CoM_x)]);
+                        disp(['Final CoM x coordinate = ',num2str(CoM_xh)]);
                         disp(['Max CoM height = ',num2str(CoM_y)]);fprintf('\n');
                         
                         % Add function values to list
@@ -317,7 +339,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                         this.list.J_stability = [this.list.J_stability J_stability];
                         this.list.J_torque = [this.list.J_torque J_torque];
                         this.list.f = [this.list.f f];
-                        this.list.CoM_x = [this.list.CoM_x CoM_x];
+                        this.list.CoM_xh = [this.list.CoM_xh CoM_xh];
                         this.list.CoM_y = [this.list.CoM_y CoM_y];
                     end
                 end
@@ -327,11 +349,14 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
         
         %__________________________________________________________________
         % Inverse Kinematics
-            function [tau_IK,CoM_x,CoM_y] = Calc_IK(this)
+            function [tau_IK,CoM_xh,CoM_xm, CoM_xf, CoM_y] = Calc_IK(this)
                 
+                % Clear leg state lists
+                this.list.q_leg =           [];
+                this.list.q_leg_d =         []; 
                 
                 % Get simulation data
-                tau         = this.sim.data.tau';
+                tau = this.sim.data.tau';
                 
                 % Timesteps
                 % Check whether simulation was cut short and adjust time if so
@@ -353,14 +378,14 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 for k=1:length(t)
                     % State and input
                     % Retrieve x(t) from all states sim.data.xlist made during simulation
-                    x = this.sim.data.xlist(k,:); %[1 x 30]
+                    x = this.sim.data.xlist(k,:); 
                     
-                    q_leg = x(18+1:18+6)';       % 6x1
-                    q_leg_d = x(18+7:18+12)';    % 6x1
+                    q_leg   = x(18+1:18+6)';       
+                    q_leg_d = x(18+7:18+12)';                          
                     
                     u(:,k) = [tau(k,1); tau(k,2); tau(k,3)];
                     
-                    % No ext forces
+                    % No external forces
                     Fe = zeros(3,1);
                     
                     % Build ground reaction force (GRF)
@@ -395,8 +420,10 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                     this.list.F_GRF = [this.list.F_GRF F_GRF];
                     
                     x = [q_leg;q_leg_d];
+                    
                     % State evaluation to obtain active joint accelerations
-                    x_d = this.sim.model.leg.dx(t(k), x, u(:,k), F_GRF, Fe); %x_d     = [q_d; q_dd];
+                    %x_d     = [q_d; q_dd];
+                    x_d = this.sim.model.leg.dx(t(k), x, u(:,k), F_GRF, Fe); 
                     
                     % Active joint accelerations
                     qa_dd = x_d(10:12);
@@ -404,7 +431,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                     % Inverse formulation
                     
                     % M-matrices with  M = [Mpp Mpa ; Map Maa]
-                    M  = this.sim.model.leg.calc_M(q_leg'); %6x6
+                    M  = this.sim.model.leg.calc_M(q_leg'); 
                     Mpp = M(1:3,1:3);
                     Mpa = M(1:3,4:6);
                     Map = M(4:6,1:3);
@@ -414,20 +441,21 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                     % New formulation Mb (rhs)
                     Mb = [Mpa;Maa];
                     
-                    
-                    
                     % Other terms
                     G = this.sim.model.leg.calc_G(q_leg);
-                    C = this.sim.model.leg.calc_C(q_leg,q_leg_d); %
+                    C = this.sim.model.leg.calc_C(q_leg,q_leg_d); 
                     J_GRF   = this.sim.model.leg.calc_J_GRF(q_leg);
                     D = this.sim.model.leg.params.d;
                     
                     % Inverse formulation
                     qp_dd_t_act(k,:) = Ma \ ( -Mb * qa_dd + G - D .* q_leg_d - C * q_leg + J_GRF' * F_GRF );
                     
+                    this.list.q_leg = [this.list.q_leg q_leg];
+                    this.list.q_leg_d = [this.list.q_leg_d q_leg_d];
                 end
                 
-                tau_IK = qp_dd_t_act(:,4:6);  %Torque active from inverse formulation
+                % Active torque
+                tau_IK = qp_dd_t_act(:,4:6);  
                 
                 %CoM x and y
                 x = this.sim.data.xlist;
@@ -436,19 +464,28 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 for k=1:length(t)
                     [CoM_x(k), CoM_y(k)] = this.sim.model.leg.calc_CoM(q_leg(:,k));
                 end
-                
-                %Final x coordinate CoM
-                CoM_x = (CoM_x(end));
-                
+
                 %Largest y coordinate CoM
                 this.data.CoM_y = CoM_y(:);
-                CoM_y = max(CoM_y);
+                [i_CoM_y_max,~] = find(CoM_y == max(CoM_y));
+                CoM_y           = max(CoM_y);
                 
+                
+                %Matching x coordinate CoM (matches largest y coordinate CoM)
+                CoM_xh = (CoM_x(i_CoM_y_max));
+                
+                %Mean x coordinate
+                CoM_xm = mean(CoM_x);
+                
+                %Final x coordinate
+                CoM_xf = CoM_x(end);
+
             end
         %__________________________________________________________________________
         function plot(this) 
             % Plots the trajectories of the initial guess and the solution x found by the optimization
             % algorithm           
+            n = this.params.n;
             N = length(this.params.t);
             x = this.sim.data.xlist; %[N x 30]
             q_leg = x(:,18+1:18+6)';       % 6xN
@@ -523,7 +560,8 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             cpq1 = C(:,1:3:end);
             cpq2 = C(:,2:3:end);
             cpq3 = C(:,3:3:end);
-            s = size(cpq1);s=1:1:s(2);
+     
+            s = size(cpq3); s=1:1:s(2);
             
             figure
             for k=1:n        
@@ -531,7 +569,8 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                hold on
                subplot(3,1,2);plot(s,cpq2(k,:),'.-');title('Control Points q_2');  xlim([1 s(end)]);
                hold on
-               subplot(3,1,3);plot(s,cpq3(k,:),'.-');title('Control Points q_3');  xlim([1 s(end)]);             
+               subplot(3,1,3);plot(s,cpq3(k,:),'.-');title('Control Points q_3');  xlim([1 s(end)]);  
+               hold on
             end
             hold off
         end
@@ -578,44 +617,54 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
         % This function is to be used individually. The algorithm loads
         % the .mat file created by this function as its initial trajectory.
             
-            Ts = this.sim.params.Ts;
-            t = this.params.t;
+            Ts      = this.sim.params.Ts;
+            tspan   = this.sim.params.tspan;
+            t       = 0:Ts:tspan(2);
             
                 % Calculate references for joints
                 % Leg: q = [x1, y1, theta, q1, q2, q3]
-                q_ref       = zeros(6,length(t));
+                q_ref           = zeros(6,length(t));
+                %q_init
+                q_ref(:,1)      = [0; 0; 0; -0.6; 1.5; -1.2];
                 
                 % Timing stages, time span in seconds
-                stg1 = 0.1; stg2 = 0.3; stg3 = 0.4;
+                stg1 = 0.1; stg2 = 0.3; stg3 = 0.3; stg4 = 0.4;
 
             for k = 1:length(t)
                 % Stage 1
-                if (0<=k*Ts) & (k*Ts<=stg1)
-                    q_ref(4,k)  = -0.3;%-0.5
+                if (0<k*Ts) && (k*Ts<=stg1)
+                    q_ref(4,k)  = -0.5;
                     q_ref(5,k)  = 1.6;
                     q_ref(6,k)  = -1.2;
                 end
 
                 % Stage 2: Hip, knee and ankle extension
-                if (stg1<k*Ts) & (k*Ts<=(stg1+stg2))
-                    q_ref(4,k)  = -0.65 ;%-0.7
+                if (stg1<k*Ts) && (k*Ts<=(stg1+stg2))
+                    q_ref(4,k)  = -0.7 ;%-0.7
                     q_ref(5,k)  = 1.5 ;
                     q_ref(6,k)  = -1 ;
                 end
 
 
                 % Stage 3:  push off
-                if (stg1+stg2<k*Ts) & (k*Ts<=(stg1+stg2+stg3))
-                    q_ref(4,k)  = 0.8;
-                    q_ref(5,k)  = 0.6;%0.6
+                if (stg1+stg2<k*Ts) && (k*Ts<=(stg1+stg2+stg3))
+                    q_ref(4,k)  = 0.6;
+                    q_ref(5,k)  = 0.6;
                     q_ref(6,k)  = -0.4;
                 end
 
                 % Stage 4: Fly
-                if (stg1+stg2+stg3<k*Ts)
-                    q_ref(4,k)  = 0.1;
+                if (stg1+stg2+stg3<k*Ts) && (k*Ts<=(stg1+stg2+stg3+stg4))
+                    q_ref(4,k)  = -0.4;
                     q_ref(5,k)  = 0.2;
-                    q_ref(6,k)  = 0;
+                    q_ref(6,k)  = -0.8;
+                end
+                
+                % Stage 5: Fly
+                if (stg1+stg2+stg3+stg4<k*Ts) 
+                    q_ref(4,k)  = -0.2;
+                    q_ref(5,k)  = 0.1;
+                    q_ref(6,k)  = -0.8;
                 end
             end
             
@@ -625,18 +674,18 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             lessdata5 = q_ref(5,1:100:end);
             lessdata6 = q_ref(6,1:100:end);
 
-            x = 0:0.1:1;
-            xx = linspace(0,1,1001);
-            q_init = zeros(6,1001);
+            sites = 0:Ts*100:t(end);
+            x = linspace(0,1,length(t));
+            q_init = zeros(6,length(t));
 
             y4 = lessdata4; y5 = lessdata5;y6 = lessdata6;
-            cs4 = spline(x,[q_ref(4,1) y4 q_ref(4,end)]);
-            cs5 = spline(x,[q_ref(5,1) y5 q_ref(5,end)]);
-            cs6 = spline(x,[q_ref(6,1) y6 q_ref(6,end)]);
+            cs4 = spline(sites,[q_ref(4,1) y4 q_ref(4,end)]);
+            cs5 = spline(sites,[q_ref(5,1) y5 q_ref(5,end)]);
+            cs6 = spline(sites,[q_ref(6,1) y6 q_ref(6,end)]);
 
-            q_init(4,:) = ppval(xx,cs4);
-            q_init(5,:) = ppval(xx,cs5);
-            q_init(6,:) = ppval(xx,cs6);
+            q_init(4,:) = ppval(x,cs4);
+            q_init(5,:) = ppval(x,cs5);
+            q_init(6,:) = ppval(x,cs6);
             
             % Write q_init to .mat file
             q_init = q_init';
@@ -657,8 +706,10 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             
             % Knots, triple knots at the end
             
-            t = this.params.t;
-            tcp = this.params.tcp;
+            Ts      = this.sim.params.Ts;
+            tspan   = this.sim.params.tspan;
+            t       = 0:Ts:tspan(2);
+            tcp = t(1:this.params.cpres:end);
             
             knots = [tcp(1),tcp(1),...
                 tcp(1):tcp(end)/length(tcp):tcp(end),...
@@ -679,15 +730,24 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             % Check the constructed trajectories for q-limits and
             % work around
             
-            if (    min(q1) < this.sim.model.leg.params.q_limits(1,1)    || ...
-                    max(q1) > this.sim.model.leg.params.q_limits(1,2)    )
-                fprintf('\n');disp('Joint q1 limit reached');fprintf('\n');
-            elseif (    min(q2) < this.sim.model.leg.params.q_limits(2,1)    || ...
-                    max(q2) > this.sim.model.leg.params.q_limits(2,2)    )
-                fprintf('\n');disp('Joint q2 limit reached');fprintf('\n');
-            elseif (    min(q3) < this.sim.model.leg.params.q_limits(3,1)    || ...
-                    max(q3) > this.sim.model.leg.params.q_limits(3,2)    )
-                fprintf('\n');disp('Joint q3 limit reached');fprintf('\n');
+            if (    min(q1) < this.sim.model.leg.params.q_limits(1,1)   )
+                i = find(q1 == min(q1));
+                fprintf('\n');disp(['Joint q1 min limit reached at t = ',num2str(i*Ts)]);fprintf('\n');
+            elseif (    max(q1) > this.sim.model.leg.params.q_limits(1,2)    )
+                i = find(q1 == max(q1));
+                fprintf('\n');disp(['Joint q1 max limit reached at t = ',num2str(i*Ts)]);fprintf('\n');
+            elseif (    min(q2) < this.sim.model.leg.params.q_limits(2,1) )
+                i = find(q2 == min(q2));
+                fprintf('\n');disp(['Joint q2 min limit reached at t = ',num2str(i*Ts)]);fprintf('\n');
+            elseif (    max(q2) > this.sim.model.leg.params.q_limits(2,2)    )
+                i = find(q2 == max(q2));
+                fprintf('\n');disp(['Joint q2 max limit reached at t = ',num2str(i*Ts)]);fprintf('\n');
+            elseif (    min(q3) < this.sim.model.leg.params.q_limits(3,1)    )
+                i = find(q3 == min(q3));
+                fprintf('\n');disp(['Joint q3 min limit reached at t = ',num2str(i*Ts)]);fprintf('\n');
+            elseif (       max(q3) > this.sim.model.leg.params.q_limits(3,2)    )
+                i = find(q3 == max(q3));
+                fprintf('\n');disp(['Joint q3 max limit reached at t = ',num2str(i*Ts)]);fprintf('\n');
             else
                 
                 
@@ -713,8 +773,18 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 % Run simulation
                 this.sim.run(1);
             end
-                    
         end
+        %_____________________________________________________________
+        
+        function simulate_solution(this)      
+       % Run simulation with q_res (result)
+            this.sim.model.ref.random.q_ref = this.data.q_res;   
+            this.sim.model.ref.random.q_d_ref = this.data.q_d_res;
+            fprintf('\n');disp('Resimulating for found solution');
+            this.sim.run(1);
+            fprintf('\n');disp('Rerun animation with this.sim.animate');     
+         end
+        
     end %end methods
 end %end classdef
 
