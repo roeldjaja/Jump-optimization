@@ -57,15 +57,23 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.sim = Leg_3DoF_ACA_jumpref_simulator(actParamsFileName, legParamsFileName);
             
             % Objective criteria weights
+            
+            % Performance
             this.params.c_perf = 1/2;
-            this.params.c_stab = 1e3;
-            this.params.c_torq = 1/3e6;
+            
+            % Stability
+            this.params.c_xh = 2e2;     % CoM_x corresponding to highest CoM_y
+            this.params.c_xm = 1/1e4;
+            this.params.c_xf = 1e1;     % Last CoM_x 
+            
+            % Torque
+            this.params.c_torq = 1/3e4;
             
             % Control point parameters 
-            this.params.cpres = 300; %Downscale factor (cp = number of q trajectory points / cpres)
-            this.params.t = 0:this.sim.params.Ts:this.sim.params.tspan(2);
-            this.params.tcp = this.params.t(1:this.params.cpres:end);
-            this.params.n = length((this.params.t(1:this.params.cpres:end)));
+            this.params.cpres = 200; %Downscale factor (cp = number of q trajectory points per s/ cpres)
+            this.params.t = 0 : this.sim.params.Ts : this.sim.params.tspan(2);
+            this.params.tcp = this.params.t(1 : this.params.cpres : end);
+            this.params.n = length((this.params.t(1 : this.params.cpres : end)));
             this.params.tn = this.params.n*3;
             
             % Status
@@ -144,7 +152,8 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                                     'Display','iter',...
                                     'Algorithm','interior-point',...
                                     'InitTrustRegionRadius',1,...
-                                    'DiffMaxChange',0.7);  
+                                    'DiffMinChange',1e-2,...
+                                    'DiffMaxChange',1);  
                                     %'TypicalX',[-0.3 -0.65 0.8 0.1 1.6 1.5 0.6 0.2 -1.2 -1 -0.4 0.1],...
                                     % 'FinDiffRelStep',1e-3,...
                                     
@@ -311,8 +320,13 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                         fprintf('\n');disp(['J_performance = ',num2str(J_performance)]);
                         
                         % Stability function CoM
-                        J_stability = this.params.c_stab*(CoM_xh + CoM_xm + CoM_xf)^2;
+                        J_stability =   this.params.c_xh * ( CoM_xh )^2 +...
+                                        this.params.c_xm * ( CoM_xm )^2;
+                                    
                         disp(['J_stability = ',num2str(J_stability)]);
+                        
+                        this.params.c_xh * ( CoM_xh )^2 
+                                        this.params.c_xm * ( CoM_xm )^2                                         
                         
                         % Penalty function tau
                         tau_max = 0.085*80*30; %k_t1 * r_m1 *i_1_max (ACA_test_params)
@@ -330,8 +344,8 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                         f = -J_performance + J_torque + J_stability;
                         fprintf('\n');disp(['Evaluation succeeded: f = ',num2str(f)]);
                         disp(['Evaluation ',num2str(length(this.list.f)+1)]);('\n');fprintf('\n');
-                        disp(['Final CoM x coordinate = ',num2str(CoM_xh)]);
-                        disp(['Max CoM height = ',num2str(CoM_y)]);fprintf('\n');
+                        disp(['Final CoM x coordinate = ',num2str(CoM_xf)]);
+                        disp(['Max CoM height = ',num2str(CoM_y),' at x = ',num2str(CoM_xh)]);fprintf('\n');
                         
                         % Add function values to list
                         this.list.q_rec = [this.list.q_rec this.data.q_rec];
@@ -467,15 +481,15 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
 
                 %Largest y coordinate CoM
                 this.data.CoM_y = CoM_y(:);
-                [i_CoM_y_max,~] = find(CoM_y == max(CoM_y));
+                [~,i_CoM_y_max] = find(CoM_y == max(CoM_y));
+               
                 CoM_y           = max(CoM_y);
-                
                 
                 %Matching x coordinate CoM (matches largest y coordinate CoM)
                 CoM_xh = (CoM_x(i_CoM_y_max));
                 
-                %Mean x coordinate
-                CoM_xm = mean(CoM_x);
+                %Mean x coordinate from start to heighest point
+                CoM_xm = mean(abs(CoM_x(1:i_CoM_y_max)));
                 
                 %Final x coordinate
                 CoM_xf = CoM_x(end);
