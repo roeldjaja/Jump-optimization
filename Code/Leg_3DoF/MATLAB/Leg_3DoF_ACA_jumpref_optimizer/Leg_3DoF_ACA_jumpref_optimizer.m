@@ -18,11 +18,8 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
     % Control points                    this.list.cp 
     % Leg state q                       this.list.q_leg 
     % Leg state q_d                     this.list.q_leg_d 
-    
-    % TODO: 'Leg has fallen over' check returns matrix dimension error FIX
-    
+        
     % TODO: Tune objective constants
-    % TODO: Refine and/or smoothen initial trajectory to yield better control points
     % TODO: prepare parameters to work with multiple optimization execution file
     
     %__________________________________________________________________
@@ -70,7 +67,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.params.c_torq = 1/3e4;
             
             % Control point parameters 
-            this.params.cpres = 175; %Downscale factor (cp = number of q trajectory points per s/ cpres)
+            this.params.cpres = 200; %Downscale factor
             this.params.t = 0 : this.sim.params.Ts : this.sim.params.tspan(2);
             this.params.tcp = this.params.t(1 : this.params.cpres : end);
             this.params.n = length((this.params.t(1 : this.params.cpres : end)));
@@ -201,9 +198,11 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.data.q_d_res = [zeros(1,length(t));zeros(1,length(t));zeros(1,length(t));q1_d;q2_d;q3_d];
 
             % Stop timer
-            truntime=toc(trun);
-            this.data.list = this.list;
-            disp(['Total algorithm time: ',num2str(truntime),' s or ',num2str(truntime/60),' min']);
+            this.data.runtime   = toc(trun);
+            this.data.list      = this.list;
+            this.data.params    = this.params;
+            this.data.results   = this.results;
+            disp(['Total algorithm time: ',num2str(this.data.runtime),' s or ',num2str(this.data.runtime/60),' min']);
         end
         
         %__________________________________________________________________
@@ -807,7 +806,8 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 this.data           = evalin('base','optimization_data');
                 this.list           = this.data.list;
                 this.sim.data       = evalin('base','simulation_data');
-                
+                this.results        = this.data.results;
+                this.params         = this.data.params;
                 this.sim.plot;
                 hold on
                 this.plot;

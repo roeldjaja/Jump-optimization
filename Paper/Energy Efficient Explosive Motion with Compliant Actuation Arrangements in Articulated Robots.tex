@@ -25,7 +25,7 @@
 \newcommand\ubar[1]{%
 	\underaccent{\bar}{#1}}
 \usepackage{framed}
-\usepackage{eufrak}
+\usepackage{cite}
 
 \title{\LARGE \bf
 Energy Efficient Explosive Motion with Compliant Actuation Arrangements in Articulated Robots*
@@ -33,7 +33,7 @@ Energy Efficient Explosive Motion with Compliant Actuation Arrangements in Artic
 
 
 \author{Roel Djajadiningrat$^{1}$, Wesley Roozing$^{2}$ and Nikolaos G. Tsagarakis$^{3}$% <-this % stops a space
-\thanks{*Supported by ???}% <-this % stops a space
+\thanks{*Supported by \textbf{EU PROJECT???} }% <-this % stops a space
 \thanks{$^{1}$ Roel Djajadiningrat is a M.Sc student at the Department of Mechanical Engineering, TU Delft and a visiting student at Istituto Italiano di Tecnologia;
         {\tt\ r.djajadiningrat@student.tudelft.nl}
   }%
@@ -71,9 +71,19 @@ with significantly different stiffness and energy storage capacity properties dr
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{INTRODUCTION}
 
-Introduction Citation \cite{c1} \\
-compliant actuation, parallel
-compliance, biarticulation, biomechanics, robot jumping
+Introduction  \\
+sea's \cite{pratt1995series}\\
+(parallel) compliant actuation \cite{yesilevskiy2015comparison} \cite{liu2015spear}\\
+optimization in variable stiffness and compliance \cite{garabini2011optimality},\cite{velasco2013soft}   \\
+biarticulated robot jumping \cite{babivc2009biarticulated}. \\
+biomechanics \cite{niiyama2007mowgli}\\
+inverse kinematics recursive algorihm \cite{wang1999weight} \cite{albro2000computation} \cite{albro2001optimal}\\
+inverse kinematics hybrid dynamics algorithm, given desired joint accelerations, the base
+accelerations and joint torques are computed \cite{nakanishi2007inverse} \\
+novel design Asymmetric Compliant Actuation \cite{roozing2016design} \cite{roozing2016development} \\ 
+optimization B-spline trajectories \cite{ude2000planning} \cite{babivc2009biarticulated}
+objectives and constraints \cite{babivc2009biarticulated} \cite{kaphle2008optimality} \cite{wright1999numerical} \\
+energy \cite{verstraten2016energy}
 
 \section{Leg Design }
 
@@ -138,7 +148,8 @@ M(\mathbf{q})\mathbf{\ddot q} = \mathbf{\tau + G(q)} - C\mathbf{(q,\dot q)\dot q
 Here, the damping matrix is denoted by $D = \text{diag} (0,0,0,d_1,d_2,d_3)$, the generalised actuation forces are denoted by $\tau = [0,0,0,\tau_1,\tau_2,\tau_3]$, the generalised gravitational forces are denoted by $\mathbf{G(q)}$, the Coriolis matrix is denoted by $C\mathbf{(q, \dot q)}$ and the generalised inertia matrix is denoted by $M(\mathbf{q})$. The Jacobian for the heel and toe is denoted by $J_{GRF}^T$ and the ground forces in generalised coordinates are subsequently expressed as $J_{GRF}^T \mathbf{F}_{GRF}$. Spring-dampers define $\mathbf{F}_{GRF}$ in the vertical direction and Coulomb and viscous friction define the horizontal component, proportional to the vertical forces.
  
 \subsection{Inverse Dynamics}
-The jumping optimizations are guided with an objective function and its criteria. These objective criteria require information concerning the active torques, available through inverse dynamics calculations. \textit{\textbf{Reference to inversion IK paper}} The expression for $\mathbf{q}$ in equation (\ref{eq:q}) can be split in its passive joint and active joint components:
+The jumping optimizations are guided with an objective function and its criteria. These objective criteria require information concerning the active torques, available through inverse dynamics calculations. In the past an inverse dynamics formulation for the open chain, fully actuated systems derived from the recursive Newton-Euler formulation has been used to implement a recursive hybrid dynamics algorithm to integrate the system forward in time \cite{wang1999weight} \cite{albro2000computation} \cite{albro2001optimal}. However, for the optimization described in this paper we use an inverse dynamics calculation which revolves around the assumption that the motor torques from the previous time step are close to the motor commands computed at the current
+time step \cite{nakanishi2007inverse}. Using this assumption with the idea of a hybrid dynamics algorithm \cite{featherstone1984robot}, the base accelerations and joint torques can be computed for given desired joint accelerations. The expression for $\mathbf{q}$ in equation (\ref{eq:q}) can be split in its passive joint and active joint components:
  \begin{equation}
 \mathbf{q_p} = [x_1,y_1,\theta_1]^T, \quad  
 \mathbf{q_a} = [q_1,q_1,q_3]^T.
@@ -204,16 +215,16 @@ An expression for the active torques is now easily achieved by inversion of the 
 
 \section{Dynamic Optimisation}
 
-Explain necessity problem downscaling
+The search for an optimal motion requires finding the optimal active joint trajectories over time. Both the options in possible trajectories as the continuity of time pose an infinite amount of scenarios to investigate. Subsequently, the optimization we wish to perform needs to be reformulated from a a large scale trajectory optimal control problem into a finite-dimensional optimization problem.
 
 
 \subsection{Trajectory Parametrization}
 
-
-
+One can use basis splines, or B-splines, combined with a time-scale factor to reduce the complex problem into a parameter optimization \cite{ude2000planning} \cite{babivc2009biarticulated} \cite{wang1999weight} \cite{albro2001optimal}. A B-spline curve can be described by its basis functions $B_i(t)$ and control points $P=\{p_1,...,p_n\}$ which are evenly spaced over time. The active joint trajectories can be expressed as:   
  \begin{equation}
-\alpha + \beta = \chi 
- \end{equation}
+q_a(t,p) = \sum_{i=1}^{n} B_i (t) p_i
+\end{equation}
+Using the control points as optimization variables, an optimal set of control points can be determined and the corresponding B-splines yield optimal trajectories for the joint angle displacements, velocities and accelerations. However, the active torques pose a problem as the upper and lower bound constraints on the applied torques can become non-linear. Therefore it is chosen to express the torque limits by means of a penalty function in the objective criteria.
 
 \subsection{Pretension position}
 
@@ -223,20 +234,20 @@ Explain relevance of pretension position to jumping and why it is added as an op
 
 The objective function is comprised out of three criteria which reward the performance of the leg, penalize excessive torque needed to complete a movement and maintain the postural stability of the leg. A concrete minimization of the objective functions with these criteria is represented by:   
  \begin{equation}
-\min\limits J = -c_1 \cdot J_{performane}+c_2 \cdot J_{torque}+c_3 \cdot J_{stability}
+\min\limits J =  J_{performane}+ J_{torque}+ J_{stability}
  \end{equation}
-Here, $c_1$, $c_2$ and $c_3$ denote scaling constants.\\
+In the objective criteria, $c_1$, $c_2$, $c_3$ and $c_4$ denote scaling constants.\\
 
 \subsubsection{Performance}
 For the performance of the leg we distinguish two different objectives: 
 \begin{enumerate}
 	\item Jumping a maximum height, where the height is defined as the $y$-coordinate of the centre of mass of the leg with respect to the ground:
  \begin{equation}
-	J_{performane} = y_{CoM}^2
+	J_{performane} = -c_1 \cdot y_{CoM}^2
  \end{equation}
 	\item Jumping to a certain height efficiently, where the maximum $y$-coordinate reached by the centre of mass of the leg is bound to an equality constraint and the energy use is defined as the power used for the jump:
  \begin{equation}
-	J_{performane} = -P^2
+	J_{performane} = - c_1 \cdot P^2
  \end{equation}
 	Here, $P$ is defined as \textbf{define P}
 \end{enumerate}
@@ -244,14 +255,14 @@ For the performance of the leg we distinguish two different objectives:
 \subsubsection{Torque}
 The active torque $\tau_a$ is to be bounded within the maximum and minimum deliverable torque $ [\ubar \tau_{a} \, \bar \tau_{a}]$. This is enforced by means of a penalty function:  
  \begin{equation}
-J_{torque}=\sum_{0}^{t_f} (\ubar \tau_{a}-\tau_a)^T (\ubar \tau_{a}-\tau_a) + (\tau_a - \bar \tau_{a})^T (\tau_a - \bar \tau_{a})
+J_{torque}= c_2 \cdot \sum_{0}^{t_f} (\ubar \tau_{a}-\tau_a)^T (\ubar \tau_{a}-\tau_a) + (\tau_a - \bar \tau_{a})^T (\tau_a - \bar \tau_{a})
  \end{equation}
 Here, $t_f$ denotes the last time segment of the motion.\\
 
 \subsubsection{Stability}
-To ensure postural stability a stability criterion is introduced. The leg posture is considered stable when the $x$-coordinate of the centre of mass of the leg is equal to its initial $x$-coordinate, $x=0$, at the end of the jump, i.e. when the centre of mass reaches its maximum height. Also, the motion is assumed to be stable when the mean value of the x-coordinate of the centre of mass equals zero. This is achieved with the minimization of:
+To ensure postural stability a stability criterion is introduced. The leg posture is considered stable when the $x$-coordinate of the centre of mass of the leg is equal to its initial $x$-coordinate, $x=0$, at the end of the jump, i.e. when the centre of mass reaches its maximum height. Also, the motion is assumed to be stable when the mean value of the absolute x-coordinates of the centre of mass equals zero. This is achieved with the minimization of:
  \begin{equation}
-J_{stability}  = |x_{CoM}(t_h) + \bar x_{CoM}(t_h) |^2
+J_{stability}  = c_3\cdot x_{CoM}(t_h)^2 + c_4\cdot  \sum^{N}_{i=1}\frac{| x_{CoM}(t)_i |}{N}
  \end{equation}
 Here, $t_h$ denotes the point in time where the centre of mass reaches its maximum height. For succesful jumps $t_h=t_f$.\\
 \subsection{Algorithm}
@@ -277,7 +288,7 @@ The objective criteria described above require information concerning the kinema
 
    \begin{figure}[thpb]
       \centering
-      \framebox{\parbox{3in}{Textbox to insert figure
+      \framebox{\parbox{3in}{Figure of motion sequence
 }}
       %\includegraphics[scale=1.0]{figurefile}
       \caption{Caption}
@@ -288,7 +299,7 @@ The objective criteria described above require information concerning the kinema
 
 Results, max height and energy cost for certain height.\\
 
-The optimisation has been performed for the upward movement of the leg performing a jumping motion. The initial position of the leg yields a squatting posture and the optimisation is concluded when the centre of mass reaches its highest point \textbf{add figure of motion sequence}.  
+The optimisation has been performed for the upward movement of the leg performing a jumping motion. The initial position of the leg yields a squatting posture and the optimisation is concluded when the centre of mass reaches its highest point. The initial guess \textbf{describe init guess}  \textbf{add figure of motion sequence}.  
 
 \begin{table}[h]
 	\caption{Maximum jump height for different configurations}
@@ -345,13 +356,10 @@ Comparison of actuation topologies.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{APPENDIX}
 
-Appendixes should appear before the acknowledgment.
 
 \section*{ACKNOWLEDGMENT}
 
-The preferred spelling of the word ÒacknowledgmentÓ in America is without an ÒeÓ after the ÒgÓ. Avoid the stilted expression, ÒOne of us (R. B. G.) thanks . . .Ó  Instead, try ÒR. B. G. thanksÓ. Put sponsor acknowledgments in the unnumbered footnote on the first page.
 
 
 
@@ -359,39 +367,6 @@ The preferred spelling of the word ÒacknowledgmentÓ in America is without an ÒeÓ
 
 
 
-
-
-\begin{thebibliography}{99}
-
-\bibitem{c1} G. O. Young, ÒSynthetic structure of industrial plastics (Book style with paper title and editor),Ó 	in Plastics, 2nd ed. vol. 3, J. Peters, Ed.  New York: McGraw-Hill, 1964, pp. 15Ð64.
-\bibitem{c2} W.-K. Chen, Linear Networks and Systems (Book style).	Belmont, CA: Wadsworth, 1993, pp. 123Ð135.
-\bibitem{c3} H. Poor, An Introduction to Signal Detection and Estimation.   New York: Springer-Verlag, 1985, ch. 4.
-\bibitem{c4} B. Smith, ÒAn approach to graphs of linear forms (Unpublished work style),Ó unpublished.
-\bibitem{c5} E. H. Miller, ÒA note on reflector arrays (Periodical styleÑAccepted for publication),Ó IEEE Trans. Antennas Propagat., to be publised.
-\bibitem{c6} J. Wang, ÒFundamentals of erbium-doped fiber amplifiers arrays (Periodical styleÑSubmitted for publication),Ó IEEE J. Quantum Electron., submitted for publication.
-\bibitem{c7} C. J. Kaufman, Rocky Mountain Research Lab., Boulder, CO, private communication, May 1995.
-\bibitem{c8} Y. Yorozu, M. Hirano, K. Oka, and Y. Tagawa, ÒElectron spectroscopy studies on magneto-optical media and plastic substrate interfaces(Translation Journals style),Ó IEEE Transl. J. Magn.Jpn., vol. 2, Aug. 1987, pp. 740Ð741 [Dig. 9th Annu. Conf. Magnetics Japan, 1982, p. 301].
-\bibitem{c9} M. Young, The Techincal Writers Handbook.  Mill Valley, CA: University Science, 1989.
-\bibitem{c10} J. U. Duncombe, ÒInfrared navigationÑPart I: An assessment of feasibility (Periodical style),Ó IEEE Trans. Electron Devices, vol. ED-11, pp. 34Ð39, Jan. 1959.
-\bibitem{c11} S. Chen, B. Mulgrew, and P. M. Grant, ÒA clustering technique for digital communications channel equalization using radial basis function networks,Ó IEEE Trans. Neural Networks, vol. 4, pp. 570Ð578, July 1993.
-\bibitem{c12} R. W. Lucky, ÒAutomatic equalization for digital communication,Ó Bell Syst. Tech. J., vol. 44, no. 4, pp. 547Ð588, Apr. 1965.
-\bibitem{c13} S. P. Bingulac, ÒOn the compatibility of adaptive controllers (Published Conference Proceedings style),Ó in Proc. 4th Annu. Allerton Conf. Circuits and Systems Theory, New York, 1994, pp. 8Ð16.
-\bibitem{c14} G. R. Faulhaber, ÒDesign of service systems with priority reservation,Ó in Conf. Rec. 1995 IEEE Int. Conf. Communications, pp. 3Ð8.
-\bibitem{c15} W. D. Doyle, ÒMagnetization reversal in films with biaxial anisotropy,Ó in 1987 Proc. INTERMAG Conf., pp. 2.2-1Ð2.2-6.
-\bibitem{c16} G. W. Juette and L. E. Zeffanella, ÒRadio noise currents n short sections on bundle conductors (Presented Conference Paper style),Ó presented at the IEEE Summer power Meeting, Dallas, TX, June 22Ð27, 1990, Paper 90 SM 690-0 PWRS.
-\bibitem{c17} J. G. Kreifeldt, ÒAn analysis of surface-detected EMG as an amplitude-modulated noise,Ó presented at the 1989 Int. Conf. Medicine and Biological Engineering, Chicago, IL.
-\bibitem{c18} J. Williams, ÒNarrow-band analyzer (Thesis or Dissertation style),Ó Ph.D. dissertation, Dept. Elect. Eng., Harvard Univ., Cambridge, MA, 1993. 
-\bibitem{c19} N. Kawasaki, ÒParametric study of thermal and chemical nonequilibrium nozzle flow,Ó M.S. thesis, Dept. Electron. Eng., Osaka Univ., Osaka, Japan, 1993.
-\bibitem{c20} J. P. Wilkinson, ÒNonlinear resonant circuit devices (Patent style),Ó U.S. Patent 3 624 12, July 16, 1990. 
-
-
-
-
-
-
-\end{thebibliography}
-
-
-
-
+\bibliographystyle{ieeetr}
+\bibliography{lit}
 \end{document}
