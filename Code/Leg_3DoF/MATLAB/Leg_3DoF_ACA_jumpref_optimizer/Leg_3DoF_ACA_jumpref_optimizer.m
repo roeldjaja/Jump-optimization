@@ -63,14 +63,14 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             
             % Stability
             this.params.c_xh = 2e2;     % CoM_x corresponding to highest CoM_y
-            this.params.c_xm = 1/1e4;
+            this.params.c_xm = 1/1e5;
             this.params.c_xf = 1e1;     % Last CoM_x 
             
             % Torque
             this.params.c_torq = 1/3e4;
             
             % Control point parameters 
-            this.params.cpres = 200; %Downscale factor (cp = number of q trajectory points per s/ cpres)
+            this.params.cpres = 175; %Downscale factor (cp = number of q trajectory points per s/ cpres)
             this.params.t = 0 : this.sim.params.Ts : this.sim.params.tspan(2);
             this.params.tcp = this.params.t(1 : this.params.cpres : end);
             this.params.n = length((this.params.t(1 : this.params.cpres : end)));
@@ -202,6 +202,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
 
             % Stop timer
             truntime=toc(trun);
+            this.data.list = this.list;
             disp(['Total algorithm time: ',num2str(truntime),' s or ',num2str(truntime/60),' min']);
         end
         
@@ -489,7 +490,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 CoM_xh = (CoM_x(i_CoM_y_max));
                 
                 %Mean x coordinate from start to heighest point
-                CoM_xm = mean(abs(CoM_x(1:i_CoM_y_max)));
+                CoM_xm = mean(abs(CoM_x));%1:i_CoM_y_max)));
                 
                 %Final x coordinate
                 CoM_xf = CoM_x(end);
@@ -508,15 +509,15 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             
             figure
             plot(this.params.t, this.data.q_init(:,4)',this.params.t,this.data.q_res(4,:),'--',this.params.t,q_leg(4,:))
-            title('q_1');legend('Original reference','Solution reference','Actual trajectory');xlabel('s');ylabel('rad');
+            title('q_1');legend('Initial reference','Solution reference','Actual trajectory');xlabel('s');ylabel('rad');
             
             figure
             plot(this.params.t, this.data.q_init(:,5)',this.params.t,this.data.q_res(5,:),'--',this.params.t,q_leg(5,:))
-            title('q_2');legend('Original reference','Solution reference','Actual trajectory');xlabel('s');ylabel('rad');
+            title('q_2');legend('Initial reference','Solution reference','Actual trajectory');xlabel('s');ylabel('rad');
             
             figure
             plot(this.params.t, this.data.q_init(:,6)',this.params.t,this.data.q_res(6,:),'--',this.params.t,q_leg(6,:))
-            title('q_3');legend('Original reference','Solution reference','Actual trajectory');xlabel('s');ylabel('rad');
+            title('q_3');legend('Initial reference','Solution reference','Actual trajectory');xlabel('s');ylabel('rad');
             
             
             % Plot all q1 references
@@ -792,13 +793,29 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
         
         function simulate_solution(this)      
        % Run simulation with q_res (result)
+            this.sim.model.ref.use_random =1;
             this.sim.model.ref.random.q_ref = this.data.q_res;   
             this.sim.model.ref.random.q_d_ref = this.data.q_d_res;
             fprintf('\n');disp('Resimulating for found solution');
             this.sim.run(1);
             fprintf('\n');disp('Rerun animation with this.sim.animate');     
          end
-        
+        %_____________________________________________________________
+        function plot_matdata(this)
+            
+            if (~exist('optimization_data','var')) || (~exist('simulation_data','var'))
+                this.data           = evalin('base','optimization_data');
+                this.list           = this.data.list;
+                this.sim.data       = evalin('base','simulation_data');
+                
+                this.sim.plot;
+                hold on
+                this.plot;
+            else
+                disp('Not all needed data found. Please load .mat file');
+            end
+            
+        end 
     end %end methods
 end %end classdef
 
