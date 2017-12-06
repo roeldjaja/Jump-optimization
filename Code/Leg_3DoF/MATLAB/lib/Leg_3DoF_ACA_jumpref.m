@@ -212,9 +212,10 @@ classdef Leg_3DoF_ACA_jumpref < handle
             this.a1.x0(5) = q_joints_0(1);  % PB rotor initial position equal to joint initial position
             this.a2.x0(5) = q_joints_0(2);  % PB rotor initial position equal to joint initial position
             this.a3.x0(5) = q_joints_0(3);  % PB rotor initial position equal to joint initial position
-            this.a1.x0(6) = -this.a1.topology.t * q_joints_0; % Pretension position for dL_p = 0
-            this.a2.x0(6) = -this.a2.topology.t * q_joints_0; % Pretension position for dL_p = 0
-            this.a3.x0(6) = -this.a3.topology.t * q_joints_0; % Pretension position for dL_p = 0
+            this.a1.x0(6) = p;
+            this.a2.x0(6) = p;
+            this.a3.x0(6) = p;
+            % dL_p = ...
             this.a1.control.p_opt_prev = this.a1.x0(6);     % Pretension opt. ref. filter state
             this.a2.control.p_opt_prev = this.a2.x0(6);     % Pretension opt. ref. filter state
             this.a3.control.p_opt_prev = this.a3.x0(6);     % Pretension opt. ref. filter state
