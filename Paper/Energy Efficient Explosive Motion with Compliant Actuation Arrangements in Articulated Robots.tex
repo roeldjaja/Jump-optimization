@@ -236,7 +236,7 @@ The objective function is comprised out of three criteria which reward the perfo
  \begin{equation}
 \min\limits J =  J_{performane}+ J_{torque}+ J_{stability}
  \end{equation}
-In the objective criteria, $c_1$, $c_2$, $c_3$ and $c_4$ denote scaling constants.\\
+In the following objective criteria, $c_1$, $c_2$, $c_3$ and $c_4$ denote scaling constants.\\
 
 \subsubsection{Performance}
 For the performance of the leg we distinguish two different objectives: 
@@ -245,17 +245,20 @@ For the performance of the leg we distinguish two different objectives:
  \begin{equation}
 	J_{performane} = -c_1 \cdot y_{CoM}^2
  \end{equation}
-	\item Jumping to a certain height efficiently, where the maximum $y$-coordinate reached by the centre of mass of the leg is bound to an equality constraint and the energy use is defined as the power used for the jump:
+	\item Jumping to a certain height efficiently, where the maximum $y$-coordinate reached by the centre of mass of the leg is bound to an equality constraint and the energy use is to be minimized:
  \begin{equation}
-	J_{performane} = - c_1 \cdot P^2
+	J_{performane} =  c_1 \cdot E^2
  \end{equation}
-	Here, $P$ is defined as \textbf{define P}
+	Here, $E$ is defined as the cumulative electrical energy consumption in Joules according to the integrated positive power model \cite{verstraten2016energy}:
+	 \begin{equation}
+	E_{elec,pos} = \int max(0,P_{source}(t))dt
+	\end{equation}
 \end{enumerate}
 
 \subsubsection{Torque}
-The active torque $\tau_a$ is to be bounded within the maximum and minimum deliverable torque $ [\ubar \tau_{a} \, \bar \tau_{a}]$. This is enforced by means of a penalty function:  
+The active torque $\tau_a$ is to be kept low and within the maximum and minimum deliverable torque. This is enforced by means of a penalty function which incorporates the 2-norm of the realised values of $\tau_a$:  
  \begin{equation}
-J_{torque}= c_2 \cdot \sum_{0}^{t_f} (\ubar \tau_{a}-\tau_a)^T (\ubar \tau_{a}-\tau_a) + (\tau_a - \bar \tau_{a})^T (\tau_a - \bar \tau_{a})
+J_{torque}= c_2 \cdot || \tau_a ||_2^2
  \end{equation}
 Here, $t_f$ denotes the last time segment of the motion.\\
 
