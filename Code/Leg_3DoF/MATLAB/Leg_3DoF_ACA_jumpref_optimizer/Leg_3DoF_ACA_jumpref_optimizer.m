@@ -18,7 +18,8 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
     % Control points                    this.list.cp 
     % Leg state q                       this.list.q_leg 
     % Leg state q_d                     this.list.q_leg_d 
-        
+    
+    % TODO: Tune this.params.c_torq to work with new criterium
     % TODO: Tune objective constants
     % TODO: prepare parameters to work with multiple optimization execution file
     
@@ -52,22 +53,22 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             
             % Get simulator
             this.sim = Leg_3DoF_ACA_jumpref_simulator(actParamsFileName, legParamsFileName);
-            
+                        
             % Objective criteria weights
             
             % Performance
-            this.params.c_perf = 1/2;
+            this.params.c_perf = 1;
             
             % Stability
-            this.params.c_xh = 2e2;     % CoM_x corresponding to highest CoM_y
-            this.params.c_xm = 1/1e5;
+            this.params.c_xh = 2;     % CoM_x corresponding to highest CoM_y
+            this.params.c_xm = 1;
             this.params.c_xf = 1e1;     % Last CoM_x 
             
             % Torque
-            this.params.c_torq = 1/3e4;
+            this.params.c_torq = 2.0000e-06;
             
             % Control point parameters 
-            this.params.cpres = 200; %Downscale factor
+            this.params.cpres = 150; %Downscale factor
             this.params.t = 0 : this.sim.params.Ts : this.sim.params.tspan(2);
             this.params.tcp = this.params.t(1 : this.params.cpres : end);
             this.params.n = length((this.params.t(1 : this.params.cpres : end)));
@@ -329,15 +330,8 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                                         this.params.c_xm * ( CoM_xm )^2                                         
                         
                         % Penalty function tau
-                        tau_max = 0.085*80*30; %k_t1 * r_m1 *i_1_max (ACA_test_params)
-                        tau_lb = [-tau_max; -tau_max; -tau_max];
-                        tau_ub = [tau_max; tau_max; tau_max];
-                        tau = tau_IK';
-                        Jk = zeros(1,length(tau));  % Preallocate
-                        for k = 1:length(tau)
-                            Jk(k) = (tau_lb-tau(:,k))'*(tau_lb-tau(:,k))+(tau(:,k)-tau_ub)'*(tau(:,k)-tau_ub);
-                        end
-                        J_torque = this.params.c_torq* sum(Jk)/length(tau);  
+                        
+                        J_torque = this.params.c_torq * norm(tau_IK)^2;  
                         disp(['J_torque = ',num2str(J_torque)]);
                         
                         % Objective function
@@ -816,6 +810,18 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             end
             
         end 
+        %_____________________________________________________________
+        function load_matdata(this)
+            if (~exist('optimization_data','var')) || (~exist('simulation_data','var'))
+                this.data           = evalin('base','optimization_data');
+                this.list           = this.data.list;
+                this.sim.data       = evalin('base','simulation_data');
+                this.results        = this.data.results;
+                this.params         = this.data.params;
+            else
+                disp('Not all needed data found. Please load .mat file');
+            end            
+        end
     end %end methods
 end %end classdef
 
