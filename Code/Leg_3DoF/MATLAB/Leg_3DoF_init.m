@@ -21,3 +21,6 @@ addpath(genpath('Leg_3DoF_ACA_jumpref_optimizer'));
 
 % Dependency on ACA class
 addpath(genpath(['..' filesep '..' filesep 'ACA/MATLAB']));
+
+% fastBspine functions
+addpath(genpath(['..' filesep '..' filesep 'external/fastBspline']));

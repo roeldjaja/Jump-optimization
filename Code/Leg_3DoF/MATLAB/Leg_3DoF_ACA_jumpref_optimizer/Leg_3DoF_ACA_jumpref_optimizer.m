@@ -53,26 +53,23 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             
             % Get simulator
             this.sim = Leg_3DoF_ACA_jumpref_simulator(actParamsFileName, legParamsFileName);
-                        
+            
             % Objective criteria weights
             
             % Performance
             this.params.c_perf = 1;
             
             % Stability
-            this.params.c_xh = 2;     % CoM_x corresponding to highest CoM_y
-            this.params.c_xm = 1;
+            this.params.c_xh = 1e4;     % CoM_x corresponding to highest CoM_y
+            this.params.c_xm = 1e2;
             this.params.c_xf = 1e1;     % Last CoM_x 
             
             % Torque
-            this.params.c_torq = 2.0000e-06;
+            this.params.c_torq = 1*1/5e6;
             
             % Control point parameters 
-            this.params.cpres = 150; %Downscale factor
-            this.params.t = 0 : this.sim.params.Ts : this.sim.params.tspan(2);
-            this.params.tcp = this.params.t(1 : this.params.cpres : end);
-            this.params.n = length((this.params.t(1 : this.params.cpres : end)));
-            this.params.tn = this.params.n*3;
+            % Grab control point at t(1) and every t(1+cpres) points
+            this.params.cpres = 150;    
             
             % Status
             disp('Initialized Leg_3DoF_ACA_jumpref_optimizer with default parameters.');
@@ -97,7 +94,13 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.list.F_GRF =           [];
             this.list.cp =              [];
             
-            % Time and numbers
+            % Control point parameters
+            this.params.t = 0 : this.sim.params.Ts : this.sim.params.tspan(2);
+            this.params.tcp = this.params.t(1 : this.params.cpres : end);
+            this.params.n = length((this.params.t(1 : this.params.cpres : end)));
+            this.params.tn = this.params.n*3;
+            
+            % Time and numbers shorthand
             t = this.params.t;
             n = this.params.n;
             tn = this.params.tn;
@@ -314,8 +317,6 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                         % IK, return tau active and maximum CoM-y and mean CoM-x
                         [tau_IK,CoM_xh,CoM_xm, CoM_xf, CoM_y] = this.Calc_IK();
                         
-                        
-                        
                         % Performance index CoM height
                         J_performance = this.params.c_perf*CoM_y^2;
                         fprintf('\n');disp(['J_performance = ',num2str(J_performance)]);
@@ -323,11 +324,10 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                         % Stability function CoM
                         J_stability =   this.params.c_xh * ( CoM_xh )^2 +...
                                         this.params.c_xm * ( CoM_xm )^2;
-                                    
-                        disp(['J_stability = ',num2str(J_stability)]);
                         
-                        this.params.c_xh * ( CoM_xh )^2 
-                                        this.params.c_xm * ( CoM_xm )^2                                         
+                        disp(['c * CoM_xh = ',num2str(this.params.c_xh * ( CoM_xh )^2)]) 
+                        disp(['c * CoM_xm = ',num2str(this.params.c_xm * ( CoM_xm )^2)])      
+                        disp(['J_stability = ',num2str(J_stability)]);                                   
                         
                         % Penalty function tau
                         
