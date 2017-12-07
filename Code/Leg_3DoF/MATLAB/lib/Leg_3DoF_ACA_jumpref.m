@@ -10,6 +10,7 @@ classdef Leg_3DoF_ACA_jumpref < handle
         ref     % Reference parameters
         control % Control parameters/variables
         actParamsFileName % Actuation parameters filename
+        p       % Pretension parameter
     end
     
     %__________________________________________________________________
@@ -51,6 +52,11 @@ classdef Leg_3DoF_ACA_jumpref < handle
             this.a2     = ACA('ACA_test_params');
             this.a3     = ACA('ACA_test_params');
             
+            % Set default pretension parameter
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            this.p                     = 0.02;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                
             % For low-pass filters / exp. smoothing below
             Ts      = 1e-3;
             f_c     = 200; % [Hz]
@@ -75,6 +81,7 @@ classdef Leg_3DoF_ACA_jumpref < handle
                 load(this.actParamsFileName, 'psi', 'T', 'actuatorParams');
                 disp(['INFO: Loaded actuation topology from ' this.actParamsFileName]);
                 % type is automagically set from topology
+           
                 this.a1.params.p_static     = actuatorParams{1}.p; %#ok<*USENS>
                 this.a2.params.p_static     = actuatorParams{2}.p;
                 this.a3.params.p_static     = actuatorParams{3}.p;
@@ -212,10 +219,12 @@ classdef Leg_3DoF_ACA_jumpref < handle
             this.a1.x0(5) = q_joints_0(1);  % PB rotor initial position equal to joint initial position
             this.a2.x0(5) = q_joints_0(2);  % PB rotor initial position equal to joint initial position
             this.a3.x0(5) = q_joints_0(3);  % PB rotor initial position equal to joint initial position
-            this.a1.x0(6) = p;
-            this.a2.x0(6) = p;
-            this.a3.x0(6) = p;
-            % dL_p = ...
+            this.a1.x0(6) = this.p;
+            this.a2.x0(6) = this.p;
+            this.a3.x0(6) = this.p; 
+            this.a1.x0(4) = this.p + this.a1.topology.t * q_joints_0; % dL_p = p +t q
+            this.a2.x0(4) = this.p + this.a2.topology.t * q_joints_0; % dL_p = p +t q
+            this.a3.x0(4) = this.p + this.a3.topology.t * q_joints_0; % dL_p = p +t q
             this.a1.control.p_opt_prev = this.a1.x0(6);     % Pretension opt. ref. filter state
             this.a2.control.p_opt_prev = this.a2.x0(6);     % Pretension opt. ref. filter state
             this.a3.control.p_opt_prev = this.a3.x0(6);     % Pretension opt. ref. filter state
