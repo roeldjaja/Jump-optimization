@@ -248,7 +248,7 @@ classdef ACA < handle
             % Get states, inputs
             i_1 = u(1,:);       i_2 = u(2,:);
             x_1_d = x(1,:);     p_d = x(2,:);
-            
+
             % Parameter shorthands
             d_e1 = this.params.d_e1;
             k_t1 = this.params.k_t1;
@@ -335,8 +335,10 @@ classdef ACA < handle
             A(1,3) = -k_pb / (I_m1 * r_m1^2);
             
             % p_d
-            A(2,2) = -(d_m2 * r_m2^2 + d_p) / (I_m2 * r_m2^2);
-            A(2,4) = -k_p / (I_m2 * r_m2^2);
+%             A(2,2) = -(d_m2 * r_m2^2 + d_p) / (I_m2 * r_m2^2);
+%             A(2,4) = -k_p / (I_m2 * r_m2^2);
+            A(2,2) = 0;
+            A(2,4) = 0;
             
             % dL_pb
             A(3,1) = 1;
@@ -359,15 +361,17 @@ classdef ACA < handle
             B(1,this.inputIdx_q_d) = -this.topology.t_pb * d_pb / (I_m1 * r_m1^2);
             
             % p_d
-            B(2,2) = k_t2 * r_m2 / (I_m2 * r_m2^2);
-            B(2,this.inputIdx_q_d) = -this.topology.t * d_p / (I_m2 * r_m2^2);
+%             B(2,2) = k_t2 * r_m2 / (I_m2 * r_m2^2);
+%             B(2,this.inputIdx_q_d) = -this.topology.t * d_p / (I_m2 * r_m2^2);
+            B(2,2) = 0;
+            B(2,this.inputIdx_q_d) = 0;
             
             % dL_pb
             B(3,this.inputIdx_q_d) = this.topology.t_pb;
             
             % dL_p
             B(4,this.inputIdx_q_d) = this.topology.t;
-            
+         
             
             % C
             % x = [x_1_d; p_d; dL_pb, dL_p; x_1; p]
@@ -435,6 +439,10 @@ classdef ACA < handle
         %__________________________________________________________________
         % Get control action
         function [i_1, i_2] = controller(this, t, x, tau_ref, q, q_d, tau_p, tau_s)
+            
+%              x(2) %p_d
+%              x(6) %p
+            
             % Get the ESB torques on this ACA's driven joint index
             tau_p = tau_p(this.topology.idx); % Net ESB torque
             tau_s = tau_s(this.topology.idx); % ESB torque from other (spanned) actuators
@@ -451,6 +459,7 @@ classdef ACA < handle
             
             % PB control law
             % dL_pb_ref = K^-1 * tau_pb_ref (deflection control)
+            
             % e_m = dL_pb_ref - dL_pb
             % e_m_d = -dL_pb_d = -(x_1_d - q_d)
             % tau_m1 = r_m1^-1 * k_pb * dL_pb + k_m * (e_m + d_m * e_m_d)
@@ -466,6 +475,7 @@ classdef ACA < handle
             e_m         = dL_pb_ref - dL_pb;                                % Deflection error
             e_m_d       = dL_pb_ref_d - (x(1) + this.topology.t_pb * q_d);	% Deflection error derivative
             e_m_d_prev  = this.control.e_m_d_prev;                          % Prev. error derivative
+
             a_m         = this.control.a_m;                               	% Exp. smooth. factor
             e_m_d       = a_m * e_m_d + (1 - a_m) * e_m_d_prev;           	% Filtered error derivative
             tau_m1      =   r_m1^-1 * tau_pb_ref + ...      % Feed-forward
@@ -525,8 +535,11 @@ classdef ACA < handle
             p_ref_prev  = this.control.p_ref_prev;              % Prev. pretension pos. ref.
             p_d_ref     = (p_ref - p_ref_prev) * Ts;            % p_ref derivative
             e_p         = p_ref - p;                            % Error
-            e_p_d       = p_d_ref - p_d;                        % Error derivative
-            e_p_d_prev  = this.control.e_p_d_prev;              % Prev. error derivative
+%             e_p         = 0;                            % Error = 0
+%             e_p_d       = p_d_ref - p_d;                        % Error derivative
+            e_p_d       = 0;                      % Error derivative = 0
+            e_p_d_prev  = this.control.e_p_d_prev;              % Prev. error set to zero
+
             a_pp        = this.control.a_pp;                    % Exp. smooth. factor
             e_p_d       = a_pp * e_p_d + (1-a_pp) * e_p_d_prev;	% Filtered error derivative
             dL_p        = x(4);                                 % ESB elongation

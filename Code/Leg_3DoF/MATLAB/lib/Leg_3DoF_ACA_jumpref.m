@@ -53,9 +53,8 @@ classdef Leg_3DoF_ACA_jumpref < handle
             this.a3     = ACA('ACA_test_params');
             
             % Set default pretension parameter
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            this.p                     = 0.02;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            this.p = [0.035 0.035 0.035];
+ 
                 
             % For low-pass filters / exp. smoothing below
             Ts      = 1e-3;
@@ -149,7 +148,7 @@ classdef Leg_3DoF_ACA_jumpref < handle
             this.ref.y_hip_freq     = omega;        % Hip y reference frequency
             this.ref.y_hip_phase    = pi/8;         % Hip y reference phase
             this.ref.use_random     = 0;            % Do not use random reference by default (use this.ref_use_random() to switch!)
-            
+    
             % Set initial leg, actuator and control states from reference at t=0
             % Leg: q = [x1, y1, theta, q1, q2, q3]
             %[q_0, q_d_0]    = this.q_ref(0);
@@ -158,11 +157,11 @@ classdef Leg_3DoF_ACA_jumpref < handle
             
             % Set initial leg, actuator and control states from a squat position
             % Leg: q = [x1, y1, theta, q1, q2, q3]
-%             q_0     = [0; 0.02; 0; -0.4; 0.8; -0.8]; % Leg starts slightly in the air
-            q_0     = [0; 0; 0; -0.6; 1.5; -1.2];
-            q_d_0   = [0; 0; 0; 0; 0; 0];
-            this.setInitialStates(q_0, q_d_0);
-            
+%             q_0     = this.ref.random.q_ref ;       
+%             q_d_0   = this.ref.random.q_d_ref;             
+%             this.setInitialStates(q_0, q_d_0);
+
+
             % Set initial leg, actuator and control states from straight
             % leg configuration
             % Leg: q = [x1, y1, theta, q1, q2, q3]
@@ -219,12 +218,12 @@ classdef Leg_3DoF_ACA_jumpref < handle
             this.a1.x0(5) = q_joints_0(1);  % PB rotor initial position equal to joint initial position
             this.a2.x0(5) = q_joints_0(2);  % PB rotor initial position equal to joint initial position
             this.a3.x0(5) = q_joints_0(3);  % PB rotor initial position equal to joint initial position
-            this.a1.x0(6) = this.p;
-            this.a2.x0(6) = this.p;
-            this.a3.x0(6) = this.p; 
-            this.a1.x0(4) = this.p + this.a1.topology.t * q_joints_0; % dL_p = p +t q
-            this.a2.x0(4) = this.p + this.a2.topology.t * q_joints_0; % dL_p = p +t q
-            this.a3.x0(4) = this.p + this.a3.topology.t * q_joints_0; % dL_p = p +t q
+            this.a1.x0(6) = this.p(1);      % Pretension position
+            this.a2.x0(6) = this.p(2);      % Pretension position
+            this.a3.x0(6) = this.p(3);      % Pretension position
+            this.a1.x0(4) = this.p(1) + this.a1.topology.t * q_joints_0; % dL_p = p +t * q_0
+            this.a2.x0(4) = this.p(2) + this.a2.topology.t * q_joints_0; % dL_p = p +t * q_0
+            this.a3.x0(4) = this.p(3) + this.a3.topology.t * q_joints_0; % dL_p = p +t * q_0
             this.a1.control.p_opt_prev = this.a1.x0(6);     % Pretension opt. ref. filter state
             this.a2.control.p_opt_prev = this.a2.x0(6);     % Pretension opt. ref. filter state
             this.a3.control.p_opt_prev = this.a3.x0(6);     % Pretension opt. ref. filter state
@@ -1018,9 +1017,9 @@ classdef Leg_3DoF_ACA_jumpref < handle
                 
                 % Set initial leg, actuator and control states from reference at t=0
                 %disp('WARN: Setting initial leg, actuator and control states from random reference at t=0:');
-                %q_0    = this.ref.random.q_ref(:,1)
-                %q_d_0  = this.ref.random.q_d_ref(:,1);
-                %this.setInitialStates(q_0, q_d_0);
+                q_0    = this.ref.random.q_ref(:,1);
+                q_d_0  = this.ref.random.q_d_ref(:,1);
+                this.setInitialStates(q_0, q_d_0);
                 
                 % Set flag
                 this.ref.use_random = 1;

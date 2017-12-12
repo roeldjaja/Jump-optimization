@@ -89,7 +89,6 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
             disp(['Simulating for ' num2str(this.params.tspan(2),'%3.1f') ' s...']);
             tic
             x = this.ode4int(@(t,x) this.model.dx_ode(t,x), this.params.t, this.params.x0, @(t,x) this.outFun(t, x));
-
             toc
             t = this.params.t;
             
@@ -724,7 +723,7 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
             h2 = plot(t, P_A2_filt, 'Color', C.R, 'LineWidth', 2);
             h3 = plot(t, P_A3_filt, 'Color', C.G, 'LineWidth', 2);
             h4 = plot(t, P_filt, 'Color', C.BLK, 'LineWidth', 2);
-            setYAxis;%(-1, yAxisIgnoreTime);
+            setYAxis(-1, yAxisIgnoreTime);
             paperModeLegend(	paperMode, ...
                                 {   ['$P_{A1}$ filt. (' num2str(P_A1_filt(end), '%3.1f') ' W end)'],	...
                                     ['$P_{A2}$ filt. (' num2str(P_A2_filt(end), '%3.1f') ' W end)'],    ...
@@ -810,7 +809,7 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
                                 {'$\dot{p}_1$', '$\dot{p}_2$', '$\dot{p}_3$'},    ...
                                 {'p_{d,1}', 'p_{d,2}', 'p_{d,3}'}           );
             paperModeAxisLabels(paperMode, {'$t$ [s]', '[rpm]'}, {'t [s]', '[rpm]'});
-            setYAxis;
+            setYAxis;%;
             paperModeTitle(     showTitleInPaperMode, paperMode, ...
                                 'M2 rotor velocities',  ...
                                 'M2 rotor velocities'   );

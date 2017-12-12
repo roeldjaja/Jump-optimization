@@ -2,7 +2,7 @@
 % File to do test with pretension position (temporary)
 
 % Load jump reference
-load 061217_2
+load q_init3
 
 % Construct optimizer, simulator, model, leg
 opt =  Leg_3DoF_ACA_jumpref_optimizer('actuatorParams_biarticulated.mat', 'Leg_3DoF_design_bi');
@@ -19,12 +19,12 @@ for k = 1:8
     opt.list.F_GRF = [];
     
     % Set simulator jump reference
-    opt.sim.model.ref.random.q_ref = optimization_data.q_res;
-    opt.sim.model.ref.random.q_d_ref = optimization_data.q_d_res;
+    opt.sim.model.ref.random.q_ref = q_init;
+    opt.sim.model.ref.random.q_d_ref = q_init_d;
     opt.sim.model.ref.use_random =1;
     
     % Set initial states
-    opt.sim.model.setInitialStates( opt.sim.model.ref.random.q_ref(:,1), opt.sim.model.ref.random.q_d_ref(:,1) )
+    opt.sim.model.setInitialStates( q_init(:,1), q_init_d(:,1) )
 
     % Simulate with jump reference
     opt.sim.run(1);
