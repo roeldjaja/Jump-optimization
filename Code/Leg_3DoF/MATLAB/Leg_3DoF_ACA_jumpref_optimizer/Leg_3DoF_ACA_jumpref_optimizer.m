@@ -2,8 +2,10 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
     % Leg_3DoF_ACA_jumpref_optimizer Class for optimization of the trajectory of the
     % 3-DoF leg actuated by Asymmetric Compliant Actuators (ACAs)
     
+    % Construction example for biarticulated:
+    % <...> = Leg_3DoF_ACA_jumpref_optimizer('actuatorParams_biarticulated.mat','Leg_3DoF_design_bi')
     % Run optimization with this.run, 
-    % Afterwards animate with this.sim.animate or this.animatesolution(resimulates)
+    % Afterwards resimulate solution with this.simulate_solution and use this.sim.animate to animate latest simulation
     % Plot optimization data with this.plot
     
     % Available Data     
@@ -17,12 +19,11 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
     % CoM y coordinates (max)           this.list.CoM_y                        
     % All evaluation ground forces      this.list.F_GRF  
     % Control points                    this.list.cp 
+    % Pretensions                       this.list.p
     % Leg state q                       this.list.q_leg 
     % Leg state q_d                     this.list.q_leg_d 
     
-    % TODO: Tune this.params.c_torq to work with new criterium
-    % TODO: Tune objective constants
-    % TODO: prepare parameters to work with multiple optimization execution file
+    % TODO: sufficient change in p variables
     
     %__________________________________________________________________
     % Properties
@@ -78,11 +79,15 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.params.t = 0 : this.sim.params.Ts : this.sim.params.tspan(2);
             
             % Control point parameters 
-            this.params.cpres           = 150;       % Get cp at t(1) and every t(cpres+1)
-            this.params.DiffMaxChange   = 1;  
+            this.params.cpres           = 150;       % Get cp at t(1) and every t(cpres+1)  
             
             % Initial pretensions
             this.data.p_init = [0.03 0.03 0.03];
+            
+            % Optimization options
+            this.params.DiffMinChange           = 0;        % Default 0
+            this.params.DiffMaxChange           = inf;      % Deftault inf
+            this.params.InitTrustRegionRadius   = 1;        % Default sqrt(number of variables)
             
             % Status
             disp('Initialized Leg_3DoF_ACA_jumpref_optimizer with default parameters.');
@@ -168,8 +173,8 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 options = optimoptions( 'fmincon',...           
                                         'Display','iter',...
                                         'Algorithm','interior-point',...
-                                        'InitTrustRegionRadius',1,...
-                                        'DiffMinChange',1e-2,...
+                                        'InitTrustRegionRadius',this.params.InitTrustRegionRadius,...
+                                        'DiffMinChange',this.params.DiffMinChange,...
                                         'DiffMaxChange',this.params.DiffMaxChange);  
                                         %'TypicalX',[-0.3 -0.65 0.8 0.1 1.6 1.5 0.6 0.2 -1.2 -1 -0.4 0.1],...
                                         % 'FinDiffRelStep',1e-3,...
@@ -243,20 +248,20 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 lb(1:n)         = this.sim.model.leg.params.q_limits(1,1);    %lb q1
                 lb(n+1:2*n)     = this.sim.model.leg.params.q_limits(2,1);    %lb q2
                 lb(2*n+1:3*n)   = this.sim.model.leg.params.q_limits(3,1);    %lb q3
-                lb(3*n+1:3*n+3) = -0.024;                                     %lb p %TODO
+                lb(3*n+1:3*n+3) = -0.08;                                      %lb p %TODO
 
                 ub              = zeros(1,tn);
                 ub(1:n)         = this.sim.model.leg.params.q_limits(1,2);    %ub q1
                 ub(n+1:2*n)     = this.sim.model.leg.params.q_limits(2,2);    %ub q2
                 ub(2*n+1:3*n)   = this.sim.model.leg.params.q_limits(3,2);    %ub q3
-                ub(3*n+1:3*n+3) = 0.0440;                                     %ub p  %TODO
+                ub(3*n+1:3*n+3) = 0.08;                                       %ub p  %TODO
                    
                 % Optimization options
                 options = optimoptions( 'fmincon',...           
                                         'Display','iter',...
                                         'Algorithm','interior-point',...
-                                        'InitTrustRegionRadius',1,... 
-                                        'DiffMinChange',1e-1,...
+                                        'InitTrustRegionRadius', this.params.InitTrustRegionRadius,... 
+                                        'DiffMinChange',this.params.DiffMinChange,...
                                         'DiffMaxChange',this.params.DiffMaxChange,...  
                                         'TypicalX',[cp_init this.data.p_init]);
                                         %'DiffMinChange',1e-2,...
@@ -411,6 +416,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 catch ME
                 end
                 if ~isempty(ME)
+                    disp(ME.message)
                     f = NaN;
                     ('\n');disp(['Error in simulation, ignoring function evaluation: f = NaN , for ', num2str(length(this.list.f)+1)]);('\n');
                 else
@@ -561,7 +567,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 try
                     this.sim.run(0); 
                     
-                % Skip iteration if a joint limit (or other) error still occurs
+                % Skip iteration if a joint limit, p limit or other error still occurs
                 catch ME
                 end
                 if ~isempty(ME)

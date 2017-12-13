@@ -203,10 +203,10 @@ classdef ACA < handle
             % x = [x_1_d; p_d; dL_pb, dL_p; x_1; p]
             % u = [i_1, i_2, [q_d]] where q_d is a topology.Nx1 vector
             % y = [[x]; P_1; P_2; v_1; v_2; [tau_pb]; [tau_p]; [tau]]
-            
+           
             % Get ESB elongation
             dL_p = x(4);
-            
+          
             % Check pretension range out of bounds, after checking for
             % noESB
             % Check for noESB
@@ -440,7 +440,7 @@ classdef ACA < handle
         % Get control action
         function [i_1, i_2] = controller(this, t, x, tau_ref, q, q_d, tau_p, tau_s)
             
-%              x(2) %p_d
+             x(2) %p_d
 %              x(6) %p
             
             % Get the ESB torques on this ACA's driven joint index
@@ -534,8 +534,8 @@ classdef ACA < handle
             p_d         = x(2);                                 % Pretension pos. derivative
             p_ref_prev  = this.control.p_ref_prev;              % Prev. pretension pos. ref.
             p_d_ref     = (p_ref - p_ref_prev) * Ts;            % p_ref derivative
-            e_p         = p_ref - p;                            % Error
-%             e_p         = 0;                            % Error = 0
+%             e_p         = p_ref - p;                            % Error
+            e_p         = 0;                            % Error = 0
 %             e_p_d       = p_d_ref - p_d;                        % Error derivative
             e_p_d       = 0;                      % Error derivative = 0
             e_p_d_prev  = this.control.e_p_d_prev;              % Prev. error set to zero
@@ -544,8 +544,11 @@ classdef ACA < handle
             e_p_d       = a_pp * e_p_d + (1-a_pp) * e_p_d_prev;	% Filtered error derivative
             dL_p        = x(4);                                 % ESB elongation
             if (dL_p > 0)
-                tau_m2      =   r_m2^-1 * k_p * dL_p + ...      % Compensation
+%                 tau_m2      =   r_m2^-1 * k_p * dL_p + ...      % Compensation
+%                                 k_pp * (e_p + d_pp * e_p_d);    % PD
+                tau_m2      =   0 + ...                         % Compensation
                                 k_pp * (e_p + d_pp * e_p_d);    % PD
+
             else
                 tau_m2      =	k_pp * (e_p + d_pp * e_p_d);    % PD
             end
