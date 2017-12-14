@@ -46,13 +46,16 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.params.noESB = 0;
             if (~exist('actParamsFileName', 'var'))
                 actParamsFileName = '';
+                % Recognize ESB
                 this.params.noESB = 1;
             end
             if (~exist('legParamsFileName', 'var'))
                 legParamsFileName = '';
             end
-            disp('value noESB')
-            disp(this.params.noESB)
+            if (exist('legParamsFileName', 'var'))
+                % Recognize articulation
+                this.params.leginput = legParamsFileName;
+            end
             
             % Set empty struct for results
             this.results = struct;
@@ -81,8 +84,8 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             % Control point parameters 
             this.params.cpres           = 150;       % Get cp at t(1) and every t(cpres+1)  
             
-            % Initial pretensions
-            this.data.p_init = [0.03 0.03 0.03];
+            % Initial pretension positions (third = 0, is reset in optimization)
+            this.data.p_init = [0.03 0.03 eps];
             
             % Optimization options
             this.params.DiffMinChange           = 0;        % Default 0
@@ -175,8 +178,8 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                                         'Algorithm','interior-point',...
                                         'InitTrustRegionRadius',this.params.InitTrustRegionRadius,...
                                         'DiffMinChange',this.params.DiffMinChange,...
-                                        'DiffMaxChange',this.params.DiffMaxChange);  
-                                        %'TypicalX',[-0.3 -0.65 0.8 0.1 1.6 1.5 0.6 0.2 -1.2 -1 -0.4 0.1],...
+                                        'DiffMaxChange',this.params.DiffMaxChange,...  
+                                        'TypicalX',cp_init);%,...
                                         % 'FinDiffRelStep',1e-3,...
 
                 % Optimization
@@ -235,6 +238,13 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 
                 disp('Optimizing with pretension')
                 
+                % Set pretension postition ranges from legParamsFileName
+                if strcmp(this.params.leginput,'Leg_3DoF_design_mono')
+                     p_range = getfield(Leg_3DoF_design_mono,'p_range_mono');
+                elseif strcmp(this.params.leginput,'Leg_3DoF_design_bi')
+                     p_range = getfield(Leg_3DoF_design_bi,'p_range_bi');
+                end
+                
                 % Run optimization with control points [x] = [cp1 cp2 cp3 p]
                 % corresponding to [q1 q2 q3 p]
                 x0 = [cp_init this.data.p_init]; %initial guess configuration in [3*n + 3, 1] vector corresonding to [q1.. q2.. q3.. p]'
@@ -248,14 +258,14 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 lb(1:n)         = this.sim.model.leg.params.q_limits(1,1);    %lb q1
                 lb(n+1:2*n)     = this.sim.model.leg.params.q_limits(2,1);    %lb q2
                 lb(2*n+1:3*n)   = this.sim.model.leg.params.q_limits(3,1);    %lb q3
-                lb(3*n+1:3*n+3) = -0.08;                                      %lb p %TODO
+                lb(3*n+1:3*n+3) = p_range(1:3)';                              %lb p 
 
                 ub              = zeros(1,tn);
                 ub(1:n)         = this.sim.model.leg.params.q_limits(1,2);    %ub q1
                 ub(n+1:2*n)     = this.sim.model.leg.params.q_limits(2,2);    %ub q2
                 ub(2*n+1:3*n)   = this.sim.model.leg.params.q_limits(3,2);    %ub q3
-                ub(3*n+1:3*n+3) = 0.08;                                       %ub p  %TODO
-                   
+                ub(3*n+1:3*n+3) = p_range(4:6)';                              %ub p  
+
                 % Optimization options
                 options = optimoptions( 'fmincon',...           
                                         'Display','iter',...

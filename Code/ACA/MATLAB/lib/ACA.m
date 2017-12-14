@@ -337,8 +337,7 @@ classdef ACA < handle
             % p_d
 %             A(2,2) = -(d_m2 * r_m2^2 + d_p) / (I_m2 * r_m2^2);
 %             A(2,4) = -k_p / (I_m2 * r_m2^2);
-            A(2,2) = 0;
-            A(2,4) = 0;
+
             
             % dL_pb
             A(3,1) = 1;
@@ -363,8 +362,7 @@ classdef ACA < handle
             % p_d
 %             B(2,2) = k_t2 * r_m2 / (I_m2 * r_m2^2);
 %             B(2,this.inputIdx_q_d) = -this.topology.t * d_p / (I_m2 * r_m2^2);
-            B(2,2) = 0;
-            B(2,this.inputIdx_q_d) = 0;
+
             
             % dL_pb
             B(3,this.inputIdx_q_d) = this.topology.t_pb;
@@ -440,7 +438,7 @@ classdef ACA < handle
         % Get control action
         function [i_1, i_2] = controller(this, t, x, tau_ref, q, q_d, tau_p, tau_s)
             
-             x(2) %p_d
+%              x(2) %p_d
 %              x(6) %p
             
             % Get the ESB torques on this ACA's driven joint index
