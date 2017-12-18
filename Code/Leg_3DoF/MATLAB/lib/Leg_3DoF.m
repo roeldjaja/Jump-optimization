@@ -133,7 +133,7 @@ classdef Leg_3DoF < handle
 
             % Get states
             % q = [x1, y1, theta1, q1, q2, q3]
-            % x = [x1, y1, theta1, x2, y2, theta2, x3, y3, theta3, x4, y4, theta4]
+            % x = [x1, y1, theta1, x2, y2, theta2, x3, y3, theta3, x4, y4, theta4]  
             x1      = q(1);
             y1      = q(2);
             theta1  = q(3);

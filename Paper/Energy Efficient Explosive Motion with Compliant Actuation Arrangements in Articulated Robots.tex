@@ -32,21 +32,15 @@ Energy Efficient Explosive Motion with Compliant Actuation Arrangements in Artic
 }
 
 
-\author{Roel Djajadiningrat$^{1}$, Wesley Roozing$^{2}$ and Nikolaos G. Tsagarakis$^{3}$% <-this % stops a space
-\thanks{*Supported by \textbf{EU PROJECT???} }% <-this % stops a space
+\author{Roel Djajadiningrat$^{1}$, Wesley Roozing$^{2}$ and Nikolaos G. Tsagarakis$^{2}$% <-this % stops a space
 \thanks{$^{1}$ Roel Djajadiningrat is a M.Sc student at the Department of Mechanical Engineering, TU Delft and a visiting student at Istituto Italiano di Tecnologia;
         {\tt\ r.djajadiningrat@student.tudelft.nl}
   }%
-\thanks{$^{2}$Wesley Roozing is with the Department of Advanced Robotics,
+\thanks{$^{2}$Wesley Roozing and Nikolaos G. Tsagarakis are with the Department of Advanced Robotics,
 	(Fondazione) Istituto Italiano di Tecnologia, via Morego,
 	30, 16163 Genova, Italy.
-        {\tt\small wesley.roozing@iit.it}
+        {\tt\ \{wesley.roozing, nikos.tsagarakis\}@iit.it}
      }%
-\thanks{$^{2}$Nikolaos G. Tsagarakis is with the Department of Advanced Robotics,
-	(Fondazione) Istituto Italiano di Tecnologia, via Morego,
-	30, 16163 Genova, Italy.
-	{\tt\small nikos.tsagarakis@iit.it}        
-    }%
 }
 
 
@@ -71,21 +65,21 @@ with significantly different stiffness and energy storage capacity properties dr
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{INTRODUCTION}
 
-Introduction  \\
-sea's \cite{pratt1995series}\\
-(parallel) compliant actuation \cite{yesilevskiy2015comparison} \cite{liu2015spear}\\
-optimization in variable stiffness and compliance \cite{garabini2011optimality},\cite{velasco2013soft}   \\
-biarticulated robot jumping \cite{babivc2009biarticulated}. \\
-biomechanics \cite{niiyama2007mowgli}\\
-inverse kinematics recursive algorihm \cite{wang1999weight} \cite{albro2000computation} \cite{albro2001optimal}\\
-inverse kinematics hybrid dynamics algorithm, given desired joint accelerations, the base
-accelerations and joint torques are computed \cite{nakanishi2007inverse} \\
-novel design Asymmetric Compliant Actuation \cite{roozing2016design} \cite{roozing2016development} \\ 
-optimization B-spline trajectories \cite{ude2000planning} \cite{babivc2009biarticulated}
-objectives and constraints \cite{babivc2009biarticulated} \cite{kaphle2008optimality} \cite{wright1999numerical} \\
-energy \cite{verstraten2016energy}
+In the past robot applications were found predominantly in static industrial settings, but over the past years robots have been introduced to more dynamic settings, operating with and among humans. This change in application is accompanied by a change in requirements on robots. One of the primary challenges today is letting robots match human-like behaviour in terms of motion. This requires light-weight actuation systems that allow for energy efficient explosive motion, large  instantaneous  forces  with  short  duration, and matching motion planning and control. A prime example of an exacting explosive motion is the vertical jump.
+\\
+Several approaches have been investigated over the years to design robotic systems capable of energy efficient explosive motion. The use of sensorization of moving parts of rigid machines and active control tends to be costly, encombrant, and unreliable. Therefore, often systems with compliant properties are used. The `Bow Leg' hopping robot is a compliant hopping leg with a curved leaf spring made of laminated fibreglass and strings that hold the leg in compression to store elastic energy which shows us that low power motors  can  be  competent  for  actuation \cite{zeglin1999bow}. A small bipedal jumping robot called `Mowgli' uses compliant muscles antagonistic to its pneumatic artificial muscles made of rubber tubes in order to simplify its body while being able to store and release energy rapidly enabling it to jump as high as 0.5 m \cite{niiyama2007mowgli}. A switchable form of Parallel Elastic Actuation (PEA) has shown to utilize the benefits of compliant properties whilst maintaining a high degree of control when the compliance is not needed \cite{liu2015spear}. The introduction of Series Elastic Actuation (SEA) ensured more accurate and stable force control leading to increased energy efficiency over PEA \cite{pratt1995series,yesilevskiy2015comparison}.
+Further optimization of synchronized variation of stiffness and velocity when moving
+in the shortest time while limiting possible impact forces has been reached using Variable Stiffness Actuation (VSA) \cite{garabini2011optimality} and the importance of the optimization of joint trajectories besides the actuation parameters has been argued to increase energy efficiency \cite{velasco2013soft}. Also bi-articulation, spanning multiple joints simultaneously with a single muscle as is seen in nature, is shown to increase energy efficiency drastically \cite{schenau1989rotation,prilutsky1994tendon}. Comparative jumping experiments with single actuator bi-articulated robots opposed to multiple actuator robots show increased performance in jumping for bi-articulation configurations \cite{oshima2007jumping,babivc2009biarticulated,hyon2002development}. \\
+More recently, Roozing et al. \cite{roozing2016design,roozing2016development} presented the development and control of a novel asymmetric antagonistic actuation scheme characterised by large energy storage capacity that enables efficient execution of motions, as well as a novel method to select the design parameters of asymmetric
+compliant actuation (ACA) schemes to improve the energy efficiency of multi-DoF articulated robots powered by this type of actuators. This paper extends these previous works and contributes by using the ACA design to execute optimal explosive vertical jumping motions submitted to different objectives. An optimization problem is formulated to optimize the joint trajectories for energy efficient vertical jumping motions of a 3-DoF leg and three different configurations of the ACA's are investigated.\\
+The paper is structured as follows. Section \ref{sec:legDesign} describes a 3-DoF leg model, the asymmetric actuation and three different actuation configuration used to demonstrate the effectiveness of the ACA design for the execution of energy efficient explosive motions. Section \ref{sec:dynamicModel} describes the dynamics of the leg and the dynamic computations performed to aid the jumping motion optimization. Section \ref{sec:dynamicOptimisation} describes the optimisation parameters, the objective criteria and the optimisation algorithm. The optimisation results are presented in Section \ref{sec:results} followed by a discussion of results in Section \ref{sec:discussion} and conclusions in Section \ref{sec:conclusions}.
 
-\section{Leg Design }
+
+\section{Leg Design } \label{sec:legDesign}
+
+\subsection{Model}
+
+been+model
 
 \subsection{Assymmetric Compliant Actuation}
 
@@ -103,14 +97,15 @@ For the concept of Assymetric Compliant Actuation, or ACA, a combination of two 
  The Power Branch (\textit{PB}) is a rotary Series Elastic Actuator (\textit{SEA}) which consists of a high power motor \textit{M1} in series with a torsional elastic element \textit{SE}. The Energy Storage Branch (\textit{ESB}) consists of a lower power motor \textit{M2} with a high reduction linear transmission which transfers its power through a unidirectional series elastic element \textit{PE}.
 
 \subsection{Configurations}
-In nature, bi-articulated muscle structures, muscle structures that actuate multiple joints, can be found on humans and animals. An example of a bi-articulated muscle structure are the hamstrings, which span both the hip and knee joint. ACA's can be utilized to realize bi-articulated actuation by letting the PB drive a joint directly, and letting the ESB tendon span the driven joint by a pulley and in turn drive a second joint. Bi-articulation is one of three configurations of the leg considered for the jumping optimization:
+In nature, bi-articulated muscle structures, muscle structures that actuate multiple joints simultaneously, can be found on humans and other animals. An example of a bi-articulated muscle structure are the hamstrings, which span both the hip and knee joint. ACA's can be utilized to realize bi-articulated actuation by letting the PB drive a joint directly, and letting the ESB tendon span a second joint by means of a pulley. Bi-articulation is one of three actuation configurations of the leg considered for the jumping optimization:
 
   \begin{enumerate}
-	\item Firstly, the ACA's are not considered and jumping optimizations are performed for the leg with fixed compliance SEA's only.
-	\item Secondly, the ACA's are introduced to perform jumping optimizations on a mono-articulated version of the leg. 
-	\item Lastly, a bi-articulated version of the leg is considered for optimization.
+	\item The ACA's are not considered and jumping optimizations are performed for the leg with fixed compliance SEA's only.
+	\item The ACA's are introduced to perform jumping optimizations on a mono-articulated version of the leg. 
+	\item A bi-articulated version of the leg is considered for optimization.
 \end{enumerate}
-The leg actuation configurations are shown in Fig \ref{fig:configurations}.
+The leg actuation configurations are shown in Fig \ref{fig:configurations}. The designs of the actuation configurations have been optimized to select actuation
+parameters that yield high electrical energy efficiency and reduction in peak torque and electrical power requirements \cite{roozing2016design}.
 
 \begin{figure}[b]
 	\centering
@@ -121,7 +116,7 @@ The leg actuation configurations are shown in Fig \ref{fig:configurations}.
 	\label{fig:configurations}
 \end{figure}
 
-\section{Dynamic Model}
+\section{Dynamic Model} \label{sec:dynamicModel}
 
 \subsection{Forward Dynamics} 
 The leg consists out of four links which are connected by the actuated ankle, knee and hip joints, denoted $q_1,q_2,q_3$, with torques $\tau_1,\tau_2,\tau_3$ as shown in Fig. \ref{fig:leg}. 
@@ -143,19 +138,23 @@ The Euler-Lagrange formulism with generalised coordinates $\mathbf{q} \in \mathf
  \end{equation}
 leading to:
  \begin{equation}
-M(\mathbf{q})\mathbf{\ddot q} = \mathbf{\tau + G(q)} - C\mathbf{(q,\dot q)\dot q -} D \mathbf{\dot q} + J_{GRF}^T \mathbf{F}_{GRF}  \label{eq:fwddyn}
+M(\mathbf{q})\mathbf{\ddot q} = \mathbf{\boldsymbol{\tau} + G(q)} - C\mathbf{(q,\dot q)\dot q -} D \mathbf{\dot q} + J_{GRF}^T \mathbf{F}_{GRF}  \label{eq:fwddyn}
  \end{equation}
-Here, the damping matrix is denoted by $D = \text{diag} (0,0,0,d_1,d_2,d_3)$, the generalised actuation forces are denoted by $\tau = [0,0,0,\tau_1,\tau_2,\tau_3]$, the generalised gravitational forces are denoted by $\mathbf{G(q)}$, the Coriolis matrix is denoted by $C\mathbf{(q, \dot q)}$ and the generalised inertia matrix is denoted by $M(\mathbf{q})$. The Jacobian for the heel and toe is denoted by $J_{GRF}^T$ and the ground forces in generalised coordinates are subsequently expressed as $J_{GRF}^T \mathbf{F}_{GRF}$. Spring-dampers define $\mathbf{F}_{GRF}$ in the vertical direction and Coulomb and viscous friction define the horizontal component, proportional to the vertical forces.
+Here, the damping matrix is denoted by $D = \text{diag} (0,0,0,d_1,d_2,d_3)$, the generalised actuation forces are denoted by $\boldsymbol{\tau} = [0,0,0,\tau_1,\tau_2,\tau_3]$, the generalised gravitational forces are denoted by $\mathbf{G(q)}$, the Coriolis matrix is denoted by $C\mathbf{(q, \dot q)}$ and the generalised inertia matrix is denoted by $M(\mathbf{q})$. The Jacobian for the heel and toe is denoted by $J_{GRF}^T$ and the ground forces in generalised coordinates are subsequently expressed as $J_{GRF}^T \mathbf{F}_{GRF}$. Spring-dampers define $\mathbf{F}_{GRF}$ in the vertical direction and Coulomb and viscous friction define the horizontal component, proportional to the vertical forces.
  
 \subsection{Inverse Dynamics}
-The jumping optimizations are guided with an objective function and its criteria. These objective criteria require information concerning the active torques, available through inverse dynamics calculations. In the past an inverse dynamics formulation for the open chain, fully actuated systems derived from the recursive Newton-Euler formulation has been used to implement a recursive hybrid dynamics algorithm to integrate the system forward in time \cite{wang1999weight} \cite{albro2000computation} \cite{albro2001optimal}. However, for the optimization described in this paper we use an inverse dynamics calculation which revolves around the assumption that the motor torques from the previous time step are close to the motor commands computed at the current
-time step \cite{nakanishi2007inverse}. Using this assumption with the idea of a hybrid dynamics algorithm \cite{featherstone1984robot}, the base accelerations and joint torques can be computed for given desired joint accelerations. The expression for $\mathbf{q}$ in equation (\ref{eq:q}) can be split in its passive joint and active joint components:
+For formulation of the optimisation problem described in Sec. \ref{sec:dynamicOptimisation}, we first need to derive the inverse dynamics of the system in order to compute the active torques applied to it \cite{nakanishi2007inverse}. The configuration vector $\mathbf{q}$ can be split in its passive joint and active joint components:
+ \begin{equation}
+\mathbf{q} = \left[\mathbf{q_p}, \mathbf{q_a}\right]^T
+\end{equation}
+with
  \begin{equation}
 \mathbf{q_p} = [x_1,y_1,\theta_1]^T, \quad  
 \mathbf{q_a} = [q_1,q_1,q_3]^T.
 \end{equation}
 \noindent
-Incorporating these into the dynamic equations in equation (\ref{eq:fwddyn}) with the knowledge that $\boldsymbol{\tau_p}=0$ leads to:
+Similarly, $\boldsymbol{\tau} = \left[\mathbf{0},\boldsymbol{\tau}_a\right]^T$.
+Substituting these into \eqref{eq:fwddyn}:
 \begin{equation}
 \begin{aligned}
 &\left[\begin{array}{cc}  
@@ -181,16 +180,12 @@ J_1\\
 J_2
 \end{array} \right] 
 \mathbf{F}_{EXT}\mathbf{(q, \dot q)}
-\end{aligned}
+\end{aligned} \label{eq:ik}
 \end{equation}		
-Here, $\mathbf{B}$ denotes the gravitational, Coriolis and damping forces. Writing out the matrix multiplications to:
-\begin{equation}
-\begin{aligned}
-&M_{pp} \mathbf{\ddot q_p}+M_{pa} \mathbf{\ddot q_a} + \mathbf{B_p (q,\dot q)} = J_1 \mathbf{F}_{EXT}\mathbf{(q, \dot q)} \\
-&M_{ap} \mathbf{\ddot q_p}+M_{aa} \mathbf{\ddot q_a} + \mathbf{B_a (q,\dot q)} = J_2 \mathbf{F}_{EXT}\mathbf{(q, \dot q) + \boldsymbol{\tau_a}} 
-\end{aligned}
-\end{equation}
-allows for an inverse formulation:
+Where $\mathbf{B}$ denotes the gravitational, Coriolis and damping forces. 
+
+
+Rearranging \eqref{eq:ik} allows for an inverse formulation:
 \begin{equation}
 \begin{aligned}
 &\left[\begin{array}{cc}  
@@ -213,30 +208,30 @@ J_{EXT}^T\mathbf{F}_{EXT}\mathbf{(q, \dot q)}.
 \end{equation}	
 An expression for the active torques is now easily achieved by inversion of the left-hand side mass matrix. 
 
-\section{Dynamic Optimisation}
+\section{Dynamic Optimisation} \label{sec:dynamicOptimisation}
 
-The search for an optimal motion requires finding the optimal active joint trajectories over time. Both the options in possible trajectories as the continuity of time pose an infinite amount of scenarios to investigate. Subsequently, the optimization we wish to perform needs to be reformulated from a a large scale trajectory optimal control problem into a finite-dimensional optimization problem.
+The search for an optimal motion requires finding active joint trajectories over time. Expressing these trajectories over time directly poses an extremely high dimensional optimisation problem which is laborious to solve. Consequently, the optimization we wish to perform needs to be reformulated from a large scale trajectory optimal control problem into a lower-dimensional optimization problem \cite{kaphle2008optimality}.
 
 
 \subsection{Trajectory Parametrization}
 
-One can use basis splines, or B-splines, combined with a time-scale factor to reduce the complex problem into a parameter optimization \cite{ude2000planning} \cite{babivc2009biarticulated} \cite{wang1999weight} \cite{albro2001optimal}. A B-spline curve can be described by its basis functions $B_i(t)$ and control points $P=\{p_1,...,p_n\}$ which are evenly spaced over time. The active joint trajectories can be expressed as:   
+One can use basis splines, or B-splines, combined with a time-scale factor to reduce the complex problem into a parameter optimization \cite{ude2000planning} \cite{babivc2009biarticulated} \cite{wang1999weight} \cite{albro2001optimal}. A B-spline curve can be described by its basis functions $B_i(t)$ and control points $\mathbf{P}=\left[p_1,\dots,p_n\right]$ which are evenly spaced over time. The active joint trajectories are then computed:   
  \begin{equation}
 q_a(t,p) = \sum_{i=1}^{n} B_i (t) p_i
 \end{equation}
-Using the control points as optimization variables, an optimal set of control points can be determined and the corresponding B-splines yield optimal trajectories for the joint angle displacements, velocities and accelerations. However, the active torques pose a problem as the upper and lower bound constraints on the applied torques can become non-linear. Therefore it is chosen to express the torque limits by means of a penalty function in the objective criteria.
+Using the control points as optimization variables, an optimal set of control points can be determined and the corresponding B-splines yield optimal trajectories for the joint angle displacements, velocities and accelerations. 
 
-\subsection{Pretension position}
+\subsection{Pretension positions}
 
 Explain relevance of pretension position to jumping and why it is added as an optimisation variable.
 
 \subsection{Objective criteria}
 
-The objective function is comprised out of three criteria which reward the performance of the leg, penalize excessive torque needed to complete a movement and maintain the postural stability of the leg. A concrete minimization of the objective functions with these criteria is represented by:   
+The objective function is comprised out of three criteria which 1) reward the performance of the leg, 2) penalize excessive torque needed to complete a movement and 3) maintain the postural stability of the leg. A minimization of the objective functions with these criteria is represented by:   
  \begin{equation}
-\min\limits J =  J_{performane}+ J_{torque}+ J_{stability}
+\min_{\mathbf{p}}\limits J =  J_{performane}+ J_{torque}+ J_{stability}
  \end{equation}
-In the following objective criteria, $c_1$, $c_2$, $c_3$ and $c_4$ denote scaling constants.\\
+In the following objective criteria, $c_1$, $c_2$, $c_3$, $c_4$ and $c_5$ denote scaling constants.\\
 
 \subsubsection{Performance}
 For the performance of the leg we distinguish two different objectives: 
@@ -245,9 +240,9 @@ For the performance of the leg we distinguish two different objectives:
  \begin{equation}
 	J_{performane} = -c_1 \cdot y_{CoM}^2
  \end{equation}
-	\item Jumping to a certain height efficiently, where the maximum $y$-coordinate reached by the centre of mass of the leg is bound to an equality constraint and the energy use is to be minimized:
+	\item Jumping to a certain height efficiently, where the maximum $y$-coordinate reached by the centre of mass of the leg $y_{COM}$ is to be close to a set height $y_{COM,set}$ and the energy use is to be minimized:
  \begin{equation}
-	J_{performane} =  c_1 \cdot E^2
+	J_{performane} =  c_1 \cdot E^2 + c_2 \cdot |y_{COM,set}-y_{COM}|
  \end{equation}
 	Here, $E$ is defined as the cumulative electrical energy consumption in Joules according to the integrated positive power model \cite{verstraten2016energy}:
 	 \begin{equation}
@@ -256,18 +251,19 @@ For the performance of the leg we distinguish two different objectives:
 \end{enumerate}
 
 \subsubsection{Torque}
+The active torques pose a problem as the upper and lower bound constraints on the applied torques can become non-linear. Therefore it is chosen to express the torque limits by means of a penalty function in the objective criteria.
 The active torque $\tau_a$ is to be kept low and within the maximum and minimum deliverable torque. This is enforced by means of a penalty function which incorporates the 2-norm of the realised values of $\tau_a$:  
  \begin{equation}
-J_{torque}= c_2 \cdot || \tau_a ||_2^2
+J_{torque}= c_3 \cdot || \tau_a ||_2^2
  \end{equation}
-Here, $t_f$ denotes the last time segment of the motion.\\
 
 \subsubsection{Stability}
-To ensure postural stability a stability criterion is introduced. The leg posture is considered stable when the $x$-coordinate of the centre of mass of the leg is equal to its initial $x$-coordinate, $x=0$, at the end of the jump, i.e. when the centre of mass reaches its maximum height. Also, the motion is assumed to be stable when the mean value of the absolute x-coordinates of the centre of mass equals zero. This is achieved with the minimization of:
+To ensure postural stability a stability criterion is introduced. The leg posture is considered stable when the $x$-coordinate of the centre of mass of the leg is equal to its initial $x$-coordinate, $x_{CoM}=0$, at the end of the jump, i.e. when the centre of mass reaches its maximum height. Also, the motion is assumed to be stable when the mean value of the absolute x-coordinates of the centre of mass equals zero. For an $N$ number of time segments, this is achieved with the minimization of:
  \begin{equation}
-J_{stability}  = c_3\cdot x_{CoM}(t_h)^2 + c_4\cdot  \sum^{N}_{i=1}\frac{| x_{CoM}(t)_i |}{N}
+J_{stability}  = c_4\cdot x_{CoM}(t_h)^2 + c_5\cdot  \sum^{N}_{i=1}\frac{| x_{CoM}(t)_i |}{N}
  \end{equation}
-Here, $t_h$ denotes the point in time where the centre of mass reaches its maximum height. For succesful jumps $t_h=t_f$.\\
+Here, $t_h$ denotes the point in time where the centre of mass reaches its maximum height. Let $t_f$ denote the final time segment of the optimisation motion where either the maximum CoM height $y_{CoM}$ has been reached or the jump is unsuccessful and the leg has fallen over. For successful jumps $t_h=t_f$. \\
+
 \subsection{Algorithm}
 
 The objective criteria described above require information concerning the kinematic and dynamic state of the leg. Both forward and inverse dynamic calculations are to be performed while the leg states are set by adjusting the earlier described $B$-spline joint trajectories. This dependence is managed by the optimisation algorithm. The algorithm in words yields:\\
@@ -280,7 +276,7 @@ The objective criteria described above require information concerning the kinema
 	\item[$\diamond$] Run simulation of motion through forward dynamics
 	\item[$\diamond$] Calculate active torques through inverse dynamics
 	\item[$\diamond$] Evaluate objective function\\
-	\item[$\diamond$] Exit if local minimum is reached, \\ else vary control points and repeat steps with $\diamond$ 
+	\item[$\diamond$] Exit if local minimum is reached, \\ else, vary control points and repeat $\diamond$ steps
 \end{itemize}
 
 	
@@ -298,7 +294,7 @@ The objective criteria described above require information concerning the kinema
       \label{figurelabel}
    \end{figure}
    
-\section{Results}
+\section{Results} \label{sec:results}
 
 Results, max height and energy cost for certain height.\\
 
@@ -336,12 +332,14 @@ The optimisation has been performed for the upward movement of the leg performin
 	\end{center}
 \end{table}
 
-
-\section{Discussion}
+\section{Discussion} \label{sec:discussion}
 
 Comparison of actuation topologies.
 
-\section{Conclusions}
+\section{Conclusions} \label{sec:conclusions}
+
+Conclusions
+
 
 \addtolength{\textheight}{-12cm}   % This command serves to balance the column lengths
                                   % on the last page of the document manually. It shortens
@@ -363,7 +361,7 @@ Comparison of actuation topologies.
 
 \section*{ACKNOWLEDGMENT}
 
-
+Supported by European Commission projects WALK-MAN (611832), CENTAURO (644839), CoglMon (644727)
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
