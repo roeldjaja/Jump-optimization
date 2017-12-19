@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6500 64-bit) (preloaded format=pdflatex 2017.12.4)  18 DEC 2017 17:22
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6500 64-bit) (preloaded format=pdflatex 2017.12.4)  19 DEC 2017 11:21
 entering extended mode
 **"./Energy Efficient Explosive Motion with Compliant Actuation Arrangements in
  Articulated Robots.tex"
@@ -238,66 +238,64 @@ Underfull \hbox (badness 1931) in paragraph at lines 51--51
 he De-
  []
 
+Missing character: There is no â in font ptmr7t!
+Missing character: There is no € in font ptmr7t!
+Missing character: There is no ™ in font ptmr7t!
 [1{C:/Users/Roel/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}
 
 
 ]
-LaTeX Font Info:    Try loading font information for U+euf on input line 135.
+LaTeX Font Info:    Try loading font information for U+euf on input line 133.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\ueuf.fd"
 File: ueuf.fd 2013/01/14 v3.01 Euler Fraktur
 )
-Underfull \hbox (badness 10000) in paragraph at lines 142--144
+Underfull \hbox (badness 10000) in paragraph at lines 140--142
 \OT1/ptm/m/n/10 Here, the damp-ing ma-trix is de-noted by $\OML/cmm/m/it/10 D \
 OT1/cmr/m/n/10 =
  []
 
 
-Underfull \hbox (badness 3209) in paragraph at lines 142--144
+Underfull \hbox (badness 3209) in paragraph at lines 140--142
 []\OT1/cmr/m/n/10 (0\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 0\OML/cmm/m/it/10 ; \OT1
 /cmr/m/n/10 0\OML/cmm/m/it/10 ; d[]; d[]; d[]\OT1/cmr/m/n/10 )$\OT1/ptm/m/n/10 
 , the gen-er-alised ac-tu-a-tion forces
  []
 
 
-Underfull \hbox (badness 2096) in paragraph at lines 142--144
+Underfull \hbox (badness 2096) in paragraph at lines 140--142
 \OT1/ptm/m/n/10 Spring-dampers de-fine $\OT1/cmr/bx/n/10 F[]$ \OT1/ptm/m/n/10 i
 n the ver-ti-cal di-rec-tion
  []
 
 [2]
-Underfull \hbox (badness 10000) in paragraph at lines 233--235
+Underfull \hbox (badness 10000) in paragraph at lines 235--237
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 264--266
+Underfull \hbox (badness 10000) in paragraph at lines 266--268
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 269--270
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 273--274
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 278--279
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 299--300
+Underfull \hbox (badness 10000) in paragraph at lines 271--272
 
  []
 
 [3]
+Underfull \hbox (badness 10000) in paragraph at lines 275--276
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 280--281
+
+ []
+
+
 ("Energy Efficient Explosive Motion with Compliant Actuation Arrangements in Ar
-ticulated Robots.bbl")
+ticulated Robots.bbl" [4])
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -309,7 +307,9 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the US letter (8.5in X 11in) paper size.
 
-[4]
+[5
+
+]
 ("Energy Efficient Explosive Motion with Compliant Actuation Arrangements in Ar
 ticulated Robots.aux")
 
@@ -317,13 +317,13 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 2052 strings out of 493312
- 29545 string characters out of 3138902
- 92376 words of memory out of 3000000
+ 2051 strings out of 493312
+ 29533 string characters out of 3138902
+ 93376 words of memory out of 3000000
  5588 multiletter control sequences out of 15000+200000
- 50217 words of font info for 117 fonts, out of 3000000 for 9000
+ 49110 words of font info for 116 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 27i,17n,26p,1413b,291s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 27i,17n,26p,1440b,291s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/base/8r.enc}<C:/Program Files/Mi
 KTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Program Files/MiKTeX 2.9
 /fonts/type1/public/amsfonts/cm/cmbx7.pfb><C:/Program Files/MiKTeX 2.9/fonts/ty
@@ -344,9 +344,9 @@ s/MiKTeX 2.9/fonts/type1/urw/times/utmbi8a.pfb><C:/Program Files/MiKTeX 2.9/fon
 ts/type1/urw/times/utmr8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/time
 s/utmri8a.pfb>
 Output written on "Energy Efficient Explosive Motion with Compliant Actuation A
-rrangements in Articulated Robots.pdf" (4 pages, 222714 bytes).
+rrangements in Articulated Robots.pdf" (5 pages, 227622 bytes).
 PDF statistics:
- 96 PDF objects out of 1000 (max. 8388607)
+ 99 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
