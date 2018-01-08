@@ -14,7 +14,8 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
     % Efficient jump criterion values   this.list.J_energy   
     % Stability criterion values        this.list.J_stability      
     % Torque criterion values           this.list.J_torque        
-    % Objective function values         this.list.f                
+    % Objective function values         this.list.f     
+    % cumulative electrical energy      this.list.E
     % CoM x-coordinates (at max height) this.list.CoM_xh            
     % CoM y coordinates (max)           this.list.CoM_y                        
     % All evaluation ground forces      this.list.F_GRF  
@@ -87,7 +88,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.params.cpres           = 150;       % Get cp at t(1) and every t(cpres+1)  
             
             % Minimal Jumping height
-            this.params.CoM_y_ref       = 0.95;
+            this.params.CoM_y_ref       = 0.90;
             
             % Initial pretension positions (third = 0, is reset in optimization)
             this.data.p_init = [0.03 0.03 eps];
@@ -115,6 +116,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.list.J_stability   = [];
             this.list.J_torque      = [];
             this.list.f             = [];
+            this.list.E             = [];
             this.list.CoM_xh        = [];
             this.list.CoM_y         = [];
             this.list.q_rec         = [];
@@ -491,6 +493,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                         this.list.J_stability   = [this.list.J_stability J_stability];
                         this.list.J_torque      = [this.list.J_torque J_torque];
                         this.list.f             = [this.list.f f];
+                        this.list.E             = [this.list.E E_final];
                         this.list.CoM_xh        = [this.list.CoM_xh CoM_xh];
                         this.list.CoM_y         = [this.list.CoM_y CoM_y];
                     end
@@ -651,6 +654,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                         this.list.J_stability   = [this.list.J_stability J_stability];
                         this.list.J_torque      = [this.list.J_torque J_torque];
                         this.list.f             = [this.list.f f];
+                        this.list.E             = [this.list.E E_final];
                         this.list.CoM_xh        = [this.list.CoM_xh CoM_xh];
                         this.list.CoM_y         = [this.list.CoM_y CoM_y];
                     end

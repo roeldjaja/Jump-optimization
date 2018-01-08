@@ -24,3 +24,4 @@ addpath(genpath(['..' filesep '..' filesep 'ACA/MATLAB']));
 
 % fastBspline functions
 addpath(genpath(['..' filesep '..' filesep 'external/fastbspline']));
+run(genpath(['..' filesep '..' filesep 'external/fastbspline/CompileMexFiles'])) 

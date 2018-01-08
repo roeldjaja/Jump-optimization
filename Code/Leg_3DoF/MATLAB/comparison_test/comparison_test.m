@@ -55,7 +55,7 @@ com_bi.params.InitTrustRegionRadius    = InitTrustRegionRadius;
 com_bi.params.DiffMinChange            = DiffMinChange;
 com_bi.params.DiffMaxChange            = DiffMaxChange; 
 
-% com_bi.sim.model.p    = p;
+% com_bi.sim.model.p    = p;0.01
 com_bi.params.c_high  = c_high;            
 com_bi.params.c_ener  = c_ener;            
 com_bi.params.c_xh    = c_xh;      
