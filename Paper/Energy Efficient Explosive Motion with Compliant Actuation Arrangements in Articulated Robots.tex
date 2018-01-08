@@ -56,8 +56,8 @@ Energy Efficient Explosive Motion with Compliant Actuation Arrangements in Artic
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}
 
-This paper presents the trajectory and pretension optimisation for a jumping motion of a 3-DoF leg using recently introduced asymmetric compliant actuator configurations which provide energy efficient actuation for explosive motions. Two actuation branches
-with significantly different stiffness and energy storage capacity properties driving a single joint make up the actuator design. An optimisation problem is formulated to optimise the joint trajectories for energy efficient vertical jumping motions. Several configurations of the asymmetric compliant actuators have been investigated. Optimization studies of the jumping motions demonstrate SOMETHING. 
+This paper presents the trajectory and elastic element pretensions optimisation for a jumping motion of a 3-DoF leg using recently introduced asymmetric compliant actuator configurations which provide energy efficient actuation for explosive motions. Two actuation branches
+with significantly different stiffness and energy storage capacity properties driving a single joint make up the actuator design. An optimisation problem is formulated to optimise the elastic element pretensions and the joint trajectories for energy efficient vertical jumping motions. Several configurations of the asymmetric compliant actuators have been investigated. Optimization studies of the jumping motions demonstrate SOMETHING. 
 
 \end{abstract}
 
@@ -143,12 +143,12 @@ Here, the damping matrix is denoted by $D = \text{diag} (0,0,0,d_1,d_2,d_3)$, th
 \subsection{Inverse Dynamics}
 For formulation of the optimisation problem described in Sec. \ref{sec:dynamicOptimisation}, we first need to derive the inverse dynamics of the system in order to compute the applied active torques \cite{nakanishi2007inverse}. The configuration vector $\mathbf{q}$ can be split in its passive joint and active joint components:
  \begin{equation}
-\mathbf{q} = \left[\mathbf{q_p}, \mathbf{q_a}\right]^T
+\mathbf{q} = \left[\mathbf{q}_p, \mathbf{q}_a\right]^T
 \end{equation}
 with
  \begin{equation}
-\mathbf{q_p} = [x_1,y_1,\theta_1]^T, \quad  
-\mathbf{q_a} = [q_1,q_1,q_3]^T.
+\mathbf{q}_p = [x_1,y_1,\theta_1]^T, \quad  
+\mathbf{q}_a = [q_1,q_1,q_3]^T.
 \end{equation}
 \noindent
 Similarly, $\boldsymbol{\tau} = \left[\mathbf{0},\boldsymbol{\tau}_a\right]^T$.
@@ -160,17 +160,17 @@ M_{pp} & M_{aa}\\
 M_{ap} & M_{aa}
 \end{array} \right]
 \left[\begin{array}{c}  
-\mathbf{\ddot q_p}\\
-\mathbf{\ddot q_a}
+\mathbf{\ddot q}_p\\
+\mathbf{\ddot q}_a
 \end{array} \right] +
 \left[\begin{array}{c}  
-\mathbf{B_p (q,\dot q)}\\
-\mathbf{B_a (q,\dot q)}
+\mathbf{B}_p \mathbf{(q,\dot q)}\\
+\mathbf{B}_a \mathbf{(q,\dot q)}
 \end{array} \right] 
 =\\
 &\left[\begin{array}{c}  
 \mathbf{0}\\
-\boldsymbol{\tau_a}
+\boldsymbol{\tau}_a
 \end{array} \right] 
 +
 \left[\begin{array}{c}  
@@ -189,15 +189,15 @@ M_{pp} & 0\\
 M_{ap} &-I
 \end{array} \right]
 \left[\begin{array}{c}  
-\mathbf{\ddot q_p}\\
-\boldsymbol{\tau_a}
+\mathbf{\ddot q}_p\\
+\boldsymbol{\tau}_a
 \end{array} \right] =\\ 
 -&
 \left[\begin{array}{c}  
 M_{pa}\\
 M_{aa}
 \end{array} \right] 
-\mathbf{\ddot q_a}-
+\mathbf{\ddot q}_a-
 \mathbf{B(q, \dot q)}+
 J_{EXT}^T\mathbf{F}_{EXT}\mathbf{(q, \dot q)}.
 \end{aligned}
@@ -252,9 +252,9 @@ For the performance of the leg we distinguish two different objectives:
 
 \subsubsection{Torque}
 The active torques pose a problem as the upper and lower bound constraints on the applied torques can become non-linear. Therefore it is chosen to express the torque limits by means of a penalty function in the objective criteria.
-The active torque $\boldsymbol{\tau_a}$ is to be kept low and within the maximum and minimum deliverable torque. This is enforced by means of a penalty function which incorporates the 2-norm of the realised values of $\boldsymbol{\tau_a}$:  
+The active torque $\boldsymbol{\tau}_a$ is to be kept low and within the maximum and minimum deliverable torque. This is enforced by means of a penalty function which incorporates the 2-norm of the realised values of $\boldsymbol{\tau}_a$:  
  \begin{equation}
-J_{torque}= c_3 \cdot || \boldsymbol{\tau_a} ||_2^2
+J_{torque}= c_3 \cdot || \boldsymbol{\tau}_a ||_2^2
  \end{equation}
 
 \subsubsection{Stability}
@@ -365,6 +365,6 @@ Supported by European Commission projects WALK-MAN (611832), CENTAURO (644839), 
 
 
 
-\bibliographystyle{unsrt}
+\bibliographystyle{ieeetran}
 \bibliography{lit}
 \end{document}

@@ -89,7 +89,6 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
             disp(['Simulating for ' num2str(this.params.tspan(2),'%3.1f') ' s...']);
             tic
             x = this.ode4int(@(t,x) this.model.dx_ode(t,x), this.params.t, this.params.x0, @(t,x) this.outFun(t, x));
-
             toc
             t = this.params.t;
             
@@ -918,7 +917,9 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
                         q_leg(6,i) > this.model.leg.params.q_limits(3,2)    )
                     error(['Leg has hit joint limit on joint 3: q(6) = ' num2str(q_leg(3,i)) '!']);
                 end
-
+                if (	q_leg(:,i) == zeros(6,1)    )
+                    return
+                end
                 % Draw configuration
                 draw_configuration(     this.model.leg, ...
                                         q_leg(:,1:i), ...
