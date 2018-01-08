@@ -989,7 +989,21 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
             
             % Get variables from simulation results
             t           = this.data.t;
-            x_leg       = this.data.x_leg;
+            
+            % Check where motion ends and freeze final configuration
+            % Find first zero column
+            cutoff = find(~any(this.data.x_leg, 1));
+                if isempty(cutoff) ==1
+                   x_leg       = this.data.x_leg;
+                else
+            % Replace all zero columns with column before first zero column       
+                    x_leg               = this.data.x_leg;
+                    for k = cutoff(1):length(x_leg)
+                        x_leg(:,k) = x_leg(:,cutoff(1) - 1);
+                    end
+                end
+                
+            
             tau         = this.data.tau'; % Transpose
             
             % Frame rate, time step

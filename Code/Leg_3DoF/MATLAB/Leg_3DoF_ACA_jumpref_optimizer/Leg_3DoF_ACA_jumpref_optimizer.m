@@ -69,7 +69,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.params.c_high  = 1;
             
             % Energy
-            this.params.c_ener  = 1;
+            this.params.c_ener  = 2e-6;
             
             % Stability
             this.params.c_xh    = 1e4;      % CoM_x corresponding to highest CoM_y
@@ -78,7 +78,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             % Torque
             this.params.c_torq  = 2e-8;
             
-            this.params.c_y_ref = 1;
+            this.params.c_y_ref = 1e1;
             
             % Time
             this.params.t = 0 : this.sim.params.Ts : this.sim.params.tspan(2);
@@ -469,9 +469,16 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                         J_energy    = this.params.c_ener*E_final^2 + ...
                                       this.params.c_y_ref*abs(this.params.CoM_y_ref - CoM_y);
                         disp(['J_energy = ',num2str(J_energy)]);
+                        disp(['E = ',num2str(E_final)]);
+                        disp(['y_refdiff = ',num2str(abs(this.params.CoM_y_ref - CoM_y))]);
                         
                         % Objective function
-                        f = -J_high + J_torque + J_stability;
+                        
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                         f = -J_high + J_torque + J_stability;
+                        f = J_energy + J_torque + J_stability;
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                        
                         fprintf('\n');disp(['Evaluation succeeded: f = ',num2str(f)]);
                         disp(['Evaluation ',num2str(length(this.list.f)+1)]);('\n');fprintf('\n');
                         disp(['Final CoM x coordinate = ',num2str(CoM_xf)]);
@@ -626,7 +633,12 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                         disp(['J_energy = ',num2str(J_energy)]);
                         
                         % Objective function
-                        f = -J_high + J_torque + J_stability;
+                        
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                         f = -J_high + J_torque + J_stability;
+                        f = J_energy + J_torque + J_stability;
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                        
                         fprintf('\n');disp(['Evaluation succeeded: f = ',num2str(f)]);
                         disp(['Evaluation ',num2str(length(this.list.f)+1)]);('\n');fprintf('\n');
                         disp(['Final CoM x coordinate = ',num2str(CoM_xf)]);
