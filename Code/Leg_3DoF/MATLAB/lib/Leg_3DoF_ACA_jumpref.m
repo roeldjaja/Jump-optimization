@@ -53,7 +53,7 @@ classdef Leg_3DoF_ACA_jumpref < handle
             this.a3     = ACA('ACA_test_params');
             
             % Set default pretension parameter
-            this.p = [0 0 0];
+            this.p = [0.0001 0.0001 0.0001];
  
                 
             % For low-pass filters / exp. smoothing below

@@ -78,11 +78,16 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             % Torque
             this.params.c_torq  = 2e-8;
             
+            this.params.c_y_ref = 1;
+            
             % Time
             this.params.t = 0 : this.sim.params.Ts : this.sim.params.tspan(2);
             
             % Control point parameters 
             this.params.cpres           = 150;       % Get cp at t(1) and every t(cpres+1)  
+            
+            % Minimal Jumping height
+            this.params.CoM_y_ref       = 0.95;
             
             % Initial pretension positions (third = 0, is reset in optimization)
             this.data.p_init = [0.03 0.03 eps];
@@ -461,7 +466,8 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                         
                         % Energy function
                         E_final     = this.sim.data.E(tlength);
-                        J_energy    = this.params.c_ener*E_final^2;
+                        J_energy    = this.params.c_ener*E_final^2 + ...
+                                      this.params.c_y_ref*abs(this.params.CoM_y_ref - CoM_y);
                         disp(['J_energy = ',num2str(J_energy)]);
                         
                         % Objective function
@@ -615,7 +621,8 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                         
                         % Energy function
                         E_final     = this.sim.data.E(tlength);
-                        J_energy    = this.params.c_ener*E_final^2;
+                        J_energy    = this.params.c_ener*E_final^2 + ...
+                                      this.params.c_y_ref*abs(this.params.CoM_y_ref - CoM_y);
                         disp(['J_energy = ',num2str(J_energy)]);
                         
                         % Objective function

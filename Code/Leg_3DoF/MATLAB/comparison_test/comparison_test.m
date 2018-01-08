@@ -16,7 +16,6 @@ c_xm    = 1e2;
 c_torq  =  1.e-08;            
 % Control point parameters 
 cpres   = 200;
-p       = [0 0 0];
 
 % No Esb
 com_noESB   = comparison_optimizer;
@@ -25,7 +24,7 @@ com_noESB.params.InitTrustRegionRadius    = InitTrustRegionRadius;
 com_noESB.params.DiffMinChange            = DiffMinChange;
 com_noESB.params.DiffMaxChange            = DiffMaxChange; 
 
-com_noESB.sim.model.p    = p;
+% com_noESB.sim.model.p    = p;
 com_noESB.params.c_high  = c_high;            
 com_noESB.params.c_ener  = c_ener;            
 com_noESB.params.c_xh    = c_xh;      
@@ -40,7 +39,7 @@ com_mono.params.InitTrustRegionRadius    = InitTrustRegionRadius;
 com_mono.params.DiffMinChange            = DiffMinChange;
 com_mono.params.DiffMaxChange            = DiffMaxChange; 
 
-com_mono.sim.model.p    = p;
+% com_mono.sim.model.p    = p;
 com_mono.params.c_high  = c_high;            
 com_mono.params.c_ener  = c_ener;            
 com_mono.params.c_xh    = c_xh;      
@@ -56,7 +55,7 @@ com_bi.params.InitTrustRegionRadius    = InitTrustRegionRadius;
 com_bi.params.DiffMinChange            = DiffMinChange;
 com_bi.params.DiffMaxChange            = DiffMaxChange; 
 
-com_bi.sim.model.p    = p;
+% com_bi.sim.model.p    = p;
 com_bi.params.c_high  = c_high;            
 com_bi.params.c_ener  = c_ener;            
 com_bi.params.c_xh    = c_xh;      
