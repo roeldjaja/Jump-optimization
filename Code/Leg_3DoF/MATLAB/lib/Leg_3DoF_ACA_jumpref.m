@@ -165,9 +165,9 @@ classdef Leg_3DoF_ACA_jumpref < handle
             % Set initial leg, actuator and control states from straight
             % leg configuration
             % Leg: q = [x1, y1, theta, q1, q2, q3]
-%             q_0     = [0; 0.02; 0; 0.0; 0.0; 0.0]; % Leg starts slightly in the air
-%             q_d_0   = [0; 0; 0; 0; 0; 0];
-%             this.setInitialStates(q_0, q_d_0);
+            q_0     = [0; 0.02; 0; 0.0; 0.0; 0.0]; % Leg starts slightly in the air
+            q_d_0   = [0; 0; 0; 0; 0; 0];
+            this.setInitialStates(q_0, q_d_0);
             
             %%%%%%%%%%%%%%%%
             
