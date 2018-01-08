@@ -180,6 +180,11 @@ classdef ACA < handle
             
             % dx = A * x + B * u + f(x,u)
             dx = A * x + B * u + f;
+            
+            if (dx(6) ~= 0)
+                x
+                dx
+            end
         end
         
         
@@ -236,7 +241,8 @@ classdef ACA < handle
                 % Dynamics
                 % == -A(2,4)
                 % Disable this for bidirectional spring behaviour
-                f(2) = k_p * dL_p / (I_m2 * r_m2^2);
+                % NOTE: Now disabled as we force p to stay constant (I.e. we require p_d == 0)
+                %f(2) = k_p * dL_p / (I_m2 * r_m2^2);
                 
                 % Outputs
                 % == -C(this.outputIdx_tau_p, 4) and -C(this.outputIdx_tau, 4)
@@ -284,6 +290,10 @@ classdef ACA < handle
                 g(this.outputIdx_P_2,i) = i_2(i) * v_2;
                 g(this.outputIdx_v_1,i) = v_1;
                 g(this.outputIdx_v_2,i) = v_2;
+            end
+            
+            if (f(2) ~= 0)
+                f
             end
             
         end
