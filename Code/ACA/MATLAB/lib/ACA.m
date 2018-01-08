@@ -180,11 +180,6 @@ classdef ACA < handle
             
             % dx = A * x + B * u + f(x,u)
             dx = A * x + B * u + f;
-            
-            if (dx(6) ~= 0)
-                x
-                dx
-            end
         end
         
         
@@ -291,11 +286,6 @@ classdef ACA < handle
                 g(this.outputIdx_v_1,i) = v_1;
                 g(this.outputIdx_v_2,i) = v_2;
             end
-            
-            if (f(2) ~= 0)
-                f
-            end
-            
         end
         
         
