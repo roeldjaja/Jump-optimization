@@ -231,7 +231,7 @@ The objective function is comprised out of three criteria which 1) reward the pe
  \begin{equation}
 \min_{\mathbf{p}}\limits J =  J_{performane}+ J_{torque}+ J_{stability}
  \end{equation}
-In the following objective criteria, $c_1$, $c_2$, $c_3$, $c_4$ and $c_5$ denote scaling constants.\\
+In the following objective criteria, $c_1$, $c_2$, $c_3$, $c_4$, $c_5$ and $c_6$ denote scaling constants.\\
 
 \subsubsection{Performance}
 For the performance of the leg we distinguish two different objectives: 
@@ -258,10 +258,14 @@ J_{torque}= c_3 \cdot || \boldsymbol{\tau}_a ||_2^2
  \end{equation}
 
 \subsubsection{Stability}
-To ensure postural stability a stability criterion is introduced. The leg posture is considered stable when the $x$-coordinate of the centre of mass of the leg is equal to its initial $x$-coordinate, $x_{CoM}=0$, at the end of the jump, i.e. when the centre of mass reaches its maximum height. Also, the motion is assumed to be stable when the mean value of the absolute x-coordinates of the centre of mass equals zero. For an $N$ number of time segments, this is achieved with the minimization of:
+To ensure postural stability a stability criterion is introduced. The leg posture is considered stable when the $x$-coordinate of the centre of mass of the leg is equal to its initial $x$-coordinate, $x_{CoM}=0$, at the end of the jump, i.e. when the centre of mass reaches its maximum height. Also, the motion is assumed to be stable when the mean value of the absolute x-coordinates of the centre of mass equals zero. Higher stability is also assumed for a low rotational momentum $L_i$ for each leg segment at maximum height of centre of mass. For an $N$ number of time segments, this is achieved with the minimization of:
  \begin{equation}
-J_{stability}  = c_4\cdot x_{CoM}(t_h)^2 + c_5\cdot  \sum^{N}_{i=1}\frac{| x_{CoM}(t)_i |}{N}
+ \begin{aligned}
+&J_{stability}  =  \\ & c_4\cdot x_{CoM}(t_h)^2  +c_5\cdot  {\sum^{N}_{i=1}\frac{| x_{CoM}(t)_i |}{N}}^2   
+				  + c_6  \cdot   {\sum^4_{i=1} | L_i(t_h) |}^2
+ \end{aligned}
  \end{equation}
+ 
 Here, $t_h$ denotes the point in time where the centre of mass reaches its maximum height. Let $t_f$ denote the final time segment of the optimisation motion where either the maximum CoM height $y_{CoM}$ has been reached or the jump is unsuccessful and the leg has fallen over. For successful jumps $t_h=t_f$. \\
 
 \subsection{Algorithm}

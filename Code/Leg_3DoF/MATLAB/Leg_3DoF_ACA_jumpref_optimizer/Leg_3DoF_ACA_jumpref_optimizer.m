@@ -75,6 +75,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             % Stability
             this.params.c_xh    = 1e4;      % CoM_x corresponding to highest CoM_y
             this.params.c_xm    = 1e2;      % Mean CoM_x
+            this.params.c_RM    = 1e-1;
             
             % Torque
             this.params.c_torq  = 2e-8;
@@ -448,18 +449,20 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                         
                         
                         % IK, return tau active and maximum CoM-y and mean CoM-x
-                        [tau_IK,CoM_xh,CoM_xm, CoM_xf, CoM_y, tlength] = this.Calc_IK();
+                        [tau_IK,CoM_xh,CoM_xm, CoM_xf, CoM_y, tlength, RM] = this.Calc_IK();
                         
                         % Performance index CoM height
                         J_high = this.params.c_high*CoM_y^2;
                         fprintf('\n');disp(['J_high = ',num2str(J_high)]);
                         
-                        % Stability function CoM
+                        % Stability function 
                         J_stability =   this.params.c_xh * ( CoM_xh )^2 +...
-                                        this.params.c_xm * ( CoM_xm )^2;
-                        
-                        disp(['c * CoM_xh = ',num2str(this.params.c_xh * ( CoM_xh )^2)]) 
-                        disp(['c * CoM_xm = ',num2str(this.params.c_xm * ( CoM_xm )^2)])      
+                                        this.params.c_xm * ( CoM_xm )^2 +...
+                                        this.params.c_RM * (   RM   )^2;
+
+                        disp(['c * CoM_xh^2 = ',num2str(this.params.c_xh * ( CoM_xh )^2)]) 
+                        disp(['c * CoM_xm^2 = ',num2str(this.params.c_xm * ( CoM_xm )^2)])      
+                        disp(['c *   RM  ^2 = ',num2str(this.params.c_RM * ( RM )^2)])  
                         disp(['J_stability = ',num2str(J_stability)]);                                   
                         
                         % Penalty function tau
@@ -611,7 +614,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                         
                         
                         % IK, return tau active and maximum CoM-y and mean CoM-x
-                        [tau_IK,CoM_xh,CoM_xm, CoM_xf, CoM_y, tlength] = this.Calc_IK();
+                        [tau_IK,CoM_xh,CoM_xm, CoM_xf, CoM_y, tlength, RM] = this.Calc_IK();
                         
                         % Performance index CoM height
                         J_high = this.params.c_high*CoM_y^2;
@@ -619,7 +622,8 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                         
                         % Stability function CoM
                         J_stability =   this.params.c_xh * ( CoM_xh )^2 +...
-                                        this.params.c_xm * ( CoM_xm )^2;
+                                        this.params.c_xm * ( CoM_xm )^2 +...
+                                        this.params.c_RM * (   RM   )^2;
                         
                         disp(['c * CoM_xh = ',num2str(this.params.c_xh * ( CoM_xh )^2)]) 
                         disp(['c * CoM_xm = ',num2str(this.params.c_xm * ( CoM_xm )^2)])      
@@ -664,7 +668,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
         
         %__________________________________________________________________
         % Inverse Kinematics
-            function [tau_IK,CoM_xh,CoM_xm, CoM_xf, CoM_y, tlength] = Calc_IK(this)
+            function [tau_IK,CoM_xh,CoM_xm, CoM_xf, CoM_y, tlength, RM] = Calc_IK(this)
                 
                 % Clear leg state lists
                 this.list.q_leg         = [];
@@ -776,28 +780,49 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 % Active torque
                 tau_IK = qp_dd_t_act(:,4:6);  
                 
-                %CoM x and y
+                % CoM x and y
                 x       = this.sim.data.xlist;
                 q_leg   = x(:,18+1:18+6)';       % 6xN
+                q_leg_d = x(:,18+7:18+12)';
                 
                 for k = 1:length(t)
                     [CoM_x(k), CoM_y(k)] = this.sim.model.leg.calc_CoM(q_leg(:,k));
                 end
 
-                %Largest y coordinate CoM
+                % Largest y coordinate CoM
                 this.data.CoM_y = CoM_y(:);
                 [~,i_CoM_y_max] = find(CoM_y == max(CoM_y));
                
                 CoM_y           = max(CoM_y);
                 
-                %Matching x coordinate CoM (matches largest y coordinate CoM)
+                % Matching x coordinate CoM (matches largest y coordinate CoM)
                 CoM_xh = (CoM_x(i_CoM_y_max));
                 
-                %Mean x coordinate from start to heighest point
+                % Mean x coordinate from start to heighest point
                 CoM_xm = mean(abs(CoM_x));%1:i_CoM_y_max)));
                 
-                %Final x coordinate
+                % Final x coordinate
                 CoM_xf = CoM_x(end);
+                
+                % Velocities at maximum CoM_y
+                [fwdKin_vel] = this.sim.model.leg.calc_fwdKin_vel( q_leg(:,i_CoM_y_max)', q_leg_d(:,i_CoM_y_max));
+                
+                %Cartesian to angular velocity
+                [theta1_d,~] = cart2pol(fwdKin_vel(1),fwdKin_vel(2));
+                [theta2_d,~] = cart2pol(fwdKin_vel(4),fwdKin_vel(5));
+                [theta3_d,~] = cart2pol(fwdKin_vel(7),fwdKin_vel(8));
+                [theta4_d,~] = cart2pol(fwdKin_vel(10),fwdKin_vel(11));
+                
+                % Rotational momentum  
+                % L = J * theta_d
+                L1 = this.sim.model.leg.params.J1 * theta1_d;
+                L2 = this.sim.model.leg.params.J2 * theta2_d;
+                L3 = this.sim.model.leg.params.J3 * theta3_d;
+                L4 = this.sim.model.leg.params.J4 * theta4_d;
+  
+                
+                % Absolute sum of rotational moments
+                RM = sumabs([L1 L2 L3 L4]);
                 
                 %Simulation time
                 tlength = length(t);

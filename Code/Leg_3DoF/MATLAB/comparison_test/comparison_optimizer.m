@@ -87,7 +87,7 @@ classdef comparison_optimizer < handle
         end
         
         %__________________________________________________________________
-        % Run optimization (tn variables, SQP fmincon)
+        % Run optimization (tn variables,  fmincon)
         function [] = run(this)
             
             trun = tic;

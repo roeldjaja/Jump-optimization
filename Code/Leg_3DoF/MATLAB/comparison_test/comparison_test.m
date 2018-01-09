@@ -99,7 +99,11 @@ com_bi.simulate_solution;
 
 
 
-
+% CoM_y_noESB = 0.8853
+% 
+% CoM_y_mono = 0.8666
+% 
+% CoM_y_bi  0.8758
 
 
 
