@@ -6,14 +6,14 @@ DiffMinChange            = 1e-3;
 DiffMaxChange            = 0.5;
             
 % Performance (high)
-c_high  = 1;            
+c_high  = 1e1;            
 % Energy
 c_ener  = 1;            
 % Stability
-c_xh    = 1e3;      
+c_xh    = 1e4;      
 c_xm    = 1e2;            
 % Torque
-c_torq  =  2e-5;            
+c_torq  =  1e-8; %3e-6;   works           
 % Control point parameters 
 cpres   = 100;
 

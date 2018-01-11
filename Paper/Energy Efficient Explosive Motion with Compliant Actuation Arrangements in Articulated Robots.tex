@@ -251,7 +251,7 @@ For the performance of the leg we distinguish two different objectives:
 \end{enumerate}
 
 \subsubsection{Torque}
-The active torques pose a problem as the upper and lower bound constraints on the applied torques can become non-linear. Therefore it is chosen to express the torque limits by means of a penalty function in the objective criteria.
+The active torques pose a problem as the upper and lower bound constraints on the applied torques can become non-linear. Therefore it is chosen to express the torque limits by means of a penalty function in the objective criteria and to terminate the simulation when the torque limits are violated.
 The active torque $\boldsymbol{\tau}_a$ is to be kept low and within the maximum and minimum deliverable torque. This is enforced by means of a penalty function which incorporates the 2-norm of the realised values of $\boldsymbol{\tau}_a$:  
  \begin{equation}
 J_{torque}= c_3 \cdot || \boldsymbol{\tau}_a ||_2^2
@@ -278,7 +278,7 @@ The objective criteria described above require information concerning the kinema
 	\item[$\diamond$] Create trajectory with $B$-splines
 	\item[$\diamond$] Check joint angles, continue if limits are not exceeded \\else, vary control points and repeat $\diamond$ steps
 	\item[$\diamond$] Run simulation of motion through forward dynamics
-	\item[$\diamond$] Calculate active torques through inverse dynamics
+	\item[$\diamond$] Calculate active torques through inverse dynamics,\\ continue if limits are not exceeded \\else, vary control points and repeat $\diamond$ steps
 	\item[$\diamond$] Evaluate objective function\\
 	\item[$\diamond$] Exit if local minimum is reached, \\ else, vary control points and pretension positions and repeat $\diamond$ steps
 \end{itemize}

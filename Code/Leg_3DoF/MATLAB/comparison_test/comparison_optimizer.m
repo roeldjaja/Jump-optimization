@@ -351,30 +351,38 @@ classdef comparison_optimizer < handle
                         disp(['J_stability = ',num2str(J_stability)]);                                   
                         
                         % Penalty function tau
-                        J_torque = this.params.c_torq * norm(tau_IK)^2;  
-                        disp(['J_torque = ',num2str(J_torque)]);
                         
-                        % Energy function
-                        E_final     = this.sim.data.E(tlength);
-                        J_energy    = this.params.c_ener*E_final^2;
-                        disp(['J_energy = ',num2str(J_energy)]);
-                        
-                        % Objective function
-                        f = -J_high + J_torque + J_stability;
-                        fprintf('\n');disp(['Evaluation succeeded: f = ',num2str(f)]);
-                        disp(['Evaluation ',num2str(length(this.list.f)+1)]);('\n');fprintf('\n');
-                        disp(['Final CoM x coordinate = ',num2str(CoM_xf)]);
-                        disp(['Max CoM height = ',num2str(CoM_y),' at x = ',num2str(CoM_xh)]);fprintf('\n');
-                        
-                        % Add function values to list
-                        this.list.q_rec         = [this.list.q_rec this.data.q_rec];
-                        this.list.J_high        = [this.list.J_high J_high];
-                        this.list.J_energy      = [this.list.J_energy J_energy];
-                        this.list.J_stability   = [this.list.J_stability J_stability];
-                        this.list.J_torque      = [this.list.J_torque J_torque];
-                        this.list.f             = [this.list.f f];
-                        this.list.CoM_xh        = [this.list.CoM_xh CoM_xh];
-                        this.list.CoM_y         = [this.list.CoM_y CoM_y];
+                        % Ignore evaluation if max active torque >= 204
+                        if max(max(abs(tau_IK))) >= 204
+                            fprintf('\n');disp('Torque limit violated: f = NaN');fprintf('\n');
+                            f = NaN;
+                        else
+                            
+                            J_torque = this.params.c_torq * norm(tau_IK)^2;  
+                            disp(['J_torque = ',num2str(J_torque)]);
+
+                            % Energy function
+                            E_final     = this.sim.data.E(tlength);
+                            J_energy    = this.params.c_ener*E_final^2;
+                            disp(['J_energy = ',num2str(J_energy)]);
+
+                            % Objective function
+                            f = -J_high + J_torque + J_stability;
+                            fprintf('\n');disp(['Evaluation succeeded: f = ',num2str(f)]);
+                            disp(['Evaluation ',num2str(length(this.list.f)+1)]);('\n');fprintf('\n');
+                            disp(['Final CoM x coordinate = ',num2str(CoM_xf)]);
+                            disp(['Max CoM height = ',num2str(CoM_y),' at x = ',num2str(CoM_xh)]);fprintf('\n');
+
+                            % Add function values to list
+                            this.list.q_rec         = [this.list.q_rec this.data.q_rec];
+                            this.list.J_high        = [this.list.J_high J_high];
+                            this.list.J_energy      = [this.list.J_energy J_energy];
+                            this.list.J_stability   = [this.list.J_stability J_stability];
+                            this.list.J_torque      = [this.list.J_torque J_torque];
+                            this.list.f             = [this.list.f f];
+                            this.list.CoM_xh        = [this.list.CoM_xh CoM_xh];
+                            this.list.CoM_y         = [this.list.CoM_y CoM_y];
+                        end
                     end
                 end
             end
@@ -807,9 +815,14 @@ classdef comparison_optimizer < handle
         
         function simulate_solution(this)      
        % Run simulation with q_res (result)
-            this.sim.model.ref.use_random =1;
             this.sim.model.ref.random.q_ref = this.data.q_res;   
             this.sim.model.ref.random.q_d_ref = this.data.q_d_res;
+            
+            % Set new initial state
+            this.sim.model.setInitialStates( this.sim.model.ref.random.q_ref(:,1), this.sim.model.ref.random.q_d_ref(:,1) )
+
+                
+            this.sim.model.ref.use_random =1;
             fprintf('\n');disp('Resimulating for found solution');
             this.sim.run(1);
             fprintf('\n');disp('Rerun animation with this.sim.animate');     
