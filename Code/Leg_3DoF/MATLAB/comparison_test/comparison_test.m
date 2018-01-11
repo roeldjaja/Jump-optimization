@@ -3,7 +3,7 @@
 % Optimoptions
 InitTrustRegionRadius    = 1;  
 DiffMinChange            = 1e-3;
-DiffMaxChange            = 1;
+DiffMaxChange            = 0.5;
             
 % Performance (high)
 c_high  = 1;            
@@ -13,7 +13,7 @@ c_ener  = 1;
 c_xh    = 1e4;      
 c_xm    = 1e2;            
 % Torque
-c_torq  =  1e2;            
+c_torq  =  1e-8;            
 % Control point parameters 
 cpres   = 100;
 

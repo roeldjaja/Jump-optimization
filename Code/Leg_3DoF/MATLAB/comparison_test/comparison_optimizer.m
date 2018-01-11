@@ -78,9 +78,10 @@ classdef comparison_optimizer < handle
             this.params.cpres           = 100;       % Get cp at t(1) and every t(cpres+1)  
             
             % Optimization options
-            this.params.DiffMinChange           = 0;        % Default 0
-            this.params.DiffMaxChange           = inf;      % Deftault inf
-            this.params.InitTrustRegionRadius   = 1;        % Default sqrt(number of variables)
+            this.params.DiffMinChange            = 0;        % Default 0
+            this.params.DiffMaxChange            = inf;      % Default inf
+            this.params.InitTrustRegionRadius    = 1;        % Default sqrt(number of variables)
+            this.params.FiniteDifferenceStepSize = 1e-3;     % 
             
             % Status
             disp('Initialized Leg_3DoF_ACA_jumpref_optimizer with default parameters.');
@@ -166,10 +167,11 @@ classdef comparison_optimizer < handle
                                         'Display','iter',...
                                         'Algorithm','interior-point',...
                                         'TypicalX',cp_init,...
-                                        'InitTrustRegionRadius',this.params.InitTrustRegionRadius,...
-                                        'DiffMinChange',this.params.DiffMinChange,...
-                                        'DiffMaxChange',this.params.DiffMaxChange); 
-%                                         'FiniteDifferenceStepSize',1e-3);
+                                        'FiniteDifferenceStepSize',this.params.FiniteDifferenceStepSize);
+%                                         'InitTrustRegionRadius',this.params.InitTrustRegionRadius,...
+%                                         'DiffMinChange',this.params.DiffMinChange,...
+%                                         'DiffMaxChange',this.params.DiffMaxChange); 
+ 
  
                 % Optimization
                 [x, fval, exitflag, output, lambda] = fmincon(@(x)this.jumphigh_obj(x),x0,A,b,Aeq,beq,lb,ub,@(x)this.jumpcon(x),options);
@@ -678,14 +680,19 @@ classdef comparison_optimizer < handle
 
                 % Stage 2:  push off
                 if (stg1<k*Ts) 
-                    q_ref(4,k)  = 0.1;
-                    q_ref(5,k)  = 0.2;
-                    q_ref(6,k)  = -0.3;
+
+                    q_ref(4,k)  = -0.6;
+                    q_ref(5,k)  = 1.4;
+                    q_ref(6,k)  = -1.0;
+
+%                     q_ref(4,k)  = -0.6;
+%                     q_ref(5,k)  = 1.4;
+%                     q_ref(6,k)  = -1.0;
                 end
             end
             
             % Smoothen q_ref from step to spline
-            siteres = 20;
+            siteres = 50;
             lessdata4 = q_ref(4,1:siteres:end);
             lessdata5 = q_ref(5,1:siteres:end);
             lessdata6 = q_ref(6,1:siteres:end);
@@ -696,19 +703,15 @@ classdef comparison_optimizer < handle
 
             y4  = lessdata4; y5 = lessdata5; y6 = lessdata6;
 
-            cs4 = spline(sites,[q_ref(4,1) y4 q_ref(4,end)]);
-            cs5 = spline(sites,[q_ref(5,1) y5 q_ref(5,end)]);
-            cs6 = spline(sites,[q_ref(6,1) y6 q_ref(6,end)]);
+            cs4 = pchip(sites,y4);
+            cs5 = pchip(sites,y5);
+            cs6 = pchip(sites,y6);
 
 
             q_init(4,:) = ppval(x,cs4);
             q_init(5,:) = ppval(x,cs5);
             q_init(6,:) = ppval(x,cs6);
             
-            % Time specific / Temporary
-            for k = 95:301
-                q_init(:,k) = q_init(:,95);
-            end
             % Write q_init to .mat file
             q_init = q_init';
             save('q_init','q_init')
