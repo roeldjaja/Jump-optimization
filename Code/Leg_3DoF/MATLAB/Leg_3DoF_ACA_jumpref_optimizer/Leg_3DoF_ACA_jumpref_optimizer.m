@@ -479,8 +479,8 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                         % Objective function
                         
                         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                         f = -J_high + J_torque + J_stability;
-                        f = J_energy + J_torque + J_stability;
+                        f = -J_high + J_torque + J_stability;
+%                         f = J_energy + J_torque + J_stability;
                         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                         
                         fprintf('\n');disp(['Evaluation succeeded: f = ',num2str(f)]);
@@ -803,9 +803,9 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 % Final x coordinate
                 CoM_xf = CoM_x(end);
                 
-                % Velocities at maximum CoM_y
-                [fwdKin_vel] = this.sim.model.leg.calc_fwdKin_vel( q_leg(:,i_CoM_y_max)', q_leg_d(:,i_CoM_y_max));
-                
+%                 % Velocities at maximum CoM_y
+%                 [fwdKin_vel] = this.sim.model.leg.calc_fwdKin_vel( q_leg(:,i_CoM_y_max)', q_leg_d(:,i_CoM_y_max));
+%                 
 %                 %Cartesian to angular velocity
 %                 [theta1_d,~] = cart2pol(fwdKin_vel(1),fwdKin_vel(2));
 %                 [theta2_d,~] = cart2pol(fwdKin_vel(4),fwdKin_vel(5));
@@ -975,7 +975,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 q_ref(:,1)      = [0; 0; 0; -0.6; 1.5; -1.2];
                 
                 % Timing stages, time span in seconds
-                 stg1 = 0.001; 
+                 stg1 = 0.1; 
 
             for k = 1:length(t)
                 % Stage 1
@@ -987,9 +987,14 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
 
                 % Stage 2:  push off
                 if (stg1<k*Ts) 
-                    q_ref(4,k)  = 0.1;
-                    q_ref(5,k)  = 0.2;
-                    q_ref(6,k)  = -0.3;
+
+                    q_ref(4,k)  = -0.6;
+                    q_ref(5,k)  = 1.4;
+                    q_ref(6,k)  = -1.0;
+
+%                     q_ref(4,k)  = -0.6;
+%                     q_ref(5,k)  = 1.4;
+%                     q_ref(6,k)  = -1.0;
                 end
             end
             
@@ -1094,6 +1099,9 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 % Run simulation with new q_ref
                 this.sim.model.ref.random.q_ref     = this.data.q_rec;
                 this.sim.model.ref.random.q_d_ref   = this.data.q_d_rec;
+
+                % Set new initial state
+                this.sim.model.setInitialStates( this.sim.model.ref.random.q_ref(:,1), this.sim.model.ref.random.q_d_ref(:,1) )
                 
                 % Use new reference for simulation
                 this.sim.model.ref.use_random = 1;
