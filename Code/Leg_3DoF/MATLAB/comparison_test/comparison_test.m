@@ -10,10 +10,10 @@ c_high  = 1;
 % Energy
 c_ener  = 1;            
 % Stability
-c_xh    = 1e4;      
+c_xh    = 1e3;      
 c_xm    = 1e2;            
 % Torque
-c_torq  =  1e-8;            
+c_torq  =  2e-5;            
 % Control point parameters 
 cpres   = 100;
 

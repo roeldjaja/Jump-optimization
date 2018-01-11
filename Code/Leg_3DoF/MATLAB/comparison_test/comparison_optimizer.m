@@ -167,10 +167,11 @@ classdef comparison_optimizer < handle
                                         'Display','iter',...
                                         'Algorithm','interior-point',...
                                         'TypicalX',cp_init,...
-                                        'FiniteDifferenceStepSize',this.params.FiniteDifferenceStepSize);
-%                                         'InitTrustRegionRadius',this.params.InitTrustRegionRadius,...
-%                                         'DiffMinChange',this.params.DiffMinChange,...
-%                                         'DiffMaxChange',this.params.DiffMaxChange); 
+                                        'InitTrustRegionRadius',this.params.InitTrustRegionRadius,...
+                                        'DiffMinChange',this.params.DiffMinChange,...
+                                        'DiffMaxChange',this.params.DiffMaxChange); 
+%                                         'FiniteDifferenceStepSize',this.params.FiniteDifferenceStepSize);
+
  
  
                 % Optimization
@@ -791,7 +792,10 @@ classdef comparison_optimizer < handle
                 % Run simulation with new q_ref
                 this.sim.model.ref.random.q_ref     = this.data.q_rec;
                 this.sim.model.ref.random.q_d_ref   = this.data.q_d_rec;
-                
+
+                % Set new initial state
+                this.sim.model.setInitialStates( this.sim.model.ref.random.q_ref(:,1), this.sim.model.ref.random.q_d_ref(:,1) )
+
                 % Use new reference for simulation
                 this.sim.model.ref.use_random = 1;
                 
