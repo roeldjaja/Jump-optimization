@@ -75,7 +75,7 @@ classdef comparison_optimizer < handle
             this.params.t = 0 : this.sim.params.Ts : this.sim.params.tspan(2);
             
             % Control point parameters 
-            this.params.cpres           = 150;       % Get cp at t(1) and every t(cpres+1)  
+            this.params.cpres           = 100;       % Get cp at t(1) and every t(cpres+1)  
             
             % Optimization options
             this.params.DiffMinChange           = 0;        % Default 0
@@ -165,12 +165,12 @@ classdef comparison_optimizer < handle
                 options = optimoptions( 'fmincon',...           
                                         'Display','iter',...
                                         'Algorithm','interior-point',...
+                                        'TypicalX',cp_init,...
                                         'InitTrustRegionRadius',this.params.InitTrustRegionRadius,...
                                         'DiffMinChange',this.params.DiffMinChange,...
-                                        'DiffMaxChange',this.params.DiffMaxChange);  
-                                        %'TypicalX',[-0.3 -0.65 0.8 0.1 1.6 1.5 0.6 0.2 -1.2 -1 -0.4 0.1],...
-                                        % 'FinDiffRelStep',1e-3,...
-
+                                        'DiffMaxChange',this.params.DiffMaxChange); 
+%                                         'FiniteDifferenceStepSize',1e-3);
+ 
                 % Optimization
                 [x, fval, exitflag, output, lambda] = fmincon(@(x)this.jumphigh_obj(x),x0,A,b,Aeq,beq,lb,ub,@(x)this.jumpcon(x),options);
 
@@ -666,7 +666,7 @@ classdef comparison_optimizer < handle
                 q_ref(:,1)      = [0; 0; 0; -0.6; 1.5; -1.2];
                 
                 % Timing stages, time span in seconds
-                stg1 = 0.2; stg2 = 0.2; stg3 = 0.2; stg4 = 0.4;
+                 stg1 = 0.1; 
 
             for k = 1:length(t)
                 % Stage 1
@@ -676,55 +676,39 @@ classdef comparison_optimizer < handle
                     q_ref(6,k)  = -1.2;
                 end
 
-                % Stage 2: Hip, knee and ankle extension
-                if (stg1<k*Ts) && (k*Ts<=(stg1+stg2))
-                    q_ref(4,k)  = -0.7 ;%-0.7
-                    q_ref(5,k)  = 1.6 ;
-                    q_ref(6,k)  = -1.2 ;
-                end
-
-
-                % Stage 3:  push off
-                if (stg1+stg2<k*Ts) && (k*Ts<=(stg1+stg2+stg3))
-                    q_ref(4,k)  = 0.3;
+                % Stage 2:  push off
+                if (stg1<k*Ts) 
+                    q_ref(4,k)  = 0.1;
                     q_ref(5,k)  = 0.2;
-                    q_ref(6,k)  = -0.5;%-1
-                end
-
-                % Stage 4: Fly
-                if (stg1+stg2+stg3<k*Ts) && (k*Ts<=(stg1+stg2+stg3+stg4))
-                    q_ref(4,k)  = 0.3;
-                    q_ref(5,k)  = 0.2;
-                    q_ref(6,k)  = -0.5;
-                end
-                
-                % Stage 5: Fly
-                if (stg1+stg2+stg3+stg4<k*Ts) 
-                    q_ref(4,k)  = -0.2;
-                    q_ref(5,k)  = 0.1;
-                    q_ref(6,k)  = -0.8;
+                    q_ref(6,k)  = -0.3;
                 end
             end
             
             % Smoothen q_ref from step to spline
-            
-            lessdata4 = q_ref(4,1:100:end);
-            lessdata5 = q_ref(5,1:100:end);
-            lessdata6 = q_ref(6,1:100:end);
+            siteres = 20;
+            lessdata4 = q_ref(4,1:siteres:end);
+            lessdata5 = q_ref(5,1:siteres:end);
+            lessdata6 = q_ref(6,1:siteres:end);
 
-            sites   = 0:Ts*100:t(end);
+            sites   = 0:Ts*siteres:t(end);
             x       = linspace(0,1,length(t));
             q_init  = zeros(6,length(t));
 
-            y4  = lessdata4; y5 = lessdata5;y6 = lessdata6;
+            y4  = lessdata4; y5 = lessdata5; y6 = lessdata6;
+
             cs4 = spline(sites,[q_ref(4,1) y4 q_ref(4,end)]);
             cs5 = spline(sites,[q_ref(5,1) y5 q_ref(5,end)]);
             cs6 = spline(sites,[q_ref(6,1) y6 q_ref(6,end)]);
+
 
             q_init(4,:) = ppval(x,cs4);
             q_init(5,:) = ppval(x,cs5);
             q_init(6,:) = ppval(x,cs6);
             
+            % Time specific / Temporary
+            for k = 95:301
+                q_init(:,k) = q_init(:,95);
+            end
             % Write q_init to .mat file
             q_init = q_init';
             save('q_init','q_init')

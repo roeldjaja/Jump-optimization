@@ -258,11 +258,11 @@ J_{torque}= c_3 \cdot || \boldsymbol{\tau}_a ||_2^2
  \end{equation}
 
 \subsubsection{Stability}
-To ensure postural stability a stability criterion is introduced. The leg posture is considered stable when the $x$-coordinate of the centre of mass of the leg is equal to its initial $x$-coordinate, $x_{CoM}=0$, at the end of the jump, i.e. when the centre of mass reaches its maximum height. Also, the motion is assumed to be stable when the mean value of the absolute x-coordinates of the centre of mass equals zero. Higher stability is also assumed for a low rotational momentum $L_i$ for each leg segment at maximum height of centre of mass. For an $N$ number of time segments, this is achieved with the minimization of:
+To ensure postural stability a stability criterion is introduced. The leg posture is considered stable when the $x$-coordinate of the centre of mass of the leg is equal to its initial $x$-coordinate, $x_{CoM}=0$, at the end of the jump, i.e. when the centre of mass reaches its maximum height. Also, the motion is assumed to be stable when the mean value of the absolute x-coordinates of the centre of mass equals zero. Higher stability is also assumed for a low rotational momentum $L$ at maximum height of centre of mass. For an $N$ number of time segments, this is achieved with the minimization of:
  \begin{equation}
  \begin{aligned}
 &J_{stability}  =  \\ & c_4\cdot x_{CoM}(t_h)^2  +c_5\cdot  {\sum^{N}_{i=1}\frac{| x_{CoM}(t)_i |}{N}}^2   
-				  + c_6  \cdot   {\sum^4_{i=1} | L_i(t_h) |}^2
+				  + c_6  \cdot   L(t_h)^2
  \end{aligned}
  \end{equation}
  

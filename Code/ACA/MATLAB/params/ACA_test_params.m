@@ -26,7 +26,7 @@ function [ params ] = ACA_test_params()
     params.I_m1     = 2.52e-5 + 0.0 + 0.263e-4; % PB + HD inertia [kg m^2] (CHECK HD AND MOUNTING INERTIA)
     params.d_m1     = 2.0e-3 + 2.0e-3;          % PB + HD damping [N m s / rad] (CHECK HD DAMPING) (PB: 5.35e-3 Nm/kRPM = 2e-3 Nms/rad)
     params.r_m1     = 80;                       % Harmonic drive transmission ratio []
-    params.v_1_max  = 48;                       % PB motor max voltage [V]
+    params.v_1_max  = 80;                       % PB motor max voltage [V] %48
     params.i_1_max  = 30;                       % PB motor max current [A]
 
     % ESB motor

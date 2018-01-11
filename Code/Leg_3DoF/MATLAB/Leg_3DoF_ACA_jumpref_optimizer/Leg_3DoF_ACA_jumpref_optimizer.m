@@ -75,7 +75,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             % Stability
             this.params.c_xh    = 1e4;      % CoM_x corresponding to highest CoM_y
             this.params.c_xm    = 1e2;      % Mean CoM_x
-            this.params.c_RM    = 1e-1;
+%             this.params.c_RM    = 1e-1;
             
             % Torque
             this.params.c_torq  = 2e-8;
@@ -86,7 +86,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.params.t = 0 : this.sim.params.Ts : this.sim.params.tspan(2);
             
             % Control point parameters 
-            this.params.cpres           = 150;       % Get cp at t(1) and every t(cpres+1)  
+            this.params.cpres           = 100;       % Get cp at t(1) and every t(cpres+1)  
             
             % Minimal Jumping height
             this.params.CoM_y_ref       = 0.90;
@@ -95,8 +95,8 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.data.p_init = [0.03 0.03 eps];
             
             % Optimization options
-            this.params.DiffMinChange           = 0;        % Default 0
-            this.params.DiffMaxChange           = inf;      % Deftault inf
+            this.params.DiffMinChange           = 1e-3;        % Default 0
+            this.params.DiffMaxChange           = 0.5;      % Deftault inf
             this.params.InitTrustRegionRadius   = 1;        % Default sqrt(number of variables)
             
             % Status
@@ -188,7 +188,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                                         'DiffMinChange',this.params.DiffMinChange,...
                                         'DiffMaxChange',this.params.DiffMaxChange,...  
                                         'TypicalX',cp_init);%,...
-                                        % 'FinDiffRelStep',1e-3,...
+                                        % 'FiniteDifferenceStepSize',1e-3,...
 
                 % Optimization
                 [x, fval, exitflag, output, lambda] = fmincon(@(x)this.jumphigh_obj(x),x0,A,b,Aeq,beq,lb,ub,@(x)this.jumpcon(x),options);
@@ -282,8 +282,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                                         'DiffMinChange',this.params.DiffMinChange,...
                                         'DiffMaxChange',this.params.DiffMaxChange,...  
                                         'TypicalX',[cp_init this.data.p_init]);
-                                        %'DiffMinChange',1e-2,...
-                                        %'DiffMaxChange',this.params.DiffMaxChange); 
+ 
                                        
                 % Optimization
                 [x, fval, exitflag, output, lambda] = fmincon(@(x)this.ESBjumphigh_obj(x),x0,A,b,Aeq,beq,lb,ub,@(x)this.jumpcon(x),options);
@@ -457,12 +456,12 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                         
                         % Stability function 
                         J_stability =   this.params.c_xh * ( CoM_xh )^2 +...
-                                        this.params.c_xm * ( CoM_xm )^2 +...
-                                        this.params.c_RM * (   RM   )^2;
+                                        this.params.c_xm * ( CoM_xm )^2;% +...
+%                                         this.params.c_RM * (   RM   )^2;
 
                         disp(['c * CoM_xh^2 = ',num2str(this.params.c_xh * ( CoM_xh )^2)]) 
                         disp(['c * CoM_xm^2 = ',num2str(this.params.c_xm * ( CoM_xm )^2)])      
-                        disp(['c *   RM  ^2 = ',num2str(this.params.c_RM * ( RM )^2)])  
+%                         disp(['c *   RM  ^2 = ',num2str(this.params.c_RM * ( RM )^2)])  
                         disp(['J_stability = ',num2str(J_stability)]);                                   
                         
                         % Penalty function tau
@@ -622,8 +621,8 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                         
                         % Stability function CoM
                         J_stability =   this.params.c_xh * ( CoM_xh )^2 +...
-                                        this.params.c_xm * ( CoM_xm )^2 +...
-                                        this.params.c_RM * (   RM   )^2;
+                                        this.params.c_xm * ( CoM_xm )^2;% +...
+%                                         this.params.c_RM * (   RM   )^2;
                         
                         disp(['c * CoM_xh = ',num2str(this.params.c_xh * ( CoM_xh )^2)]) 
                         disp(['c * CoM_xm = ',num2str(this.params.c_xm * ( CoM_xm )^2)])      
@@ -807,23 +806,24 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 % Velocities at maximum CoM_y
                 [fwdKin_vel] = this.sim.model.leg.calc_fwdKin_vel( q_leg(:,i_CoM_y_max)', q_leg_d(:,i_CoM_y_max));
                 
-                %Cartesian to angular velocity
-                [theta1_d,~] = cart2pol(fwdKin_vel(1),fwdKin_vel(2));
-                [theta2_d,~] = cart2pol(fwdKin_vel(4),fwdKin_vel(5));
-                [theta3_d,~] = cart2pol(fwdKin_vel(7),fwdKin_vel(8));
-                [theta4_d,~] = cart2pol(fwdKin_vel(10),fwdKin_vel(11));
-                
-                % Rotational momentum  
-                % L = J * theta_d
-                L1 = this.sim.model.leg.params.J1 * theta1_d;
-                L2 = this.sim.model.leg.params.J2 * theta2_d;
-                L3 = this.sim.model.leg.params.J3 * theta3_d;
-                L4 = this.sim.model.leg.params.J4 * theta4_d;
-  
-                
-                % Absolute sum of rotational moments
-                RM = sumabs([L1 L2 L3 L4]);
-                
+%                 %Cartesian to angular velocity
+%                 [theta1_d,~] = cart2pol(fwdKin_vel(1),fwdKin_vel(2));
+%                 [theta2_d,~] = cart2pol(fwdKin_vel(4),fwdKin_vel(5));
+%                 [theta3_d,~] = cart2pol(fwdKin_vel(7),fwdKin_vel(8));
+%                 [theta4_d,~] = cart2pol(fwdKin_vel(10),fwdKin_vel(11));
+%                 
+%                 % Rotational momentum  
+%                 % L = J * theta_d
+%                 L1 = this.sim.model.leg.params.J1 * theta1_d;
+%                 L2 = this.sim.model.leg.params.J2 * theta2_d;
+%                 L3 = this.sim.model.leg.params.J3 * theta3_d;
+%                 L4 = this.sim.model.leg.params.J4 * theta4_d;
+%   
+%                 
+%                 % Absolute sum of rotational moments
+%                 RM = sumabs([L1 L2 L3 L4]);
+                  RM = NaN; % Placeholder
+
                 %Simulation time
                 tlength = length(t);
 
@@ -975,7 +975,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 q_ref(:,1)      = [0; 0; 0; -0.6; 1.5; -1.2];
                 
                 % Timing stages, time span in seconds
-                stg1 = 0.2; stg2 = 0.2; stg3 = 0.2; stg4 = 0.4;
+                 stg1 = 0.001; 
 
             for k = 1:length(t)
                 % Stage 1
@@ -985,50 +985,30 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                     q_ref(6,k)  = -1.2;
                 end
 
-                % Stage 2: Hip, knee and ankle extension
-                if (stg1<k*Ts) && (k*Ts<=(stg1+stg2))
-                    q_ref(4,k)  = -0.7 ;%-0.7
-                    q_ref(5,k)  = 1.6 ;
-                    q_ref(6,k)  = -1.2 ;
-                end
-
-
-                % Stage 3:  push off
-                if (stg1+stg2<k*Ts) && (k*Ts<=(stg1+stg2+stg3))
-                    q_ref(4,k)  = 0.3;
+                % Stage 2:  push off
+                if (stg1<k*Ts) 
+                    q_ref(4,k)  = 0.1;
                     q_ref(5,k)  = 0.2;
-                    q_ref(6,k)  = -0.5;%-1
-                end
-
-                % Stage 4: Fly
-                if (stg1+stg2+stg3<k*Ts) && (k*Ts<=(stg1+stg2+stg3+stg4))
-                    q_ref(4,k)  = 0.3;
-                    q_ref(5,k)  = 0.2;
-                    q_ref(6,k)  = -0.5;
-                end
-                
-                % Stage 5: Fly
-                if (stg1+stg2+stg3+stg4<k*Ts) 
-                    q_ref(4,k)  = -0.2;
-                    q_ref(5,k)  = 0.1;
-                    q_ref(6,k)  = -0.8;
+                    q_ref(6,k)  = -0.3;
                 end
             end
             
             % Smoothen q_ref from step to spline
-            
-            lessdata4 = q_ref(4,1:100:end);
-            lessdata5 = q_ref(5,1:100:end);
-            lessdata6 = q_ref(6,1:100:end);
+            siteres = 50;
+            lessdata4 = q_ref(4,1:siteres:end);
+            lessdata5 = q_ref(5,1:siteres:end);
+            lessdata6 = q_ref(6,1:siteres:end);
 
-            sites   = 0:Ts*100:t(end);
+            sites   = 0:Ts*siteres:t(end);
             x       = linspace(0,1,length(t));
             q_init  = zeros(6,length(t));
 
-            y4  = lessdata4; y5 = lessdata5;y6 = lessdata6;
-            cs4 = spline(sites,[q_ref(4,1) y4 q_ref(4,end)]);
-            cs5 = spline(sites,[q_ref(5,1) y5 q_ref(5,end)]);
-            cs6 = spline(sites,[q_ref(6,1) y6 q_ref(6,end)]);
+            y4  = lessdata4; y5 = lessdata5; y6 = lessdata6;
+
+            cs4 = pchip(sites,y4);
+            cs5 = pchip(sites,y5);
+            cs6 = pchip(sites,y6);
+
 
             q_init(4,:) = ppval(x,cs4);
             q_init(5,:) = ppval(x,cs5);
@@ -1049,6 +1029,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             cp_init(:,2) = q_init(1:this.params.cpres:end,5); % q2
             cp_init(:,3) = q_init(1:this.params.cpres:end,6); % q3
             
+            this.data.cp_init = cp_init;
             % Construct B-spline trajectory out of control points
             
             % Knots, triple knots at the end

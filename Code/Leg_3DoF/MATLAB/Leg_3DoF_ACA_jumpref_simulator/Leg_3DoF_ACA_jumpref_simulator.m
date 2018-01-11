@@ -29,7 +29,7 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
             this.model =  Leg_3DoF_ACA_jumpref(actParamsFileName, legParamsFileName);
     
             % Simulation parameters
-            this.params.tspan       = [0 2];                   % Simulation time [s]
+            this.params.tspan       = [0 0.3];                   % Simulation time [s]
             this.params.Ts          = 1e-3;                     % Simulation timestep
             this.model.control.Ts	= 1e-3;                     % Controller timestep
             
@@ -512,13 +512,13 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
             P_filt      = P;
             N           = 1;
             % Ignoring the first filtIgnoreTime seconds due to startup behaviour
-            if (filtIgnoreTime > 0)
-               N                    = round(filtIgnoreTime / sampleTime);
-               P_A1_filt(1:N-1)     = P_A1_filt(N);
-               P_A2_filt(1:N-1)     = P_A2_filt(N);
-               P_A3_filt(1:N-1)     = P_A3_filt(N);
-               P_filt(1:N-1)        = P_filt(N);
-            end
+%             if (filtIgnoreTime > 0)
+%                N                    = round(filtIgnoreTime / sampleTime);
+%                P_A1_filt(1:N-1)     = P_A1_filt(N);
+%                P_A2_filt(1:N-1)     = P_A2_filt(N);
+%                P_A3_filt(1:N-1)     = P_A3_filt(N);
+%                P_filt(1:N-1)        = P_filt(N);
+%             end
             % Do actual filtering
             P_A1_filt   = filter(b, a, P_A1_filt, linspace(1,0,windowSize-1) * P_A1_filt(N));
             P_A2_filt   = filter(b, a, P_A2_filt, linspace(1,0,windowSize-1) * P_A2_filt(N));
