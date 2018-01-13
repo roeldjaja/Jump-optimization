@@ -966,6 +966,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             for k = 1:length(this.data.F_GRF)
                F_GRF_all(:,k) = this.data.F_GRF(:,k);
             end
+            figure
             plot(this.params.t,F_GRF_all,'Linewidth',2);title('Ground Forces latest simulation');...
                 xlabel('Time [s]'),ylabel('Ground Force [N]');legend('Ankle x','Ankle y','Toe x','Toe y');
             
