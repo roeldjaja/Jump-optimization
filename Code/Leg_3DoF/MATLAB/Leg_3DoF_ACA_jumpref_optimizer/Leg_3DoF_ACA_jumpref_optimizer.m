@@ -67,7 +67,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             % Objective criteria weights
             
             % Performance (high)
-            this.params.c_high  = 1;
+            this.params.c_high  = 1e1;
             
             % Energy
             this.params.c_ener  = 2e-6;
@@ -78,7 +78,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
 %             this.params.c_RM    = 1e-1;
             
             % Torque
-            this.params.c_torq  = 2e-8;
+            this.params.c_torq  = 1e-8;
             
             this.params.c_y_ref = 1e1;
             
@@ -92,11 +92,11 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.params.CoM_y_ref       = 0.90;
             
             % Initial pretension positions (third = 0, is reset in optimization)
-            this.data.p_init = [0.03 0.03 eps];
+            this.data.p_init = [0.0001 0.0001 eps];
             
             % Optimization options
-            this.params.DiffMinChange           = 1e-3;        % Default 0
-            this.params.DiffMaxChange           = 0.5;      % Deftault inf
+            this.params.DiffMinChange           = 1e-3;     % Default 0
+            this.params.DiffMaxChange           = 0.5;      % Default inf
             this.params.InitTrustRegionRadius   = 1;        % Default sqrt(number of variables)
             
             % Status
@@ -465,39 +465,47 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                         disp(['J_stability = ',num2str(J_stability)]);                                   
                         
                         % Penalty function tau
-                        J_torque = this.params.c_torq * norm(tau_IK)^2;  
-                        disp(['J_torque = ',num2str(J_torque)]);
                         
-                        % Energy function
-                        E_final     = this.sim.data.E(tlength);
-                        J_energy    = this.params.c_ener*E_final^2 + ...
-                                      this.params.c_y_ref*abs(this.params.CoM_y_ref - CoM_y);
-                        disp(['J_energy = ',num2str(J_energy)]);
-                        disp(['E = ',num2str(E_final)]);
-                        disp(['y_refdiff = ',num2str(abs(this.params.CoM_y_ref - CoM_y))]);
-                        
-                        % Objective function
-                        
-                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                        f = -J_high + J_torque + J_stability;
-%                         f = J_energy + J_torque + J_stability;
-                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                        
-                        fprintf('\n');disp(['Evaluation succeeded: f = ',num2str(f)]);
-                        disp(['Evaluation ',num2str(length(this.list.f)+1)]);('\n');fprintf('\n');
-                        disp(['Final CoM x coordinate = ',num2str(CoM_xf)]);
-                        disp(['Max CoM height = ',num2str(CoM_y),' at x = ',num2str(CoM_xh)]);fprintf('\n');
-                        
-                        % Add function values to list
-                        this.list.q_rec         = [this.list.q_rec this.data.q_rec];
-                        this.list.J_high        = [this.list.J_high J_high];
-                        this.list.J_energy      = [this.list.J_energy J_energy];
-                        this.list.J_stability   = [this.list.J_stability J_stability];
-                        this.list.J_torque      = [this.list.J_torque J_torque];
-                        this.list.f             = [this.list.f f];
-                        this.list.E             = [this.list.E E_final];
-                        this.list.CoM_xh        = [this.list.CoM_xh CoM_xh];
-                        this.list.CoM_y         = [this.list.CoM_y CoM_y];
+                        % Ignore evaluation if max active torque >= 204
+                        if max(max(abs(tau_IK))) >= 204
+                            fprintf('\n');disp('Torque limit violated: f = NaN');fprintf('\n');
+                            f = NaN;
+                        else
+                            
+                            J_torque = this.params.c_torq * norm(tau_IK)^2;  
+                            disp(['J_torque = ',num2str(J_torque)]);
+
+                            % Energy function
+                            E_final     = this.sim.data.E(tlength);
+                            J_energy    = this.params.c_ener*E_final^2 + ...
+                                          this.params.c_y_ref*abs(this.params.CoM_y_ref - CoM_y);
+                            disp(['J_energy = ',num2str(J_energy)]);
+                            disp(['E = ',num2str(E_final)]);
+                            disp(['y_refdiff = ',num2str(abs(this.params.CoM_y_ref - CoM_y))]);
+
+                            % Objective function
+
+                            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                            f = -J_high + J_torque + J_stability;
+    %                         f = J_energy + J_torque + J_stability;
+                            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+                            fprintf('\n');disp(['Evaluation succeeded: f = ',num2str(f)]);
+                            disp(['Evaluation ',num2str(length(this.list.f)+1)]);('\n');fprintf('\n');
+                            disp(['Final CoM x coordinate = ',num2str(CoM_xf)]);
+                            disp(['Max CoM height = ',num2str(CoM_y),' at x = ',num2str(CoM_xh)]);fprintf('\n');
+
+                            % Add function values to list
+                            this.list.q_rec         = [this.list.q_rec this.data.q_rec];
+                            this.list.J_high        = [this.list.J_high J_high];
+                            this.list.J_energy      = [this.list.J_energy J_energy];
+                            this.list.J_stability   = [this.list.J_stability J_stability];
+                            this.list.J_torque      = [this.list.J_torque J_torque];
+                            this.list.f             = [this.list.f f];
+                            this.list.E             = [this.list.E E_final];
+                            this.list.CoM_xh        = [this.list.CoM_xh CoM_xh];
+                            this.list.CoM_y         = [this.list.CoM_y CoM_y];
+                        end
                     end
                 end
             end
@@ -629,37 +637,45 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                         disp(['J_stability = ',num2str(J_stability)]);                                   
                         
                         % Penalty function tau
-                        J_torque = this.params.c_torq * norm(tau_IK)^2;  
-                        disp(['J_torque = ',num2str(J_torque)]);
                         
-                        % Energy function
-                        E_final     = this.sim.data.E(tlength);
-                        J_energy    = this.params.c_ener*E_final^2 + ...
-                                      this.params.c_y_ref*abs(this.params.CoM_y_ref - CoM_y);
-                        disp(['J_energy = ',num2str(J_energy)]);
-                        
-                        % Objective function
-                        
-                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                         f = -J_high + J_torque + J_stability;
-                        f = J_energy + J_torque + J_stability;
-                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                        
-                        fprintf('\n');disp(['Evaluation succeeded: f = ',num2str(f)]);
-                        disp(['Evaluation ',num2str(length(this.list.f)+1)]);('\n');fprintf('\n');
-                        disp(['Final CoM x coordinate = ',num2str(CoM_xf)]);
-                        disp(['Max CoM height = ',num2str(CoM_y),' at x = ',num2str(CoM_xh)]);fprintf('\n');
-                        
-                        % Add function values to list
-                        this.list.q_rec         = [this.list.q_rec this.data.q_rec];
-                        this.list.J_high        = [this.list.J_high J_high];
-                        this.list.J_energy      = [this.list.J_energy J_energy];
-                        this.list.J_stability   = [this.list.J_stability J_stability];
-                        this.list.J_torque      = [this.list.J_torque J_torque];
-                        this.list.f             = [this.list.f f];
-                        this.list.E             = [this.list.E E_final];
-                        this.list.CoM_xh        = [this.list.CoM_xh CoM_xh];
-                        this.list.CoM_y         = [this.list.CoM_y CoM_y];
+                        % Ignore evaluation if max active torque >= 204
+                        if max(max(abs(tau_IK))) >= 204
+                            fprintf('\n');disp('Torque limit violated: f = NaN');fprintf('\n');
+                            f = NaN;
+                        else
+                            
+                            J_torque = this.params.c_torq * norm(tau_IK)^2;  
+                            disp(['J_torque = ',num2str(J_torque)]);
+
+                            % Energy function
+                            E_final     = this.sim.data.E(tlength);
+                            J_energy    = this.params.c_ener*E_final^2 + ...
+                                          this.params.c_y_ref*abs(this.params.CoM_y_ref - CoM_y);
+                            disp(['J_energy = ',num2str(J_energy)]);
+
+                            % Objective function
+
+                            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                            f = -J_high + J_torque + J_stability;
+%                             f = J_energy + J_torque + J_stability;
+                            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+                            fprintf('\n');disp(['Evaluation succeeded: f = ',num2str(f)]);
+                            disp(['Evaluation ',num2str(length(this.list.f)+1)]);('\n');fprintf('\n');
+                            disp(['Final CoM x coordinate = ',num2str(CoM_xf)]);
+                            disp(['Max CoM height = ',num2str(CoM_y),' at x = ',num2str(CoM_xh)]);fprintf('\n');
+
+                            % Add function values to list
+                            this.list.q_rec         = [this.list.q_rec this.data.q_rec];
+                            this.list.J_high        = [this.list.J_high J_high];
+                            this.list.J_energy      = [this.list.J_energy J_energy];
+                            this.list.J_stability   = [this.list.J_stability J_stability];
+                            this.list.J_torque      = [this.list.J_torque J_torque];
+                            this.list.f             = [this.list.f f];
+                            this.list.E             = [this.list.E E_final];
+                            this.list.CoM_xh        = [this.list.CoM_xh CoM_xh];
+                            this.list.CoM_y         = [this.list.CoM_y CoM_y];
+                        end
                     end
                 end
             end
@@ -689,10 +705,11 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 
                 % Inverse Kinematics
                 
-                %Preallocate
+                % Preallocate
                 qp_dd_t_act = zeros(length(t),6);
                 
-                
+                % Prepare simulation ground forces storage
+                this.data.F_GRF = [];
                 
                 for k = 1:length(t)
                     % State and input
@@ -735,7 +752,10 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                     
                     F_GRF = [F_ankle_x; F_ankle_y; F_toe_x; F_toe_y];
                     
-                    % Make list of ground forces
+                    % Store simulation ground forces
+                    this.data.F_GRF = [this.data.F_GRF F_GRF];
+                    
+                    % Make list of all simulations ground forces
                     this.list.F_GRF = [this.list.F_GRF F_GRF];
                     
                     x       = [q_leg;q_leg_d];
@@ -841,46 +861,52 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             
             figure
             plot(this.params.t, this.data.q_init(:,4)',this.params.t,this.data.q_res(4,:),'--',this.params.t,q_leg(4,:))
-            title('q_1');legend('Initial reference','Solution reference','Actual trajectory');xlabel('s');ylabel('rad');
+            title('q_1');legend('Initial reference','Solution reference','Actual trajectory');xlabel('Time [s]');ylabel('Angle [rad]');
             
             figure
             plot(this.params.t, this.data.q_init(:,5)',this.params.t,this.data.q_res(5,:),'--',this.params.t,q_leg(5,:))
-            title('q_2');legend('Initial reference','Solution reference','Actual trajectory');xlabel('s');ylabel('rad');
+            title('q_2');legend('Initial reference','Solution reference','Actual trajectory');xlabel('Time [s]');ylabel('Angle [rad]');
             
             figure
             plot(this.params.t, this.data.q_init(:,6)',this.params.t,this.data.q_res(6,:),'--',this.params.t,q_leg(6,:))
-            title('q_3');legend('Initial reference','Solution reference','Actual trajectory');xlabel('s');ylabel('rad');
+            title('q_3');legend('Initial reference','Solution reference','Actual trajectory');xlabel('Time [s]');ylabel('Angle [rad]');
             
             
             % Plot all q1 references
             figure
+            plot(this.params.t,this.data.q_res(4,:),'m')
             hold on
             for k = 1:length(this.list.f)
                 bluefade = [0 1/length(this.list.f)*k 0];
                 plot(this.params.t,this.list.q_rec(4,(k-1)*length(this.params.t)+1:k*length(this.params.t)),'Color',bluefade)
             end
+            plot(this.params.t,this.data.q_res(4,:),'m','Linewidth',2)
             hold off
-            title('q_1');legend('Final reference');xlabel('s');ylabel('rad');
+            title('q_1');legend('Final reference, initial = green');xlabel('s');ylabel('Angle [rad]');
             
             % Plot all q2 references
             figure
+            plot(this.params.t,this.data.q_res(5,:),'m')
             hold on
             for k = 1:length(this.list.f)
                 bluefade = [0 1/length(this.list.f)*k 0];
                 plot(this.params.t,this.list.q_rec(5,(k-1)*length(this.params.t)+1:k*length(this.params.t)),'Color',bluefade)
             end
+            plot(this.params.t,this.data.q_res(5,:),'m','Linewidth',2)
             hold off
-            title('q_2');legend('Final reference');xlabel('s');ylabel('rad');
+            title('q_2');legend('Final reference, initial = green');xlabel('s');ylabel('Angle [rad]');            
             
             % Plot all q3 references
             figure
+            plot(this.params.t,this.data.q_res(6,:),'m')
             hold on
             for k = 1:length(this.list.f)
                 bluefade = [0 1/length(this.list.f)*k 0];
                 plot(this.params.t,this.list.q_rec(6,(k-1)*length(this.params.t)+1:k*length(this.params.t)),'Color',bluefade)
             end
+            plot(this.params.t,this.data.q_res(6,:),'m','Linewidth',2)
             hold off
-            title('q_3');legend('Final reference');xlabel('s');ylabel('rad');
+            title('q_3');legend('Final reference, initial = green');xlabel('s');ylabel('Angle [rad]');            
             
             % Plot evolution of f  (would be nicer to plot iterations instead of evaluations)
             figure
@@ -912,14 +938,37 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             
             figure
             for k=1:n        
-               subplot(3,1,1);plot(s,cpq1(k,:),'.-');title('Control Points q_1'); xlim([1 s(end)]);
+               subplot(3,1,1);plot(s,cpq1(k,:),'.-');title('Control Points q_1'); xlim([1 s(end)]);...
+                   xlabel('Function evaluation');ylabel('Angle [rad]');
                hold on
-               subplot(3,1,2);plot(s,cpq2(k,:),'.-');title('Control Points q_2');  xlim([1 s(end)]);
+               subplot(3,1,2);plot(s,cpq2(k,:),'.-');title('Control Points q_2');  xlim([1 s(end)]);...
+                   xlabel('Function evaluation');ylabel('Angle [rad]');
                hold on
-               subplot(3,1,3);plot(s,cpq3(k,:),'.-');title('Control Points q_3');  xlim([1 s(end)]);  
+               subplot(3,1,3);plot(s,cpq3(k,:),'.-');title('Control Points q_3');  xlim([1 s(end)]);...
+                   xlabel('Function evaluation');ylabel('Angle [rad]');  
                hold on
             end
             hold off
+            
+            % Plot evolution pretensions if optimized
+            if this.params.noESB == 0
+                p1 = this.data.list.p(:,1:3:end);
+                p2 = this.data.list.p(:,2:3:end);
+                p3 = this.data.list.p(:,3:3:end);
+                
+                figure
+                plot(s,p1,s,p2,s,p3);title('Pretension positions evolution');...
+                legend('p_1','p_2','p_3');xlabel('Function evaluation');ylabel('Pretension position [m]');
+            end
+            
+            % Plot latest ground forces
+            F_GRF_all = zeros(4,length(this.params.t));
+            for k = 1:length(this.data.F_GRF)
+               F_GRF_all(:,k) = this.data.F_GRF(:,k);
+            end
+            plot(this.params.t,F_GRF_all,'Linewidth',2);title('Ground Forces latest simulation');...
+                xlabel('Time [s]'),ylabel('Ground Force [N]');legend('Ankle x','Ankle y','Toe x','Toe y');
+            
         end
 
         %__________________________________________________________________
@@ -1119,6 +1168,17 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.sim.model.ref.random.q_d_ref = this.data.q_d_res;
             fprintf('\n');disp('Resimulating for found solution');
             this.sim.run(1);
+            
+            % Show CoM_y
+            [~,~,~,~, CoM_y,~] = this.Calc_IK;
+            fprintf('\n');disp(['CoM_y = ',num2str(CoM_y),' m']);
+            
+            % Show cumulative energy consumption
+            disp(['Energy consumption = ',num2str(this.sim.data.E(end)),' J'])
+            % Show p if optimized
+            if this.params.noESB == 0
+                disp(['p = ',num2str(this.data.results.p),' m']);
+            end
             fprintf('\n');disp('Rerun animation with this.sim.animate');     
          end
         %_____________________________________________________________
