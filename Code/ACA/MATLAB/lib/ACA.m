@@ -439,7 +439,7 @@ classdef ACA < handle
         function [i_1, i_2] = controller(this, t, x, tau_ref, q, q_d, tau_p, tau_s)
             
 %              x(2) %p_d
-%              x(6) %p
+             x(6) %p
             
             % Get the ESB torques on this ACA's driven joint index
             tau_p = tau_p(this.topology.idx); % Net ESB torque

@@ -89,7 +89,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.params.cpres           = 100;       % Get cp at t(1) and every t(cpres+1)  
             
             % Minimal Jumping height
-            this.params.CoM_y_ref       = 0.90;
+            this.params.CoM_y_ref       = 0.75;
             
             % Initial pretension positions (third = 0, is reset in optimization)
             this.data.p_init = [0.0001 0.0001 eps];
@@ -990,9 +990,9 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
              % Plot evolution control points
             C       = this.list.cp;
             n       = this.params.n;
-            cpq1    = C(:,1:3:end);
-            cpq2    = C(:,2:3:end);
-            cpq3    = C(:,3:3:end);
+            cpq1    = this.list.cp(:,1:3:end);
+            cpq2    = this.list.cp(:,2:3:end);
+            cpq3    = this.list.cp(:,3:3:end);
             s       = size(cpq1);s=1:1:s(2);
             
             for k=1:n
@@ -1041,10 +1041,6 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                     q_ref(4,k)  = -0.6;
                     q_ref(5,k)  = 1.4;
                     q_ref(6,k)  = -1.0;
-
-%                     q_ref(4,k)  = -0.6;
-%                     q_ref(5,k)  = 1.4;
-%                     q_ref(6,k)  = -1.0;
                 end
             end
             
@@ -1151,6 +1147,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 this.sim.model.ref.random.q_d_ref   = this.data.q_d_rec;
 
                 % Set new initial state
+                this.sim.model.p = this.data.p_init;
                 this.sim.model.setInitialStates( this.sim.model.ref.random.q_ref(:,1), this.sim.model.ref.random.q_d_ref(:,1) )
                 
                 % Use new reference for simulation
@@ -1163,10 +1160,15 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
         %_____________________________________________________________
         
         function simulate_solution(this)      
-       % Run simulation with q_res (result)
+%        % Run simulation with q_res (result)
             this.sim.model.ref.use_random =1;
             this.sim.model.ref.random.q_ref = this.data.q_res;   
             this.sim.model.ref.random.q_d_ref = this.data.q_d_res;
+            
+            % Set new initial state
+            this.sim.model.p = this.data.results.p;
+            this.sim.model.setInitialStates( this.sim.model.ref.random.q_ref(:,1), this.sim.model.ref.random.q_d_ref(:,1) )
+  
             fprintf('\n');disp('Resimulating for found solution');
             this.sim.run(1);
             
@@ -1176,6 +1178,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             
             % Show cumulative energy consumption
             disp(['Energy consumption = ',num2str(this.sim.data.E(end)),' J'])
+            
             % Show p if optimized
             if this.params.noESB == 0
                 disp(['p = ',num2str(this.data.results.p),' m']);
