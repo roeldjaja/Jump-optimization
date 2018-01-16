@@ -16,7 +16,6 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
     % Torque criterion values           this.list.J_torque        
     % Objective function values         this.list.f     
     % cumulative electrical energy      this.list.E
-    % CoM x-coordinates (at max height) this.list.CoM_xh            
     % CoM y coordinates (max)           this.list.CoM_y                        
     % All evaluation ground forces      this.list.F_GRF  
     % Control points                    this.list.cp 
@@ -67,20 +66,21 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             % Objective criteria weights
             
             % Performance (high)
-            this.params.c_high  = 1e1;
+            this.params.c_high  = 4e1;
             
             % Energy
             this.params.c_ener  = 2e-6;
+
+            % Reference height
+            this.params.c_y_ref = 1e1;
             
             % Stability
             this.params.c_xh    = 1e4;      % CoM_x corresponding to highest CoM_y
             this.params.c_xm    = 1e2;      % Mean CoM_x
-%             this.params.c_RM    = 1e-1;
+            this.params.c_RM    = 1e-5;        % Sum Rotational momentum around CoM
             
             % Torque
             this.params.c_torq  = 1e-8;
-            
-            this.params.c_y_ref = 1e1;
             
             % Time
             this.params.t = 0 : this.sim.params.Ts : this.sim.params.tspan(2);
@@ -98,6 +98,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.params.DiffMinChange           = 1e-3;     % Default 0
             this.params.DiffMaxChange           = 0.5;      % Default inf
             this.params.InitTrustRegionRadius   = 1;        % Default sqrt(number of variables)
+            this.params.MaxFunctionEvaluations  = 6000;     % Default 3000
             
             % Status
             disp('Initialized Leg_3DoF_ACA_jumpref_optimizer with default parameters.');
@@ -118,7 +119,6 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.list.J_torque      = [];
             this.list.f             = [];
             this.list.E             = [];
-            this.list.CoM_xh        = [];
             this.list.CoM_y         = [];
             this.list.q_rec         = [];
             this.list.F_GRF         = [];
@@ -152,7 +152,6 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             cp_init(:,1) = q_init(1:this.params.cpres:end,4); % q1
             cp_init(:,2) = q_init(1:this.params.cpres:end,5); % q2
             cp_init(:,3) = q_init(1:this.params.cpres:end,6); % q3
-            
             cp_init = reshape(cp_init,[1,tn]); %Reshape to one long row
             
             % Downscale time to control point time tcp
@@ -186,7 +185,8 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                                         'Algorithm','interior-point',...
                                         'InitTrustRegionRadius',this.params.InitTrustRegionRadius,...
                                         'DiffMinChange',this.params.DiffMinChange,...
-                                        'DiffMaxChange',this.params.DiffMaxChange,...  
+                                        'DiffMaxChange',this.params.DiffMaxChange,...
+                                        'MaxFunctionEvaluations', this.params.MaxFunctionEvaluations,...
                                         'TypicalX',cp_init);%,...
                                         % 'FiniteDifferenceStepSize',1e-3,...
 
@@ -457,11 +457,11 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                         % Stability function 
                         J_stability =   this.params.c_xh * ( CoM_xh )^2 +...
                                         this.params.c_xm * ( CoM_xm )^2;% +...
-%                                         this.params.c_RM * (   RM   )^2;
+                                        this.params.c_RM * (   RM   )^2;
 
                         disp(['c * CoM_xh^2 = ',num2str(this.params.c_xh * ( CoM_xh )^2)]) 
                         disp(['c * CoM_xm^2 = ',num2str(this.params.c_xm * ( CoM_xm )^2)])      
-%                         disp(['c *   RM  ^2 = ',num2str(this.params.c_RM * ( RM )^2)])  
+                        disp(['c *   RM  ^2 = ',num2str(this.params.c_RM * ( RM )^2)])  
                         disp(['J_stability = ',num2str(J_stability)]);                                   
                         
                         % Penalty function tau
@@ -481,7 +481,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                                           this.params.c_y_ref*abs(this.params.CoM_y_ref - CoM_y);
                             disp(['J_energy = ',num2str(J_energy)]);
                             disp(['E = ',num2str(E_final)]);
-                            disp(['y_refdiff = ',num2str(abs(this.params.CoM_y_ref - CoM_y))]);
+%                             disp(['y_refdiff = ',num2str(abs(this.params.CoM_y_ref - CoM_y))]);
 
                             % Objective function
 
@@ -493,7 +493,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                             fprintf('\n');disp(['Evaluation succeeded: f = ',num2str(f)]);
                             disp(['Evaluation ',num2str(length(this.list.f)+1)]);('\n');fprintf('\n');
                             disp(['Final CoM x coordinate = ',num2str(CoM_xf)]);
-                            disp(['Max CoM height = ',num2str(CoM_y),' at x = ',num2str(CoM_xh)]);fprintf('\n');
+                            disp(['Max CoM height = ',num2str(CoM_y)]);fprintf('\n');
 
                             % Add function values to list
                             this.list.q_rec         = [this.list.q_rec this.data.q_rec];
@@ -503,7 +503,6 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                             this.list.J_torque      = [this.list.J_torque J_torque];
                             this.list.f             = [this.list.f f];
                             this.list.E             = [this.list.E E_final];
-                            this.list.CoM_xh        = [this.list.CoM_xh CoM_xh];
                             this.list.CoM_y         = [this.list.CoM_y CoM_y];
                         end
                     end
@@ -630,7 +629,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                         % Stability function CoM
                         J_stability =   this.params.c_xh * ( CoM_xh )^2 +...
                                         this.params.c_xm * ( CoM_xm )^2;% +...
-%                                         this.params.c_RM * (   RM   )^2;
+                                        this.params.c_RM * (   RM   )^2;
                         
                         disp(['c * CoM_xh = ',num2str(this.params.c_xh * ( CoM_xh )^2)]) 
                         disp(['c * CoM_xm = ',num2str(this.params.c_xm * ( CoM_xm )^2)])      
@@ -663,7 +662,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                             fprintf('\n');disp(['Evaluation succeeded: f = ',num2str(f)]);
                             disp(['Evaluation ',num2str(length(this.list.f)+1)]);('\n');fprintf('\n');
                             disp(['Final CoM x coordinate = ',num2str(CoM_xf)]);
-                            disp(['Max CoM height = ',num2str(CoM_y),' at x = ',num2str(CoM_xh)]);fprintf('\n');
+                            disp(['Max CoM height = ',num2str(CoM_y)]);fprintf('\n');
 
                             % Add function values to list
                             this.list.q_rec         = [this.list.q_rec this.data.q_rec];
@@ -673,7 +672,6 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                             this.list.J_torque      = [this.list.J_torque J_torque];
                             this.list.f             = [this.list.f f];
                             this.list.E             = [this.list.E E_final];
-                            this.list.CoM_xh        = [this.list.CoM_xh CoM_xh];
                             this.list.CoM_y         = [this.list.CoM_y CoM_y];
                         end
                     end
@@ -799,13 +797,51 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 % Active torque
                 tau_IK = qp_dd_t_act(:,4:6);  
                 
-                % CoM x and y
+                % Get CoM and body positions and velocities
                 x       = this.sim.data.xlist;
                 q_leg   = x(:,18+1:18+6)';       % 6xN
                 q_leg_d = x(:,18+7:18+12)';
                 
                 for k = 1:length(t)
                     [CoM_x(k), CoM_y(k)] = this.sim.model.leg.calc_CoM(q_leg(:,k));
+                    [CoM_x_d(k), CoM_y_d(k)] = this.sim.model.leg.calc_CoM_vel(q_leg(:,k),q_leg_d(:,k));
+                    [fwdKin]             = this.sim.model.leg.calc_fwdKin(q_leg(:,k));
+                    [fwdKin_vel]         = this.sim.model.leg.calc_fwdKin_vel(q_leg(:,k),q_leg_d(:,k));
+                    
+                    % Body positions
+                    x1    = fwdKin(1);
+                    y1    = fwdKin(2);
+                    x2    = fwdKin(4);
+                    y2    = fwdKin(5);
+                    x3    = fwdKin(7);
+                    y3    = fwdKin(8);
+                    x4    = fwdKin(10);
+                    y4    = fwdKin(11);
+                    
+                    % Body velocities
+                    x1_d  = fwdKin_vel(1);
+                    y1_d  = fwdKin_vel(2);
+                    x2_d  = fwdKin_vel(4);
+                    y2_d  = fwdKin_vel(5);
+                    x3_d  = fwdKin_vel(7);
+                    y3_d  = fwdKin_vel(8);
+                    x4_d  = fwdKin_vel(10);
+                    y4_d  = fwdKin_vel(11);
+                    
+                    % Mass
+                    Mtot =  this.sim.model.leg.params.m1 + this.sim.model.leg.params.m2 +...
+                            this.sim.model.leg.params.m3 + this.sim.model.leg.params.m4;
+                    
+                    % Relative positions
+                    % r_i * m_i * v_i
+                    R1 = ([x1 y1] - [CoM_x(k) CoM_y(k)]) * this.sim.model.leg.params.m1 * ([x1_d; y1_d] - [CoM_x_d(k); CoM_y_d(k)]);
+                    R2 = ([x2 y2] - [CoM_x(k) CoM_y(k)]) * this.sim.model.leg.params.m2 * ([x2_d; y2_d] - [CoM_x_d(k); CoM_y_d(k)]);
+                    R3 = ([x3 y3] - [CoM_x(k) CoM_y(k)]) * this.sim.model.leg.params.m3 * ([x3_d; y3_d] - [CoM_x_d(k); CoM_y_d(k)]);
+                    R4 = ([x4 y4] - [CoM_x(k) CoM_y(k)]) * this.sim.model.leg.params.m4 * ([x4_d; y4_d] - [CoM_x_d(k); CoM_y_d(k)]);
+                   
+                    % Rotational momentum (all)
+                    % R * M * V + sum_i (r_i * m_i * v_i )
+                    L(k) = [CoM_x(k) CoM_y(k)] * Mtot * [CoM_x_d(k); CoM_y_d(k)] + (R1+R2+R3+R4);
                 end
 
                 % Largest y coordinate CoM
@@ -823,27 +859,9 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 % Final x coordinate
                 CoM_xf = CoM_x(end);
                 
-%                 % Velocities at maximum CoM_y
-%                 [fwdKin_vel] = this.sim.model.leg.calc_fwdKin_vel( q_leg(:,i_CoM_y_max)', q_leg_d(:,i_CoM_y_max));
-%                 
-%                 %Cartesian to angular velocity
-%                 [theta1_d,~] = cart2pol(fwdKin_vel(1),fwdKin_vel(2));
-%                 [theta2_d,~] = cart2pol(fwdKin_vel(4),fwdKin_vel(5));
-%                 [theta3_d,~] = cart2pol(fwdKin_vel(7),fwdKin_vel(8));
-%                 [theta4_d,~] = cart2pol(fwdKin_vel(10),fwdKin_vel(11));
-%                 
-%                 % Rotational momentum  
-%                 % L = J * theta_d
-%                 L1 = this.sim.model.leg.params.J1 * theta1_d;
-%                 L2 = this.sim.model.leg.params.J2 * theta2_d;
-%                 L3 = this.sim.model.leg.params.J3 * theta3_d;
-%                 L4 = this.sim.model.leg.params.J4 * theta4_d;
-%   
-%                 
-%                 % Absolute sum of rotational moments
-%                 RM = sumabs([L1 L2 L3 L4]);
-                  RM = NaN; % Placeholder
-
+                % Sum Rotational momentum
+                RM = sum(abs(L));
+                
                 %Simulation time
                 tlength = length(t);
 
@@ -1165,8 +1183,10 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.sim.model.ref.random.q_ref = this.data.q_res;   
             this.sim.model.ref.random.q_d_ref = this.data.q_d_res;
             
-            % Set new initial state
-            this.sim.model.p = this.data.results.p;
+            % Set initial state
+            if this.params.noESB == 0
+                this.sim.model.p = this.data.results.p;
+            end
             this.sim.model.setInitialStates( this.sim.model.ref.random.q_ref(:,1), this.sim.model.ref.random.q_d_ref(:,1) )
   
             fprintf('\n');disp('Resimulating for found solution');

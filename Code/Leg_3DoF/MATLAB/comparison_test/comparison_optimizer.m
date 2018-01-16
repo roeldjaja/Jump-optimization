@@ -14,8 +14,8 @@ classdef comparison_optimizer < handle
     % Efficient jump criterion values   this.list.J_energy   
     % Stability criterion values        this.list.J_stability      
     % Torque criterion values           this.list.J_torque        
-    % Objective function values         this.list.f                
-    % CoM x-coordinates (at max height) this.list.CoM_xh            
+    % Objective function values         this.list.f     
+    % cumulative electrical energy      this.list.E
     % CoM y coordinates (max)           this.list.CoM_y                        
     % All evaluation ground forces      this.list.F_GRF  
     % Control points                    this.list.cp 
@@ -59,17 +59,20 @@ classdef comparison_optimizer < handle
             % Objective criteria weights
             
             % Performance (high)
-            this.params.c_high  = 1;
+            this.params.c_high  = 100;%4e1;
             
             % Energy
-            this.params.c_ener  = 1;
+            this.params.c_ener  = 2e-6;
             
             % Stability
-            this.params.c_xh    = 1e4;      % CoM_x corresponding to highest CoM_y
-            this.params.c_xm    = 1e2;      % Mean CoM_x
+            this.params.c_xh    = 3e2;      % CoM_x corresponding to highest CoM_y
+            this.params.c_xm    = 1e3;      % Mean CoM_x
+
             
             % Torque
-            this.params.c_torq  = 2e-8;
+            this.params.c_torq  = 1e-8;
+            
+            this.params.c_y_ref = 1e1;
             
             % Time
             this.params.t = 0 : this.sim.params.Ts : this.sim.params.tspan(2);
@@ -77,11 +80,16 @@ classdef comparison_optimizer < handle
             % Control point parameters 
             this.params.cpres           = 100;       % Get cp at t(1) and every t(cpres+1)  
             
+            % Minimal Jumping height
+            this.params.CoM_y_ref       = 0.75;
+            
+            
+            
             % Optimization options
-            this.params.DiffMinChange            = 0;        % Default 0
-            this.params.DiffMaxChange            = inf;      % Default inf
-            this.params.InitTrustRegionRadius    = 1;        % Default sqrt(number of variables)
-            this.params.FiniteDifferenceStepSize = 1e-3;     % 
+            this.params.DiffMinChange           = 1e-3;     % Default 0
+            this.params.DiffMaxChange           = 0.5;      % Default inf
+            this.params.InitTrustRegionRadius   = 1;        % Default sqrt(number of variables)
+            this.params.MaxFunctionEvaluations  = 6000;     % Default 3000
             
             % Status
             disp('Initialized Leg_3DoF_ACA_jumpref_optimizer with default parameters.');
@@ -101,7 +109,7 @@ classdef comparison_optimizer < handle
             this.list.J_stability   = [];
             this.list.J_torque      = [];
             this.list.f             = [];
-            this.list.CoM_xh        = [];
+            this.list.E             = [];
             this.list.CoM_y         = [];
             this.list.q_rec         = [];
             this.list.F_GRF         = [];
@@ -344,7 +352,8 @@ classdef comparison_optimizer < handle
                         
                         % Stability function CoM
                         J_stability =   this.params.c_xh * ( CoM_xh )^2 +...
-                                        this.params.c_xm * ( CoM_xm )^2;
+                                        this.params.c_xm * ( CoM_xm )^2;% +...
+
                         
                         disp(['c * CoM_xh = ',num2str(this.params.c_xh * ( CoM_xh )^2)]) 
                         disp(['c * CoM_xm = ',num2str(this.params.c_xm * ( CoM_xm )^2)])      
@@ -363,15 +372,21 @@ classdef comparison_optimizer < handle
 
                             % Energy function
                             E_final     = this.sim.data.E(tlength);
-                            J_energy    = this.params.c_ener*E_final^2;
+                            J_energy    = this.params.c_ener*E_final^2 + ...
+                                          this.params.c_y_ref*abs(this.params.CoM_y_ref - CoM_y);
                             disp(['J_energy = ',num2str(J_energy)]);
 
                             % Objective function
+
+                            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                             f = -J_high + J_torque + J_stability;
+%                             f = J_energy + J_torque + J_stability;
+                            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
                             fprintf('\n');disp(['Evaluation succeeded: f = ',num2str(f)]);
                             disp(['Evaluation ',num2str(length(this.list.f)+1)]);('\n');fprintf('\n');
                             disp(['Final CoM x coordinate = ',num2str(CoM_xf)]);
-                            disp(['Max CoM height = ',num2str(CoM_y),' at x = ',num2str(CoM_xh)]);fprintf('\n');
+                            disp(['Max CoM height = ',num2str(CoM_y)]);fprintf('\n');
 
                             % Add function values to list
                             this.list.q_rec         = [this.list.q_rec this.data.q_rec];
@@ -380,7 +395,7 @@ classdef comparison_optimizer < handle
                             this.list.J_stability   = [this.list.J_stability J_stability];
                             this.list.J_torque      = [this.list.J_torque J_torque];
                             this.list.f             = [this.list.f f];
-                            this.list.CoM_xh        = [this.list.CoM_xh CoM_xh];
+                            this.list.E             = [this.list.E E_final];
                             this.list.CoM_y         = [this.list.CoM_y CoM_y];
                         end
                     end
@@ -391,7 +406,7 @@ classdef comparison_optimizer < handle
         
         %__________________________________________________________________
         % Inverse Kinematics
-            function [tau_IK,CoM_xh,CoM_xm, CoM_xf, CoM_y, tlength] = Calc_IK(this)
+            function [tau_IK,CoM_xh,CoM_xm, CoM_xf, CoM_y, tlength, RM] = Calc_IK(this)
                 
                 % Clear leg state lists
                 this.list.q_leg         = [];
@@ -416,7 +431,8 @@ classdef comparison_optimizer < handle
                 %Preallocate
                 qp_dd_t_act = zeros(length(t),6);
                 
-                
+                % Prepare simulation ground forces storage
+                this.data.F_GRF = [];
                 
                 for k = 1:length(t)
                     % State and input
@@ -459,7 +475,10 @@ classdef comparison_optimizer < handle
                     
                     F_GRF = [F_ankle_x; F_ankle_y; F_toe_x; F_toe_y];
                     
-                    % Make list of ground forces
+                    % Store simulation ground forces
+                    this.data.F_GRF = [this.data.F_GRF F_GRF];
+                    
+                    % Make list of all simulations ground forces
                     this.list.F_GRF = [this.list.F_GRF F_GRF];
                     
                     x       = [q_leg;q_leg_d];
@@ -509,6 +528,8 @@ classdef comparison_optimizer < handle
                 
                 for k = 1:length(t)
                     [CoM_x(k), CoM_y(k)] = this.sim.model.leg.calc_CoM(q_leg(:,k));
+                    this.sim.model.leg.Calc_fwdKin;
+                    this.sim.model.leg.Calc_fwdKin_vel;
                 end
 
                 %Largest y coordinate CoM
@@ -517,7 +538,7 @@ classdef comparison_optimizer < handle
                
                 CoM_y           = max(CoM_y);
                 
-                %Matching x coordinate CoM (matches largest y coordinate CoM)
+                % Matching x coordinate CoM (matches largest y coordinate CoM)
                 CoM_xh = (CoM_x(i_CoM_y_max));
                 
                 %Mean x coordinate from start to heighest point
@@ -526,6 +547,25 @@ classdef comparison_optimizer < handle
                 %Final x coordinate
                 CoM_xf = CoM_x(end);
                 
+                
+            x1    = fwdKin(1);
+            y1    = fwdKin(2);
+            x2    = fwdKin(4);
+            y2    = fwdKin(5);
+            x3    = fwdKin(7);
+            y3    = this.sim.model.leg.Calc_fwdKin(8);
+            x4    = this.sim.model.leg.Calc_fwdKin(10);
+            y4    = this.sim.model.leg.Calc_fwdKin(11);
+            
+            x1_d  = this.sim.model.leg.Calc_fwdKin_vel(1);
+            y1_d  = this.sim.model.leg.Calc_fwdKin_vel(2);
+            x2_d  = this.sim.model.leg.Calc_fwdKin_vel(4);
+            y2_d  = this.sim.model.leg.Calc_fwdKin_vel(5);
+            x3_d  = this.sim.model.leg.Calc_fwdKin_vel(7);
+            y3_d  = this.sim.model.leg.Calc_fwdKin_vel(8);
+            x4_d  = this.sim.model.leg.Calc_fwdKin_vel(10);
+            y4_d  = this.sim.model.leg.Calc_fwdKin_vel(11);
+            
                 %Simulation time
                 tlength = length(t);
 
@@ -543,46 +583,52 @@ classdef comparison_optimizer < handle
             
             figure
             plot(this.params.t, this.data.q_init(:,4)',this.params.t,this.data.q_res(4,:),'--',this.params.t,q_leg(4,:))
-            title('q_1');legend('Initial reference','Solution reference','Actual trajectory');xlabel('s');ylabel('rad');
+            title('q_1');legend('Initial reference','Solution reference','Actual trajectory');xlabel('Time [s]');ylabel('Angle [rad]');
             
             figure
             plot(this.params.t, this.data.q_init(:,5)',this.params.t,this.data.q_res(5,:),'--',this.params.t,q_leg(5,:))
-            title('q_2');legend('Initial reference','Solution reference','Actual trajectory');xlabel('s');ylabel('rad');
+            title('q_2');legend('Initial reference','Solution reference','Actual trajectory');xlabel('Time [s]');ylabel('Angle [rad]');
             
             figure
             plot(this.params.t, this.data.q_init(:,6)',this.params.t,this.data.q_res(6,:),'--',this.params.t,q_leg(6,:))
-            title('q_3');legend('Initial reference','Solution reference','Actual trajectory');xlabel('s');ylabel('rad');
+            title('q_3');legend('Initial reference','Solution reference','Actual trajectory');xlabel('Time [s]');ylabel('Angle [rad]');
             
             
             % Plot all q1 references
             figure
+            plot(this.params.t,this.data.q_res(4,:),'m')
             hold on
             for k = 1:length(this.list.f)
                 bluefade = [0 1/length(this.list.f)*k 0];
                 plot(this.params.t,this.list.q_rec(4,(k-1)*length(this.params.t)+1:k*length(this.params.t)),'Color',bluefade)
             end
+            plot(this.params.t,this.data.q_res(4,:),'m','Linewidth',2)
             hold off
-            title('q_1');legend('Final reference');xlabel('s');ylabel('rad');
+            title('q_1');legend('Final reference, initial = green');xlabel('s');ylabel('Angle [rad]');
             
             % Plot all q2 references
             figure
+            plot(this.params.t,this.data.q_res(5,:),'m')
             hold on
             for k = 1:length(this.list.f)
                 bluefade = [0 1/length(this.list.f)*k 0];
                 plot(this.params.t,this.list.q_rec(5,(k-1)*length(this.params.t)+1:k*length(this.params.t)),'Color',bluefade)
             end
+            plot(this.params.t,this.data.q_res(5,:),'m','Linewidth',2)
             hold off
-            title('q_2');legend('Final reference');xlabel('s');ylabel('rad');
+            title('q_2');legend('Final reference, initial = green');xlabel('s');ylabel('Angle [rad]');            
             
             % Plot all q3 references
             figure
+            plot(this.params.t,this.data.q_res(6,:),'m')
             hold on
             for k = 1:length(this.list.f)
                 bluefade = [0 1/length(this.list.f)*k 0];
                 plot(this.params.t,this.list.q_rec(6,(k-1)*length(this.params.t)+1:k*length(this.params.t)),'Color',bluefade)
             end
+            plot(this.params.t,this.data.q_res(6,:),'m','Linewidth',2)
             hold off
-            title('q_3');legend('Final reference');xlabel('s');ylabel('rad');
+            title('q_3');legend('Final reference, initial = green');xlabel('s');ylabel('Angle [rad]');            
             
             % Plot evolution of f  (would be nicer to plot iterations instead of evaluations)
             figure
@@ -614,14 +660,26 @@ classdef comparison_optimizer < handle
             
             figure
             for k=1:n        
-               subplot(3,1,1);plot(s,cpq1(k,:),'.-');title('Control Points q_1'); xlim([1 s(end)]);
+               subplot(3,1,1);plot(s,cpq1(k,:),'.-');title('Control Points q_1'); xlim([1 s(end)]);...
+                   xlabel('Function evaluation');ylabel('Angle [rad]');
                hold on
-               subplot(3,1,2);plot(s,cpq2(k,:),'.-');title('Control Points q_2');  xlim([1 s(end)]);
+               subplot(3,1,2);plot(s,cpq2(k,:),'.-');title('Control Points q_2');  xlim([1 s(end)]);...
+                   xlabel('Function evaluation');ylabel('Angle [rad]');
                hold on
-               subplot(3,1,3);plot(s,cpq3(k,:),'.-');title('Control Points q_3');  xlim([1 s(end)]);  
+               subplot(3,1,3);plot(s,cpq3(k,:),'.-');title('Control Points q_3');  xlim([1 s(end)]);...
+                   xlabel('Function evaluation');ylabel('Angle [rad]');  
                hold on
             end
             hold off
+
+			% Plot latest ground forces
+            F_GRF_all = zeros(4,length(this.params.t));
+            for k = 1:length(this.data.F_GRF)
+               F_GRF_all(:,k) = this.data.F_GRF(:,k);
+            end
+            figure
+            plot(this.params.t,F_GRF_all,'Linewidth',2);title('Ground Forces latest simulation');...
+                xlabel('Time [s]'),ylabel('Ground Force [N]');legend('Ankle x','Ankle y','Toe x','Toe y');
         end
 
         %__________________________________________________________________
@@ -640,11 +698,11 @@ classdef comparison_optimizer < handle
             title('q_3');legend('Original','Latest');xlabel('s');ylabel('rad');
             
              % Plot evolution control points
-            C       = this.list.cp;
+
             n       = this.params.n;
-            cpq1    = C(:,1:3:end);
-            cpq2    = C(:,2:3:end);
-            cpq3    = C(:,3:3:end);
+            cpq1    = this.list.cp(:,1:3:end);
+            cpq2    = this.list.cp(:,2:3:end);
+            cpq3    = this.list.cp(:,3:3:end);
             s       = size(cpq1);s=1:1:s(2);
             
             for k=1:n
@@ -694,9 +752,6 @@ classdef comparison_optimizer < handle
                     q_ref(5,k)  = 1.4;
                     q_ref(6,k)  = -1.0;
 
-%                     q_ref(4,k)  = -0.6;
-%                     q_ref(5,k)  = 1.4;
-%                     q_ref(6,k)  = -1.0;
                 end
             end
             
@@ -818,6 +873,8 @@ classdef comparison_optimizer < handle
             this.sim.model.ref.random.q_ref = this.data.q_res;   
             this.sim.model.ref.random.q_d_ref = this.data.q_d_res;
             
+            this.sim.model.p = this.data.results.p; %Temporary
+            
             % Set new initial state
             this.sim.model.setInitialStates( this.sim.model.ref.random.q_ref(:,1), this.sim.model.ref.random.q_d_ref(:,1) )
 
@@ -825,6 +882,14 @@ classdef comparison_optimizer < handle
             this.sim.model.ref.use_random =1;
             fprintf('\n');disp('Resimulating for found solution');
             this.sim.run(1);
+            
+            % Show CoM_y
+            [~,~,~,~, CoM_y,~] = this.Calc_IK;
+            fprintf('\n');disp(['CoM_y = ',num2str(CoM_y),' m']);
+            
+            % Show cumulative energy consumption
+            disp(['Energy consumption = ',num2str(this.sim.data.E(end)),' J'])
+            
             fprintf('\n');disp('Rerun animation with this.sim.animate');     
          end
         %_____________________________________________________________
