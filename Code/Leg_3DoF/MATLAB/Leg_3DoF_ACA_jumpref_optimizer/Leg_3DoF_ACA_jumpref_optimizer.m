@@ -77,7 +77,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             % Stability
             this.params.c_xh    = 1e4;      % CoM_x corresponding to highest CoM_y
             this.params.c_xm    = 1e2;      % Mean CoM_x
-            this.params.c_RM    = 1e-5;        % Sum Rotational momentum around CoM
+            this.params.c_RM    = 1;        % Sum Rotational momentum around CoM
             
             % Torque
             this.params.c_torq  = 1e-8;
@@ -456,7 +456,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                         
                         % Stability function 
                         J_stability =   this.params.c_xh * ( CoM_xh )^2 +...
-                                        this.params.c_xm * ( CoM_xm )^2;% +...
+                                        this.params.c_xm * ( CoM_xm )^2 +...
                                         this.params.c_RM * (   RM   )^2;
 
                         disp(['c * CoM_xh^2 = ',num2str(this.params.c_xh * ( CoM_xh )^2)]) 
@@ -628,11 +628,14 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                         
                         % Stability function CoM
                         J_stability =   this.params.c_xh * ( CoM_xh )^2 +...
-                                        this.params.c_xm * ( CoM_xm )^2;% +...
+                                        this.params.c_xm * ( CoM_xm )^2 +...
                                         this.params.c_RM * (   RM   )^2;
                         
                         disp(['c * CoM_xh = ',num2str(this.params.c_xh * ( CoM_xh )^2)]) 
-                        disp(['c * CoM_xm = ',num2str(this.params.c_xm * ( CoM_xm )^2)])      
+                        disp(['c * CoM_xm = ',num2str(this.params.c_xm * ( CoM_xm )^2)])         
+                        disp(['c *   RM  ^2 = ',num2str(this.params.c_RM * ( RM )^2)])  
+                        disp(['J_stability = ',num2str(J_stability)]);                                   
+
                         disp(['J_stability = ',num2str(J_stability)]);                                   
                         
                         % Penalty function tau
@@ -802,6 +805,9 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 q_leg   = x(:,18+1:18+6)';       % 6xN
                 q_leg_d = x(:,18+7:18+12)';
                 
+                % Preallocate rotational moments matrix
+                L       = zeros(length(t),3);
+                
                 for k = 1:length(t)
                     [CoM_x(k), CoM_y(k)] = this.sim.model.leg.calc_CoM(q_leg(:,k));
                     [CoM_x_d(k), CoM_y_d(k)] = this.sim.model.leg.calc_CoM_vel(q_leg(:,k),q_leg_d(:,k));
@@ -834,14 +840,14 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                     
                     % Relative positions
                     % r_i * m_i * v_i
-                    R1 = ([x1 y1] - [CoM_x(k) CoM_y(k)]) * this.sim.model.leg.params.m1 * ([x1_d; y1_d] - [CoM_x_d(k); CoM_y_d(k)]);
-                    R2 = ([x2 y2] - [CoM_x(k) CoM_y(k)]) * this.sim.model.leg.params.m2 * ([x2_d; y2_d] - [CoM_x_d(k); CoM_y_d(k)]);
-                    R3 = ([x3 y3] - [CoM_x(k) CoM_y(k)]) * this.sim.model.leg.params.m3 * ([x3_d; y3_d] - [CoM_x_d(k); CoM_y_d(k)]);
-                    R4 = ([x4 y4] - [CoM_x(k) CoM_y(k)]) * this.sim.model.leg.params.m4 * ([x4_d; y4_d] - [CoM_x_d(k); CoM_y_d(k)]);
-                   
+                    R1 = cross(([x1 y1 0] - [CoM_x(k) CoM_y(k) 0]), this.sim.model.leg.params.m1 * ([x1_d; y1_d; 0] - [CoM_x_d(k); CoM_y_d(k); 0]));
+                    R2 = cross(([x2 y2 0] - [CoM_x(k) CoM_y(k) 0]), this.sim.model.leg.params.m2 * ([x2_d; y2_d; 0] - [CoM_x_d(k); CoM_y_d(k); 0]));
+                    R3 = cross(([x3 y3 0] - [CoM_x(k) CoM_y(k) 0]), this.sim.model.leg.params.m3 * ([x3_d; y3_d; 0] - [CoM_x_d(k); CoM_y_d(k); 0]));
+                    R4 = cross(([x4 y4 0] - [CoM_x(k) CoM_y(k) 0]), this.sim.model.leg.params.m4 * ([x4_d; y4_d; 0] - [CoM_x_d(k); CoM_y_d(k); 0]));
+
                     % Rotational momentum (all)
                     % R * M * V + sum_i (r_i * m_i * v_i )
-                    L(k) = [CoM_x(k) CoM_y(k)] * Mtot * [CoM_x_d(k); CoM_y_d(k)] + (R1+R2+R3+R4);
+                    L(k,:) = cross([CoM_x(k) CoM_y(k) 0], Mtot * [CoM_x_d(k); CoM_y_d(k); 0]) + (R1+R2+R3+R4);
                 end
 
                 % Largest y coordinate CoM
@@ -859,8 +865,8 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 % Final x coordinate
                 CoM_xf = CoM_x(end);
                 
-                % Sum Rotational momentum
-                RM = sum(abs(L));
+                % Rotational momentum at heighest point
+                RM = L(i_CoM_y_max,3);
                 
                 %Simulation time
                 tlength = length(t);
@@ -1006,7 +1012,6 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             title('q_3');legend('Original','Latest');xlabel('s');ylabel('rad');
             
              % Plot evolution control points
-            C       = this.list.cp;
             n       = this.params.n;
             cpq1    = this.list.cp(:,1:3:end);
             cpq2    = this.list.cp(:,2:3:end);
