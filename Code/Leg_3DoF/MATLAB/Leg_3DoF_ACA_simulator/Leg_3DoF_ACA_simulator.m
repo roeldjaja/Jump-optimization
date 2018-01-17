@@ -29,7 +29,7 @@ classdef Leg_3DoF_ACA_simulator < handle
             this.model =  Leg_3DoF_ACA(actParamsFileName, legParamsFileName);
     
             % Simulation parameters
-            this.params.tspan       = [0 5];                   % Simulation time [s]
+            this.params.tspan       = [0 0.4];                   % Simulation time [s]
             this.params.Ts          = 1e-3;                     % Simulation timestep
             this.model.control.Ts	= 1e-3;                     % Controller timestep
             

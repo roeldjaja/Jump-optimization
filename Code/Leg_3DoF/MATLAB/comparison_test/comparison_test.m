@@ -1,23 +1,30 @@
 %% Set optimizers and parameters
 
 % No Esb
-com_noESB   = Leg_3DoF_ACA_jumpref_optimizer;
+noESB   = Leg_3DoF_ACA_jumpref_optimizer;
 
 % Mono
-com_mono    = Leg_3DoF_ACA_jumpref_optimizer('actuatorParams_monoarticulated.mat','Leg_3DoF_design_mono');
+mono    = Leg_3DoF_ACA_jumpref_optimizer('actuatorParams_monoarticulated.mat','Leg_3DoF_design_mono');
 
 % Bi
-com_bi      = Leg_3DoF_ACA_jumpref_optimizer('actuatorParams_biarticulated.mat','Leg_3DoF_design_bi');
+bi      = Leg_3DoF_ACA_jumpref_optimizer('actuatorParams_biarticulated.mat','Leg_3DoF_design_bi');
 
-%% Run optimizations
+%% Load data
 
-com_noESB.run
-com_mono.run
-com_bi.run
+load noESB.mat
+noESB.load_matdata
+
+load mono
+mono.load_matdata
+
+load bi.mat
+bi.load_matdata
+
+disp(['noESB c_torq = ',num2str(noESB.params.c_torq)])
+disp(['mono  c_torq = ',num2str(mono.params.c_torq)])
+disp(['bi    c_torq = ',num2str(bi.params.c_torq)])
 
 %% Post-process 
-
-
 
 % Save optimization data noESB
 % optimization_data   = com_noESB.data;
@@ -25,8 +32,8 @@ com_bi.run
 % save(['comp_noESB','optimization_data','simulation_data'])
 
 % Calculate CoM_y noESB
-com_noESB.simulate_solution;
-[~,~,~,~, CoM_y_noESB,~] = com_noESB.Calc_IK;
+noESB.simulate_solution;
+[~,~,~,~, CoM_y_noESB,~] = noESB.Calc_IK;
 disp(['CoM_y_noESB = ',num2str(CoM_y_noESB)]);
 
 % Save optimization data mono
@@ -35,8 +42,8 @@ disp(['CoM_y_noESB = ',num2str(CoM_y_noESB)]);
 % save('comp_mono','optimization_data','simulation_data')
 
 % Calculate CoM_y ,mono
-com_mono.simulate_solution;
-[~,~,~,~, CoM_y_mono,~] = com_mono.Calc_IK;
+mono.simulate_solution;
+[~,~,~,~, CoM_y_mono,~] = mono.Calc_IK;
 disp(['CoM_y_mono = ',num2str(CoM_y_mono)]);
 
 % Save optimization data bi
@@ -44,23 +51,23 @@ disp(['CoM_y_mono = ',num2str(CoM_y_mono)]);
 % simulation_data     = com_bi.sim.data;
 % save('comp_bi','optimization_data','simulation_data')
 
+
 % Calculate CoM_y bi
-com_bi.simulate_solution;
-[~,~,~,~, CoM_y_bi,~] = com_bi.Calc_IK;
+bi.simulate_solution;
+
+[~,~,~,~, CoM_y_bi,~] = bi.Calc_IK;
 disp(['CoM_y_bi = ',num2str(CoM_y_bi)]);
 
+fprintf('\n');
+disp(['CoM_y_noESB = ',num2str(CoM_y_noESB)]);
+disp(['CoM_y_mono  = ',num2str(CoM_y_mono)]);
+disp(['CoM_y_bi    = ',num2str(CoM_y_bi)]);
 
 
 
-
-
-
-
-
-
-
-
-
+% CoM_y_noESB = 0.91667
+% CoM_y_mono  = 0.92433
+% CoM_y_bi    = 0.99311
 
 
 

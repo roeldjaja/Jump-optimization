@@ -897,11 +897,11 @@ classdef Leg_3DoF_ACA_jumpref < handle
             % Generate x-y trajectory reference of the hip
             % Time instances when things happen
             t0 = 0;     % Start (always zero) and start lowering
-            t1 = 3;     % End lowering
-            t2 = 3.5;   % End wait for balance
-            t3 = 4.1;   % End finish jump
-            t4 = 4.9;   % End retracting
-            t5 = 8.0;   % End standing up
+            t1 = 0;     % End lowering
+            t2 = 0;     % End wait for balance
+            t3 = 0.2;   % End finish jump
+            t4 = 0.4;   % End retracting
+            t5 = 0.5;   % End standing up
             % Preallocate Cartesian hip coordinates
             x_hip_ankle     = zeros(1, n);
             y_hip           = zeros(1, n);
@@ -940,9 +940,9 @@ classdef Leg_3DoF_ACA_jumpref < handle
             % Generate an ankle extension profile
             ankleExtension = zeros(1,n);
             % Time instances when things happen
-            t1 = 3.90;  % Start ankle extension
-            t2 = 4.15;  % End ankle extension
-            t3 = 4.4;   % End ankle flexion
+            t1 = 0.29;  % Start ankle extension
+            t2 = 0.6;   % End ankle extension
+            t3 = 0.6;   % End ankle flexion
             for i=1:n
                 ti = t_p(i);
                 

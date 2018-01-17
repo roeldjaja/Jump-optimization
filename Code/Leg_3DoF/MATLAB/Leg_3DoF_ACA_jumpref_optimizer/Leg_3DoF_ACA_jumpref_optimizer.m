@@ -66,7 +66,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             % Objective criteria weights
             
             % Performance (high)
-            this.params.c_high  = 4e1;
+            this.params.c_high  = 5e2;
             
             % Energy
             this.params.c_ener  = 2e-6;
@@ -75,12 +75,12 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.params.c_y_ref = 1e1;
             
             % Stability
-            this.params.c_xh    = 1e4;      % CoM_x corresponding to highest CoM_y
-            this.params.c_xm    = 1e2;      % Mean CoM_x
+            this.params.c_xh    = 1.5e3;      %1e4  % CoM_x corresponding to highest CoM_y
+            this.params.c_xm    = 1e2;        % Mean CoM_x
             this.params.c_RM    = 1;        % Sum Rotational momentum around CoM
             
             % Torque
-            this.params.c_torq  = 1e-8;
+            this.params.c_torq  = 3.5e-4;
             
             % Time
             this.params.t = 0 : this.sim.params.Ts : this.sim.params.tspan(2);
@@ -797,8 +797,9 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                     this.list.q_leg_d   = [this.list.q_leg_d q_leg_d];
                 end
                 
-                % Active torque
-                tau_IK = qp_dd_t_act(:,4:6);  
+                % Active torque - ESB torque
+                t_act  = qp_dd_t_act(:,4:6);  
+                tau_IK = t_act - this.sim.data.tau_p(:,1:length(t_act))';
                 
                 % Get CoM and body positions and velocities
                 x       = this.sim.data.xlist;
@@ -857,10 +858,12 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 CoM_y           = max(CoM_y);
                 
                 % Matching x coordinate CoM (matches largest y coordinate CoM)
-                CoM_xh = (CoM_x(i_CoM_y_max));
+                % with respect to initial x coordinate CoM
+                CoM_xh = (CoM_x(i_CoM_y_max)-CoM_x(1));
                 
                 % Mean x coordinate from start to heighest point
-                CoM_xm = mean(abs(CoM_x));%1:i_CoM_y_max)));
+                % with respect to initial x coordinate CoM
+                CoM_xm = mean(abs(CoM_x - ones(1,length(CoM_x))*CoM_x(1)));
                 
                 % Final x coordinate
                 CoM_xf = CoM_x(end);
