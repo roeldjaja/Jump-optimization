@@ -33,6 +33,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
         sim         % Leg_3DoF_ACA_jumpref_simulation object
         results     % Optimisation results
         list        % Listed iteration data
+        plots       % Plotting parameters & colours
     end
     
     %__________________________________________________________________
@@ -80,7 +81,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.params.c_RM    = 1;        % Sum Rotational momentum around CoM
             
             % Torque
-            this.params.c_torq  = 3.5e-4;
+            this.params.c_torq  = 2e-4;
             
             % Time
             this.params.t = 0 : this.sim.params.Ts : this.sim.params.tspan(2);
@@ -102,6 +103,28 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             
             % Status
             disp('Initialized Leg_3DoF_ACA_jumpref_optimizer with default parameters.');
+            
+            % Plotting parameters
+            % Colours
+            this.plots.C.R        	= [1.0 0.4 0.4];
+            this.plots.C.G        	= [0.0 0.7 0.0]; % Old green: [0.3 0.8 0.3]
+            this.plots.C.B       	= [0.3 0.3 1.0];
+            this.plots.C.P       	= [0.8 0.0 1.0];
+            this.plots.C.BLK        = [0.3 0.3 0.3];
+            this.plots.C_light.R  	= [1.0 0.6 0.6];
+            this.plots.C_light.G  	= [0.2 0.8 0.2];
+            this.plots.C_light.B  	= [0.6 0.6 1.0];
+            this.plots.C_light.P 	= [0.8 0.4 1.0];
+            this.plots.C_light.GREY = [0.6 0.6 0.6];
+            %0.5, 0.5, 0.0; % Additional colours
+            %1.0, 0.7, 0.2;
+            %0.0, 0.7, 0.7   ];
+            % Other plotting parameters
+            this.plots.filtIgnoreTime       = 1.0;
+            this.plots.yAxisIgnoreTime      = 0.5;
+            this.plots.sizeNormal           = [600 400];
+            this.plots.sizePaperMode        = [500 190];%[600 230];
+            this.plots.showTitleInPaperMode = 0;
         end
         
         %__________________________________________________________________
@@ -877,8 +900,29 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             end
         %__________________________________________________________________________
         function plot(this) 
-            % Plots the trajectories of the initial guess and the solution x found by the optimization
-            % algorithm           
+            % Plots optimization results 
+            paperMode = confirm('Generate plots in paper mode? [y/N]', 0);
+            savePlots = confirm('Save plots as PDF? [y/N]', 0);
+            
+             % Get plot size depending on paperMode
+            if (paperMode)
+                figSize = this.plots.sizePaperMode;
+            else
+                figSize = this.plots.sizeNormal;
+            end
+            
+            % Plot directory
+            plotPath    = 'plots/';
+            if (~exist(plotPath, 'dir'))
+                   mkdir(plotPath); 
+            end
+            % Get some plotting parameters
+%             filtIgnoreTime          = this.plots.filtIgnoreTime;
+%             yAxisIgnoreTime         = this.plots.yAxisIgnoreTime;
+            showTitleInPaperMode    = this.plots.showTitleInPaperMode;
+            C                       = this.plots.C;         % Plot colours
+            C_light                 = this.plots.C_light;   % Light plot colours
+            
             n       = this.params.n;
             N       = length(this.params.t);
             x       = this.sim.data.xlist; %[N x 30]
@@ -901,59 +945,100 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             
             % Plot all q1 references
             figure
-            plot(this.params.t,this.data.q_res(4,:),'m')
+            resizeFig(gcf, figSize(1), figSize(2));
+            plot(this.params.t,this.list.q_rec(4,1:length(this.params.t)),'g')
             hold on
+            plot(this.params.t,this.data.q_res(4,:),'m')
             for k = 1:length(this.list.f)
-                bluefade = [0 1/length(this.list.f)*k 0];
-                plot(this.params.t,this.list.q_rec(4,(k-1)*length(this.params.t)+1:k*length(this.params.t)),'Color',bluefade)
+                greenfade = [0 1/length(this.list.f)*k 0];
+                plot(this.params.t,this.list.q_rec(4,(k-1)*length(this.params.t)+1:k*length(this.params.t)),'Color',greenfade)
             end
-            plot(this.params.t,this.data.q_res(4,:),'m','Linewidth',2)
+            plot(this.params.t,this.data.q_res(4,:),'m','Linewidth',1.5)
             hold off
-            title('q_1');legend('Final reference, initial = green');xlabel('s');ylabel('Angle [rad]');
+            setYAxis;
+            paperModeLegend(    paperMode, ...
+                                {'$q_{1,initial}$','$q_{1,final}$'},   ...
+                                {'q_1 final'}    );
+            paperModeAxisLabels(paperMode, {'$t$ [s]', '$q_1$ [rad]'}, {'t [s]', '[rad]'});
+            paperModeTitle(     showTitleInPaperMode, paperMode, ...
+                                'Trajectories $q_1$',  ...
+                                'Trajectories $q_1$'   );
+            paperSave(savePlots, [plotPath 'q1_traj.pdf']);
             
             % Plot all q2 references
             figure
-            plot(this.params.t,this.data.q_res(5,:),'m')
+            resizeFig(gcf, figSize(1), figSize(2));
+            plot(this.params.t,this.list.q_rec(5,1:length(this.params.t)),'g')
             hold on
+            plot(this.params.t,this.data.q_res(5,:),'m')
             for k = 1:length(this.list.f)
-                bluefade = [0 1/length(this.list.f)*k 0];
-                plot(this.params.t,this.list.q_rec(5,(k-1)*length(this.params.t)+1:k*length(this.params.t)),'Color',bluefade)
+                greenfade = [0 1/length(this.list.f)*k 0];
+                plot(this.params.t,this.list.q_rec(5,(k-1)*length(this.params.t)+1:k*length(this.params.t)),'Color',greenfade)
             end
-            plot(this.params.t,this.data.q_res(5,:),'m','Linewidth',2)
+            plot(this.params.t,this.data.q_res(5,:),'m','Linewidth',1.5)
             hold off
-            title('q_2');legend('Final reference, initial = green');xlabel('s');ylabel('Angle [rad]');            
+            setYAxis;
+            paperModeLegend(    paperMode, ...
+                                {'$q_{2,initial}$','$q_{2,final}$'},   ...
+                                {'q_2 initial','q_2 final'}    );
+            paperModeAxisLabels(paperMode, {'$t$ [s]', '$q_2$ [rad]'}, {'t [s]', '[rad]'});
+            paperModeTitle(     showTitleInPaperMode, paperMode, ...
+                                'Trajectories $q_2$',  ...
+                                'Trajectories $q_2$'   );
+            paperSave(savePlots, [plotPath 'q2_traj.pdf']);           
             
             % Plot all q3 references
             figure
-            plot(this.params.t,this.data.q_res(6,:),'m')
+            resizeFig(gcf, figSize(1), figSize(2));
+            plot(this.params.t,this.list.q_rec(6,1:length(this.params.t)),'g')
             hold on
+            plot(this.params.t,this.data.q_res(6,:),'m')
             for k = 1:length(this.list.f)
-                bluefade = [0 1/length(this.list.f)*k 0];
-                plot(this.params.t,this.list.q_rec(6,(k-1)*length(this.params.t)+1:k*length(this.params.t)),'Color',bluefade)
+                greenfade = [0 1/length(this.list.f)*k 0];
+                plot(this.params.t,this.list.q_rec(6,(k-1)*length(this.params.t)+1:k*length(this.params.t)),'Color',greenfade)
             end
-            plot(this.params.t,this.data.q_res(6,:),'m','Linewidth',2)
+            plot(this.params.t,this.data.q_res(6,:),'m','Linewidth',1.5)
             hold off
-            title('q_3');legend('Final reference, initial = green');xlabel('s');ylabel('Angle [rad]');            
-            
-            % Plot evolution of f  (would be nicer to plot iterations instead of evaluations)
-            figure
-            plot(1:length(this.list.f),this.list.f,'.');
-            title('Function evolution');xlabel('Objective function evaluation');ylabel('Function value');
+            setYAxis;
+            paperModeLegend(    paperMode, ...
+                                {'$q_{3,initial}$','$q_{3,final}$'},   ...
+                                {'q_3 initial','q_3 final'}    );
+            paperModeAxisLabels(paperMode, {'$t$ [s]', '$q_3$ [rad]'}, {'t [s]', '[rad]'});
+            paperModeTitle(     showTitleInPaperMode, paperMode, ...
+                                'Trajectories $q_3$',  ...
+                                'Trajectories $q_3$'   );
+            paperSave(savePlots, [plotPath 'q3_traj.pdf']);  
             
             % Plot evolution of criteria
+            xf =length(this.list.f);
             figure 
+            resizeFig(gcf, figSize(1), 500);
+            
             subplot(3,1,1)
             plot(1:length(this.list.J_high),this.list.J_high,'.');
-            title('Performance criterium (high)');xlabel('Objective function evaluation');ylabel('Performance criterium value');            
-        
+            axis([0 xf 350 500])
+            paperModeAxisLabels(paperMode, {'Objective function evaluation','Performance criterion'});
+            paperModeTitle(     showTitleInPaperMode, paperMode, ...
+                                'Performance criterion (high jump)',  ...
+                                'Performance criterion (high jump)'   );        
+                            
             subplot(3,1,2)
             plot(1:length(this.list.J_stability),this.list.J_stability,'.');
-            title('Stability criterium');xlabel('Objective function evaluation');ylabel('Stability criterium value');                    
-        
+            axis([0 xf 0 15])
+            paperModeAxisLabels(paperMode, {'Objective function evaluation','Stability criterion'});
+            paperModeTitle(     showTitleInPaperMode, paperMode, ...
+                                'Stability criterion',  ...
+                                'Stability criterion'   );       
+                            
             subplot(3,1,3)
             plot(1:length(this.list.J_torque),this.list.J_torque,'.');
-            title('Torque criterium');xlabel('Objective function evaluation');ylabel('Torque criterium value');                    
-            
+            axis([0 xf 0 450])
+            paperModeAxisLabels(paperMode, {'Objective function evaluation','Torque criterion'});
+            paperModeTitle(     showTitleInPaperMode, paperMode, ...
+                                'Torque criterion',  ...
+                                'Torque criterion'   );       
+            paperSave(savePlots, [plotPath 'crit_high.pdf']);  
+                            
             % Plot evolution control points
             C = this.list.cp;
             n = this.params.n;
@@ -964,16 +1049,24 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             s = size(cpq3); s=1:1:s(2);
             
             figure
+            resizeFig(gcf, figSize(1), 500);
             for k=1:n        
-               subplot(3,1,1);plot(s,cpq1(k,:),'.-');title('Control Points q_1'); xlim([1 s(end)]);...
-                   xlabel('Function evaluation');ylabel('Angle [rad]');
+               subplot(3,1,1);plot(s,cpq1(k,:),'.'); axis([1 s(end) min(min(cpq1))-0.3 max(max(cpq1))+0.3]);...
+               paperModeAxisLabels(paperMode, {'Objective function evaluation','$q_1$ [rad]'});
+               paperModeTitle(     showTitleInPaperMode, paperMode, ...
+                                'Control Points $q_1$',  ...
+                                'Control Points q_1'   ); 
                hold on
-               subplot(3,1,2);plot(s,cpq2(k,:),'.-');title('Control Points q_2');  xlim([1 s(end)]);...
-                   xlabel('Function evaluation');ylabel('Angle [rad]');
-               hold on
-               subplot(3,1,3);plot(s,cpq3(k,:),'.-');title('Control Points q_3');  xlim([1 s(end)]);...
-                   xlabel('Function evaluation');ylabel('Angle [rad]');  
-               hold on
+               subplot(3,1,2);plot(s,cpq2(k,:),'.');  axis([1 s(end) min(min(cpq2))-0.3 max(max(cpq2))+0.3]);...
+               paperModeAxisLabels(paperMode, {'Objective function evaluation','$q_2$ [rad]'});
+               paperModeTitle(     showTitleInPaperMode, paperMode, ...
+                                'Control Points $q_2$',  ...
+                                'Control Points q_2'   );                hold on
+               subplot(3,1,3);plot(s,cpq3(k,:),'.');  axis([1 s(end) min(min(cpq3))-0.3 max(max(cpq3))+0.3]);...
+               paperModeAxisLabels(paperMode, {'Objective function evaluation','$q_3$ [rad]'});
+               paperModeTitle(     showTitleInPaperMode, paperMode, ...
+                                'Control Points $q_3$',  ...
+                                'Control Points q_3'   );                hold on
             end
             hold off
             
@@ -984,8 +1077,16 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 p3 = this.data.list.p(:,3:3:end);
                 
                 figure
+                resizeFig(gcf, figSize(1), figSize(2));
                 plot(s,p1,s,p2,s,p3);title('Pretension positions evolution');...
-                legend('p_1','p_2','p_3');xlabel('Function evaluation');ylabel('Pretension position [m]');
+                axis([1 s(end) min(min(this.data.list.p))-0.01 max(max(this.data.list.p))+0.01]);...
+                paperModeLegend(    paperMode, ...
+                                {'$p_1$','$p_2$','$p_3$'},   ...
+                                {'p_1','p_2','p_3'}    );
+                paperModeAxisLabels(paperMode, {'Objective function evaluation','Pretension position [m]'});
+                paperModeTitle(     showTitleInPaperMode, paperMode, ...
+                                    'Pretension positions',  ...
+                                    'Pretension positions'   ); 
             end
             
             % Plot latest ground forces
