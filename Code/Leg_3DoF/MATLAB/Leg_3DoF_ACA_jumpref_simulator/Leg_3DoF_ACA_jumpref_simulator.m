@@ -384,6 +384,15 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
             C                       = this.plots.C;         % Plot colours
             C_light                 = this.plots.C_light;   % Light plot colours
             
+            % Get final time simulation
+            x_l = this.data.xlist;
+            cutoff = find(~any(x_l, 2));
+            if isempty(cutoff) ==1
+                tfinal = this.params.t(end);
+            else
+                tfinal = this.params.t(cutoff(1)-1);
+            end
+            
             % Get variables from data
             % leg: q = [x1, y1, theta1, q1, q2, q3]
             % leg: x = [q; q_d]
@@ -555,7 +564,7 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
             plot(t, q_ref(4,:), '--', 'Color', C.B);
             plot(t, q_ref(5,:), '--', 'Color', C.R);
             plot(t, q_ref(6,:), '--', 'Color', C.G);
-            setYAxis;
+            setYAxis; xlim([0 tfinal]);
             paperModeLegend(    paperMode, ...
                                 {'$q_1$', '$q_2$', '$q_3$', '$q_1^*$', '$q_2^*$', '$q_3^*$'},   ...
                                 {'q_1', 'q_2', 'q_3', 'q_{1,ref}', 'q_{2,ref}', 'q_{3,ref}'}    );
@@ -571,7 +580,7 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
             plot(t, q_joints_d(1,:), 'Color', C.B);
             plot(t, q_joints_d(2,:), 'Color', C.R);
             plot(t, q_joints_d(3,:), 'Color', C.G);
-            setYAxis;%(-1, 2*yAxisIgnoreTime);
+            setYAxis;xlim([0 tfinal]);%(-1, 2*yAxisIgnoreTime);
             paperModeLegend(    paperMode, ...
                                 {'$\dot{q}_1$', '$\dot{q}_2$', '$\dot{q}_3$'},    ...
                                 {'q_{1,d}', 'q_{2,d}', 'q_{3,d}'}           );
@@ -585,7 +594,7 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
             figure(3); clf; hold on; grid on;
             resizeFig(gcf, figSize(1), figSize(2));
             plot(t, x_floatingBase);
-            setYAxis;%(-1, 2*yAxisIgnoreTime);
+            setYAxis;xlim([0 tfinal]);%(-1, 2*yAxisIgnoreTime);
             paperModeLegend(    paperMode, ...
                                 {'$x_1$ [m]', '$y_1$ [m]', '$\theta_1$ [rad]', '$\dot{x}_1$ [m/s]', '$\dot{y}_1$ [m/s]', '$\dot{\theta}_1$ [rad/s]'},   ...
                                 {'x_1 [m]', 'y_1 [m]', 'theta_1 [rad]', 'x_{1,d} [m/s]', 'y_{1,d} [m/s]', 'theta_{1,d} [rad/s]'}    );
@@ -618,7 +627,8 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
                                     'Joint 1 torques (noESB)',  ...
                                     'Joint 1 torques (noESB)'   );
             end
-            setYAxis;%(-1, yAxisIgnoreTime);
+%             setYAxis(-1, yAxisIgnoreTime);
+            xlim([0 tfinal]);
             paperModeAxisLabels(paperMode, {'$t$ [s]', '[N m]'}, {'t [s]', '[N m]'});
             paperSave(savePlots, [plotPath 'q_1_torques.pdf']);
             
@@ -658,7 +668,8 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
                                     'Joint 2 torques (noESB)',  ...
                                     'Joint 2 torques (noESB)'   );
             end
-            setYAxis;%(-1, yAxisIgnoreTime);
+%             setYAxis(-1, yAxisIgnoreTime);
+            xlim([0 tfinal]);
             paperModeAxisLabels(paperMode, {'$t$ [s]', '[N m]'}, {'t [s]', '[N m]'});
             paperSave(savePlots, [plotPath 'q_2_torques.pdf']);
             
@@ -668,7 +679,8 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
             plot(t, tau_ref(3,:), '--', 'Color', C.BLK);
             plot(t, tau_pb_3, 'Color', C.B);
             %plot(t, tau(3,:), 'Color', C.BLK);
-            setYAxis;%(-1, 2*yAxisIgnoreTime);
+%             setYAxis(-1, 2*yAxisIgnoreTime);
+            xlim([0 tfinal]);
             paperModeLegend(    paperMode, ...
                             	{'$\tau_3^*$', '$\tau_{PB,A3}$'},    ...
                              	{'tau_{3,ref}', 'tau_{PB,A3}'}       	);
@@ -702,7 +714,7 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
             plot([0 max(t)], [this.model.a1.params.p_range(2) this.model.a1.params.p_range(2)], '--', 'Color', C.B);
             plot([0 max(t)], [this.model.a2.params.p_range(1) this.model.a2.params.p_range(1)], '--', 'Color', C.R);
             plot([0 max(t)], [this.model.a2.params.p_range(2) this.model.a2.params.p_range(2)], '--', 'Color', C.R);
-            setYAxis;
+            setYAxis;xlim([0 tfinal]);
             paperModeLegend(	paperMode, ...
                                 {'$p_1$', '$p_2$'},     ...
                                 {'p_1', 'p_2'}      	);
@@ -723,7 +735,7 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
             h2 = plot(t, P_A2_filt, 'Color', C.R, 'LineWidth', 2);
             h3 = plot(t, P_A3_filt, 'Color', C.G, 'LineWidth', 2);
             h4 = plot(t, P_filt, 'Color', C.BLK, 'LineWidth', 2);
-            setYAxis;%(-1, yAxisIgnoreTime);
+            setYAxis;xlim([0 tfinal]);%(-1, yAxisIgnoreTime);
             paperModeLegend(	paperMode, ...
                                 {   ['$P_{A1}$ filt. (' num2str(P_A1_filt(end), '%3.1f') ' W end)'],	...
                                     ['$P_{A2}$ filt. (' num2str(P_A2_filt(end), '%3.1f') ' W end)'],    ...
@@ -751,7 +763,7 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
                                 {'$P_{m1,A1}$', '$P_{m2,A1}$'},   ...
                                 {'P_{m1,A1}', 'P_{m2,A1}'}      	);
             paperModeAxisLabels(paperMode, {'$t$ [s]', '[W]'}, {'t [s]', '[W]'});
-            setYAxis;%(-1, yAxisIgnoreTime);
+            setYAxis;xlim([0 tfinal]);%(-1, yAxisIgnoreTime);
             paperModeTitle(     showTitleInPaperMode, paperMode, ...
                                 'PB vs ESB power: ACA1',  ...
                                 'PB vs ESB power: ACA1'   );
@@ -762,7 +774,7 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
                                 {'$P_{m1,A2}$', '$P_{m2,A2}$'},   ...
                                 {'P_{m1,A2}', 'P_{m2,A2}'}      	);
             paperModeAxisLabels(paperMode, {'$t$ [s]', '[W]'}, {'t [s]', '[W]'});
-            setYAxis;%(-1, yAxisIgnoreTime);
+            setYAxis;xlim([0 tfinal]);%(-1, yAxisIgnoreTime);
             paperModeTitle(     showTitleInPaperMode, paperMode, ...
                                 'PB vs ESB power: ACA2',  ...
                                 'PB vs ESB power: ACA2'   );
@@ -773,7 +785,7 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
                                 {'$P_{m1,A3}$', '$P_{m2,A3}$'},   ...
                                 {'P_{m1,A3}', 'P_{m2,A3}'}      	);
             paperModeAxisLabels(paperMode, {'$t$ [s]', '[W]'}, {'t [s]', '[W]'});
-            setYAxis;%(-1, yAxisIgnoreTime);
+            setYAxis;xlim([0 tfinal]);%(-1, yAxisIgnoreTime);
             paperModeTitle(     showTitleInPaperMode, paperMode, ...
                                 'PB vs ESB power: ACA3',  ...
                                 'PB vs ESB power: ACA3'   );
@@ -792,7 +804,7 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
                                 {'$i_{m1,A1}$', '$i_{m2,A1}$', '$i_{m1,A2}$', '$i_{m2,A2}$', '$i_{m1,A3}$', '$i_{m2,A3}$'},     ...
                                 {'i_{m1,A1}', 'i_{m2,A1}', 'i_{m1,A2}', 'i_{m2,A2}', 'i_{m1,A3}', 'i_{m2,A3}'}                  );
             paperModeAxisLabels(paperMode, {'$t$ [s]', '[A]'}, {'t [s]', '[A]'});
-            setYAxis;%(-1, yAxisIgnoreTime);
+            setYAxis;xlim([0 tfinal]);%(-1, yAxisIgnoreTime);
             paperModeTitle(     showTitleInPaperMode, paperMode, ...
                                 'Motor currents',  ...
                                 'Motor currents'   );
@@ -809,7 +821,7 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
                                 {'$\dot{p}_1$', '$\dot{p}_2$', '$\dot{p}_3$'},    ...
                                 {'p_{d,1}', 'p_{d,2}', 'p_{d,3}'}           );
             paperModeAxisLabels(paperMode, {'$t$ [s]', '[rpm]'}, {'t [s]', '[rpm]'});
-            setYAxis;
+            setYAxis;xlim([0 tfinal]);%;
             paperModeTitle(     showTitleInPaperMode, paperMode, ...
                                 'M2 rotor velocities',  ...
                                 'M2 rotor velocities'   );
@@ -825,7 +837,7 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
                                 {'$E_{p,1}$', '$E_{p,2}$', '$E_{p,3}$'},    ...
                                 {'E_{p,1}', 'E_{p,2}', 'E_{p,3}'}           );
             paperModeAxisLabels(paperMode, {'$t$ [s]', 'Energy [J]'}, {'t [s]', 'Energy [J]'});
-            setYAxis;
+            setYAxis;xlim([0 tfinal]);%
             paperModeTitle(     showTitleInPaperMode, paperMode, ...
                                 'ESB stored energy',  ...
                                 'ESB stored energy'   );
@@ -844,7 +856,7 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
                                 {'$v_{m1,A1}$', '$v_{m2,A1}$', '$v_{m1,A2}$', '$v_{m2,A2}$', '$v_{m1,A3}$', '$v_{m2,A3}$'},     ...
                                 {'v_{m1,A1}', 'v_{m2,A1}', 'v_{m1,A2}', 'v_{m2,A2}', 'v_{m1,A3}', 'v_{m2,A3}'}                  );
             paperModeAxisLabels(paperMode, {'$t$ [s]', 'Voltage [V]'}, {'t [s]', 'Voltage [V]'});
-            setYAxis;%(-1, yAxisIgnoreTime);
+            setYAxis;xlim([0 tfinal]);%(-1, yAxisIgnoreTime);
             paperModeTitle(     showTitleInPaperMode, paperMode, ...
                                 'Motor voltages',  ...
                                 'Motor voltages'   );
@@ -857,7 +869,7 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
             plot(t, E_A2, 'Color', C.R);
             plot(t, E_A3, 'Color', C.G);
             plot(t, E, 'Color', C.BLK);
-            setYAxis;
+            setYAxis;xlim([0 tfinal]);%;
             paperModeLegend(	paperMode, ...
                                 {'$E_{A1}$', '$E_{A2}$', '$E_{A3}$', '$E$'},    ...
                                 {'E_{A1}', 'E_{A2}', 'E_{A3}', 'E'}             );

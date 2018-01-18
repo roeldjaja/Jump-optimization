@@ -1068,6 +1068,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                                 'Control Points $q_3$',  ...
                                 'Control Points q_3'   );                hold on
             end
+            paperSave(savePlots, [plotPath 'cp.pdf']);  
             hold off
             
             % Plot evolution pretensions if optimized
@@ -1088,6 +1089,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                                     'Pretension positions',  ...
                                     'Pretension positions'   ); 
             end
+            paperSave(savePlots, [plotPath 'p.pdf']);  
             
             % Plot latest ground forces
             F_GRF_all = zeros(4,length(this.params.t));
