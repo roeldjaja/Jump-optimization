@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6500 64-bit) (preloaded format=pdflatex 2017.12.4)  17 JAN 2018 11:20
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6500 64-bit) (preloaded format=pdflatex 2017.12.4)  19 JAN 2018 11:17
 entering extended mode
 **"./Energy Efficient Explosive Motion with Compliant Actuation Arrangements in
  Articulated Robots.tex"
@@ -176,13 +176,37 @@ Package: accents 2006/05/12 v1.3 Math Accent Tools
 \cc@group=\count104
 \cc@skewchar=\count105
 )
+("C:\Program Files\MiKTeX 2.9\tex\latex\graphics\graphicx.sty"
+Package: graphicx 2017/06/01 v1.1a Enhanced LaTeX Graphics (DPC,SPQR)
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\graphics\keyval.sty"
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks20
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\graphics\graphics.sty"
+Package: graphics 2017/06/25 v1.2c Standard LaTeX Graphics (DPC,SPQR)
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\graphics\trig.sty"
+Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\graphics-cfg\graphics.cfg"
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 99.
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\graphics-def\pdftex.def"
+File: pdftex.def 2017/06/24 v1.0g Graphics/color driver for pdftex
+))
+\Gin@req@height=\dimen124
+\Gin@req@width=\dimen125
+)
 (C:\Users\Roel\AppData\Roaming\MiKTeX\2.9\tex\latex\framed\framed.sty
 Package: framed 2011/10/22 v 0.96: framed or shaded text with page breaks
 \OuterFrameSep=\skip50
-\fb@frw=\dimen124
-\fb@frh=\dimen125
-\FrameRule=\dimen126
-\FrameSep=\dimen127
+\fb@frw=\dimen126
+\fb@frh=\dimen127
+\FrameRule=\dimen128
+\FrameSep=\dimen129
 )
 (C:\Users\Roel\AppData\Roaming\MiKTeX\2.9\tex\latex\cite\cite.sty
 LaTeX Info: Redefining \cite on input line 302.
@@ -194,41 +218,109 @@ ticulated Robots.aux")
 \openout1 = `"Energy Efficient Explosive Motion with Compliant Actuation Arrang
 ements in Articulated Robots.aux"'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 47.
-LaTeX Font Info:    ... okay on input line 47.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 47.
-LaTeX Font Info:    ... okay on input line 47.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 47.
-LaTeX Font Info:    ... okay on input line 47.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 47.
-LaTeX Font Info:    ... okay on input line 47.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 47.
-LaTeX Font Info:    ... okay on input line 47.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 47.
-LaTeX Font Info:    ... okay on input line 47.
-LaTeX Font Info:    Calculating math sizes for size <11> on input line 51.
-LaTeX Font Info:    Try loading font information for U+msa on input line 51.
- ("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsa.fd"
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 48.
+LaTeX Font Info:    ... okay on input line 48.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 48.
+LaTeX Font Info:    ... okay on input line 48.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 48.
+LaTeX Font Info:    ... okay on input line 48.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 48.
+LaTeX Font Info:    ... okay on input line 48.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 48.
+LaTeX Font Info:    ... okay on input line 48.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 48.
+LaTeX Font Info:    ... okay on input line 48.
+
+(C:\Users\Roel\AppData\Roaming\MiKTeX\2.9\tex\context\base\supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count106
+\scratchdimen=\dimen130
+\scratchbox=\box29
+\nofMPsegments=\count107
+\nofMParguments=\count108
+\everyMPshowfont=\toks21
+\MPscratchCnt=\count109
+\MPscratchDim=\dimen131
+\MPnumerator=\count110
+\makeMPintoPDFobject=\count111
+\everyMPtoPDFconversion=\toks22
+) ("C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\epstopdf-base.sty"
+Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
+
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\infwarerr.sty"
+Package: infwarerr 2016/05/16 v1.4 Providing info/warning/error messages (HO)
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\grfext.sty"
+Package: grfext 2016/05/16 v1.2 Manage graphics extensions (HO)
+
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\kvdefinekeys.sty"
+Package: kvdefinekeys 2016/05/16 v1.4 Define keys (HO)
+
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ltxcmds.sty"
+Package: ltxcmds 2016/05/16 v1.23 LaTeX kernel commands for general use (HO)
+)))
+("C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\kvoptions.sty"
+Package: kvoptions 2016/05/16 v3.12 Key value format for package options (HO)
+
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\kvsetkeys.sty"
+Package: kvsetkeys 2016/05/16 v1.17 Key value parser (HO)
+
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\etexcmds.sty"
+Package: etexcmds 2016/05/16 v1.6 Avoid name clashes with e-TeX commands (HO)
+
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ifluatex.sty"
+Package: ifluatex 2016/05/16 v1.4 Provides the ifluatex switch (HO)
+Package ifluatex Info: LuaTeX not detected.
+)
+Package etexcmds Info: Could not find \expanded.
+(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
+(etexcmds)             that some package has redefined \expanded.
+(etexcmds)             In the latter case, load this package earlier.
+)))
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\pdftexcmds.sty"
+Package: pdftexcmds 2017/03/19 v0.25 Utility functions of pdfTeX for LuaTeX (HO
+)
+
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\ifpdf.sty"
+Package: ifpdf 2017/03/15 v3.2 Provides the ifpdf switch
+)
+Package pdftexcmds Info: LuaTeX not detected.
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+)
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
+38.
+Package grfext Info: Graphics extension search list:
+(grfext)             [.pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPE
+G,.JBIG2,.JB2,.eps]
+(grfext)             \AppendGraphicsExtensions on input line 456.
+)
+LaTeX Font Info:    Calculating math sizes for size <11> on input line 52.
+LaTeX Font Info:    Try loading font information for U+msa on input line 52.
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsa.fd"
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 51.
- ("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsb.fd"
+LaTeX Font Info:    Try loading font information for U+msb on input line 52.
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsb.fd"
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Try loading font information for OT1+pcr on input line 51.
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 52.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\psnfss\ot1pcr.fd"
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
-LaTeX Font Info:    Try loading font information for OMS+pcr on input line 51.
+LaTeX Font Info:    Try loading font information for OMS+pcr on input line 52.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\psnfss\omspcr.fd"
 File: omspcr.fd 
 )
 LaTeX Font Info:    Font shape `OMS/pcr/m/n' in size <8> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 51.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 52.
 
-Underfull \hbox (badness 1931) in paragraph at lines 51--51
+Underfull \hbox (badness 1931) in paragraph at lines 52--52
 [][][]$[]$\OT1/ptm/m/n/8 Wesley Rooz-ing and Niko-laos G. Tsagarakis are with t
 he De-
  []
@@ -240,61 +332,76 @@ Missing character: There is no ™ in font ptmr7t!
 
 
 ]
-LaTeX Font Info:    Try loading font information for U+euf on input line 133.
+LaTeX Font Info:    Try loading font information for U+euf on input line 134.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\ueuf.fd"
 File: ueuf.fd 2013/01/14 v3.01 Euler Fraktur
 )
-Underfull \hbox (badness 10000) in paragraph at lines 140--142
+Underfull \hbox (badness 10000) in paragraph at lines 141--143
 \OT1/ptm/m/n/10 Here, the damp-ing ma-trix is de-noted by $\OML/cmm/m/it/10 D \
 OT1/cmr/m/n/10 =
  []
 
 
-Underfull \hbox (badness 3209) in paragraph at lines 140--142
+Underfull \hbox (badness 3209) in paragraph at lines 141--143
 []\OT1/cmr/m/n/10 (0\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 0\OML/cmm/m/it/10 ; \OT1
 /cmr/m/n/10 0\OML/cmm/m/it/10 ; d[]; d[]; d[]\OT1/cmr/m/n/10 )$\OT1/ptm/m/n/10 
 , the gen-er-alised ac-tu-a-tion forces
  []
 
 
-Underfull \hbox (badness 2096) in paragraph at lines 140--142
+Underfull \hbox (badness 2096) in paragraph at lines 141--143
 \OT1/ptm/m/n/10 Spring-dampers de-fine $\OT1/cmr/bx/n/10 F[]$ \OT1/ptm/m/n/10 i
 n the ver-ti-cal di-rec-tion
  []
 
 [2]
-Underfull \hbox (badness 10000) in paragraph at lines 233--235
+Underfull \hbox (badness 10000) in paragraph at lines 234--236
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 269--270
+Overfull \hbox (33.14822pt too wide) detected at line 268
+[][]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 270--271
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 273--274
+Underfull \hbox (badness 10000) in paragraph at lines 274--275
 
  []
 
 [3]
-Underfull \hbox (badness 10000) in paragraph at lines 277--278
+Underfull \hbox (badness 10000) in paragraph at lines 278--279
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 282--283
+Underfull \hbox (badness 10000) in paragraph at lines 283--284
 
  []
 
+<initialguess.pdf, id=30, pagebox=cropbox, 295.60437pt x 291.0875pt>
+File: initialguess.pdf Graphic file (type pdf)
+<use initialguess.pdf>
+Package pdftex.def Info: initialguess.pdf  used on input line 296. on input lin
+e 296.
+Package pdftex.def Info: Requested size: 206.92163pt x 203.75984pt on input lin
+e 296.
 
-Overfull \hbox (16.32787pt too wide) in paragraph at lines 309--318
+Overfull \hbox (35.27373pt too wide) in paragraph at lines 310--319
  [] 
  []
 
 
-Overfull \hbox (7.87987pt too wide) in paragraph at lines 325--334
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+Overfull \hbox (39.96973pt too wide) in paragraph at lines 326--335
  [] 
  []
 
@@ -303,7 +410,10 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 
 ("Energy Efficient Explosive Motion with Compliant Actuation Arrangements in Ar
-ticulated Robots.bbl" [4])
+ticulated Robots.bbl" [4 <./initialguess.pdf>]
+Underfull \vbox (badness 4132) has occurred while \output is active []
+
+)
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -315,19 +425,17 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the US letter (8.5in X 11in) paper size.
 
-[5
-
-]
+[5]
 ("Energy Efficient Explosive Motion with Compliant Actuation Arrangements in Ar
 ticulated Robots.aux") ) 
 Here is how much of TeX's memory you used:
- 2060 strings out of 493312
- 29679 string characters out of 3138902
- 92376 words of memory out of 3000000
- 5597 multiletter control sequences out of 15000+200000
- 49110 words of font info for 116 fonts, out of 3000000 for 9000
+ 3261 strings out of 493312
+ 47608 string characters out of 3138902
+ 113849 words of memory out of 3000000
+ 6734 multiletter control sequences out of 15000+200000
+ 50794 words of font info for 118 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 27i,17n,26p,1440b,291s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 41i,17n,26p,1440b,306s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/base/8r.en
 c}<C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Pr
 ogram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx7.pfb><C:/Program Fil
@@ -347,9 +455,9 @@ mb8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/utmbi8a.pfb><C:/Pro
 gram Files/MiKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb><C:/Program Files/MiKTeX
  2.9/fonts/type1/urw/times/utmri8a.pfb>
 Output written on "Energy Efficient Explosive Motion with Compliant Actuation A
-rrangements in Articulated Robots.pdf" (5 pages, 220220 bytes).
+rrangements in Articulated Robots.pdf" (5 pages, 226788 bytes).
 PDF statistics:
- 95 PDF objects out of 1000 (max. 8388607)
+ 101 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 6 words of extra memory for PDF output out of 10000 (max. 10000000)
 

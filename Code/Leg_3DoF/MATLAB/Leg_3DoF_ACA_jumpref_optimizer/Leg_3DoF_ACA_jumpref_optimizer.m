@@ -23,8 +23,6 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
     % Leg state q                       this.list.q_leg 
     % Leg state q_d                     this.list.q_leg_d 
     
-    % TODO: sufficient change in p variables
-    
     %__________________________________________________________________
     % Properties
     properties
@@ -64,6 +62,11 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             % Get simulator
             this.sim = Leg_3DoF_ACA_jumpref_simulator(actParamsFileName, legParamsFileName);
             
+            % Set pretension to zero for no ESB (matters for plots)
+            if this.params.noESB == 1 
+                this.sim.model.p = [0 0 0];
+            end
+            
             % Objective criteria weights
             
             % Performance (high)
@@ -81,7 +84,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.params.c_RM    = 1;        % Sum Rotational momentum around CoM
             
             % Torque
-            this.params.c_torq  = 2e-4;
+            this.params.c_torq  = 2e-4; %1e-4
             
             % Time
             this.params.t = 0 : this.sim.params.Ts : this.sim.params.tspan(2);
@@ -90,10 +93,11 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.params.cpres           = 100;       % Get cp at t(1) and every t(cpres+1)  
             
             % Minimal Jumping height
-            this.params.CoM_y_ref       = 0.75;
+            this.params.CoM_y_ref       = 0.87;
             
             % Initial pretension positions (third = 0, is reset in optimization)
             this.data.p_init = [0.0001 0.0001 eps];
+            
             
             % Optimization options
             this.params.DiffMinChange           = 1e-3;     % Default 0
@@ -440,9 +444,9 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 % Run simulation with new q_ref
                 this.sim.model.ref.random.q_ref     = this.data.q_rec;
                 this.sim.model.ref.random.q_d_ref   = this.data.q_d_rec;
-
-                % Set new initial state
-                this.sim.model.setInitialStates( this.sim.model.ref.random.q_ref(:,1), this.sim.model.ref.random.q_d_ref(:,1) )
+                  
+                % Set new initial state 
+                this.sim.model.setInitialStates( this.sim.model.ref.random.q_ref(:,1), zeros(this.sim.model.leg.N/2,1) )
 
                 % Use new reference for simulation
                 this.sim.model.ref.use_random       = 1;
@@ -515,7 +519,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
 
                             fprintf('\n');disp(['Evaluation succeeded: f = ',num2str(f)]);
                             disp(['Evaluation ',num2str(length(this.list.f)+1)]);('\n');fprintf('\n');
-                            disp(['Final CoM x coordinate = ',num2str(CoM_xf)]);
+                            disp(['Final CoM x coordinate = ',num2str(CoM_xf),'. CoM x change = ',num2str(CoM_xh) ]);
                             disp(['Max CoM height = ',num2str(CoM_y)]);fprintf('\n');
 
                             % Add function values to list
@@ -615,7 +619,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 disp(['p = ',num2str(this.sim.model.p)])
                 
                 % Set new initial state
-                this.sim.model.setInitialStates( this.sim.model.ref.random.q_ref(:,1), this.sim.model.ref.random.q_d_ref(:,1) )
+                this.sim.model.setInitialStates( this.sim.model.ref.random.q_ref(:,1), zeros(this.sim.model.leg.N/2,1) )
                
                 % Use new reference for simulation
                 this.sim.model.ref.use_random = 1;
@@ -687,7 +691,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
 
                             fprintf('\n');disp(['Evaluation succeeded: f = ',num2str(f)]);
                             disp(['Evaluation ',num2str(length(this.list.f)+1)]);('\n');fprintf('\n');
-                            disp(['Final CoM x coordinate = ',num2str(CoM_xf)]);
+                            disp(['Final CoM x coordinate = ',num2str(CoM_xf),'. CoM x change = ',num2str(CoM_xh) ]);
                             disp(['Max CoM height = ',num2str(CoM_y)]);fprintf('\n');
 
                             % Add function values to list
@@ -821,9 +825,9 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 end
                 
                 % Active torque - ESB torque
-                t_act  = qp_dd_t_act(:,4:6);  
+                t_act  = qp_dd_t_act(:,4:6); 
                 tau_IK = t_act - this.sim.data.tau_p(:,1:length(t_act))';
-                
+
                 % Get CoM and body positions and velocities
                 x       = this.sim.data.xlist;
                 q_leg   = x(:,18+1:18+6)';       % 6xN
@@ -913,8 +917,10 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             
             % Plot directory
             plotPath    = 'plots/';
-            if (~exist(plotPath, 'dir'))
-                   mkdir(plotPath); 
+            if (savePlots)
+                if (~exist(plotPath, 'dir'))
+                       mkdir(plotPath); 
+                end
             end
             % Get some plotting parameters
 %             filtIgnoreTime          = this.plots.filtIgnoreTime;
@@ -958,11 +964,11 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             setYAxis;
             paperModeLegend(    paperMode, ...
                                 {'$q_{1,initial}$','$q_{1,final}$'},   ...
-                                {'q_1 final'}    );
+                                {'q_1 initial','q_1 final'});
             paperModeAxisLabels(paperMode, {'$t$ [s]', '$q_1$ [rad]'}, {'t [s]', '[rad]'});
             paperModeTitle(     showTitleInPaperMode, paperMode, ...
                                 'Trajectories $q_1$',  ...
-                                'Trajectories $q_1$'   );
+                                'Trajectories q_1'   );
             paperSave(savePlots, [plotPath 'q1_traj.pdf']);
             
             % Plot all q2 references
@@ -984,7 +990,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             paperModeAxisLabels(paperMode, {'$t$ [s]', '$q_2$ [rad]'}, {'t [s]', '[rad]'});
             paperModeTitle(     showTitleInPaperMode, paperMode, ...
                                 'Trajectories $q_2$',  ...
-                                'Trajectories $q_2$'   );
+                                'Trajectories q_2'   );
             paperSave(savePlots, [plotPath 'q2_traj.pdf']);           
             
             % Plot all q3 references
@@ -1006,7 +1012,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             paperModeAxisLabels(paperMode, {'$t$ [s]', '$q_3$ [rad]'}, {'t [s]', '[rad]'});
             paperModeTitle(     showTitleInPaperMode, paperMode, ...
                                 'Trajectories $q_3$',  ...
-                                'Trajectories $q_3$'   );
+                                'Trajectories q_3'   );
             paperSave(savePlots, [plotPath 'q3_traj.pdf']);  
             
             % Plot evolution of criteria
@@ -1016,7 +1022,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             
             subplot(3,1,1)
             plot(1:length(this.list.J_high),this.list.J_high,'.');
-            axis([0 xf 350 500])
+%             axis([0 xf 350 500])
             paperModeAxisLabels(paperMode, {'Objective function evaluation','Performance criterion'});
             paperModeTitle(     showTitleInPaperMode, paperMode, ...
                                 'Performance criterion (high jump)',  ...
@@ -1024,7 +1030,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                             
             subplot(3,1,2)
             plot(1:length(this.list.J_stability),this.list.J_stability,'.');
-            axis([0 xf 0 15])
+%             axis([0 xf 0 15])
             paperModeAxisLabels(paperMode, {'Objective function evaluation','Stability criterion'});
             paperModeTitle(     showTitleInPaperMode, paperMode, ...
                                 'Stability criterion',  ...
@@ -1032,7 +1038,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                             
             subplot(3,1,3)
             plot(1:length(this.list.J_torque),this.list.J_torque,'.');
-            axis([0 xf 0 450])
+%             axis([0 xf 0 450])
             paperModeAxisLabels(paperMode, {'Objective function evaluation','Torque criterion'});
             paperModeTitle(     showTitleInPaperMode, paperMode, ...
                                 'Torque criterion',  ...
@@ -1052,18 +1058,18 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             resizeFig(gcf, figSize(1), 500);
             for k=1:n        
                subplot(3,1,1);plot(s,cpq1(k,:),'.'); axis([1 s(end) min(min(cpq1))-0.3 max(max(cpq1))+0.3]);...
-               paperModeAxisLabels(paperMode, {'Objective function evaluation','$q_1$ [rad]'});
+               paperModeAxisLabels(paperMode, {'Objective function evaluation','$q_1$ [rad]'},{'Objective function evaluation','q_1 [rad]'});
                paperModeTitle(     showTitleInPaperMode, paperMode, ...
                                 'Control Points $q_1$',  ...
                                 'Control Points q_1'   ); 
                hold on
                subplot(3,1,2);plot(s,cpq2(k,:),'.');  axis([1 s(end) min(min(cpq2))-0.3 max(max(cpq2))+0.3]);...
-               paperModeAxisLabels(paperMode, {'Objective function evaluation','$q_2$ [rad]'});
+               paperModeAxisLabels(paperMode, {'Objective function evaluation','$q_2$ [rad]'},{'Objective function evaluation','q_2 [rad]'});
                paperModeTitle(     showTitleInPaperMode, paperMode, ...
                                 'Control Points $q_2$',  ...
                                 'Control Points q_2'   );                hold on
                subplot(3,1,3);plot(s,cpq3(k,:),'.');  axis([1 s(end) min(min(cpq3))-0.3 max(max(cpq3))+0.3]);...
-               paperModeAxisLabels(paperMode, {'Objective function evaluation','$q_3$ [rad]'});
+               paperModeAxisLabels(paperMode, {'Objective function evaluation','$q_3$ [rad]'},{'Objective function evaluation','q_3 [rad]'});
                paperModeTitle(     showTitleInPaperMode, paperMode, ...
                                 'Control Points $q_3$',  ...
                                 'Control Points q_3'   );                hold on
@@ -1277,7 +1283,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
 
                 % Set new initial state
                 this.sim.model.p = this.data.p_init;
-                this.sim.model.setInitialStates( this.sim.model.ref.random.q_ref(:,1), this.sim.model.ref.random.q_d_ref(:,1) )
+                this.sim.model.setInitialStates( this.sim.model.ref.random.q_ref(:,1), zeros(this.sim.model.leg.N/2,1) )
                 
                 % Use new reference for simulation
                 this.sim.model.ref.use_random = 1;
@@ -1285,6 +1291,79 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 % Run simulation
                 this.sim.run(1);
             end
+        end
+        
+        %_____________________________________________________________
+        function plot_q_init(this)
+
+            % Load q_init
+            load('q_init','q_init')
+            
+            % Get states
+            this.simulate_q_init;
+            q_list = this.sim.data.xlist(:,18+1:18+6);
+            
+            % Plots optimization results 
+            paperMode = confirm('Generate plots in paper mode? [y/N]', 0);
+            savePlots = confirm('Save plots as PDF? [y/N]', 0);
+            
+            % Title
+            showTitleInPaperMode    = this.plots.showTitleInPaperMode;
+            
+            % Plot directory
+            plotPath    = 'plots/';
+            if (~exist(plotPath, 'dir'))
+                   mkdir(plotPath); 
+            end
+            
+            % Clear current axes
+            cla; hold on;
+
+            for k = 1:7
+                q = q_list(1+(k-1)*round(length(q_init)/7),:)';
+                if q == zeros(6,1)
+                    break
+                else
+                    % Get the positions of a few points for drawing
+                    [x_toe, y_toe, ~]       = this.sim.model.leg.calc_fwdKin_named(q(:,end), 'toe');
+                    [x_heel, y_heel, ~]     = this.sim.model.leg.calc_fwdKin_named(q(:,end), 'heel');
+                    [x_ankle, y_ankle, ~]	= this.sim.model.leg.calc_fwdKin_named(q(:,end), 'ankle');
+                    [x_knee, y_knee, ~]     = this.sim.model.leg.calc_fwdKin_named(q(:,end), 'knee');
+                    [x_hip, y_hip, ~]       = this.sim.model.leg.calc_fwdKin_named(q(:,end), 'hip');
+                    [x_body, y_body, ~]     = this.sim.model.leg.calc_fwdKin_named(q(:,end), 'body');
+
+                    % Get the CoM position
+                    [x_CoM, y_CoM]          = this.sim.model.leg.calc_CoM(q(:,end));
+
+                    % Floor, dotted helper line
+                    plot([-0.2 0.5], [-0.01 -0.01], 'black', 'LineWidth', 2);
+                    plot([0 0], [0 1.1], '--', 'Color', 'black');
+
+                    greygrade = ones(1,3)*0.7-(k-1)*0.1;  
+
+                    % Leg segments
+                    plot([x_heel, x_toe], [y_heel, y_toe], 'Color',greygrade, 'LineWidth', 3);
+                    plot([x_ankle, x_knee], [y_ankle, y_knee],'Color',greygrade, 'LineWidth', 3);
+                    plot([x_knee, x_hip], [y_knee, y_hip], 'Color',greygrade, 'LineWidth', 3);
+                    plot([x_hip, x_body], [y_hip, y_body],'Color',greygrade, 'LineWidth', 3);
+
+                    % CoM
+                    if k <= 6
+                        scatter(x_CoM, y_CoM, 25,'MarkerFaceColor',[0+k*(1/6),0,0],'MarkerEdgeColor','b');
+                    end
+                    % Plot settings
+                    xlim([-0.6 0.6]);
+                    ylim([-0.1 1.1]);
+                    axis square 
+                end
+            end
+
+                paperModeAxisLabels(paperMode, {'x [m]','y [m]'});
+                paperModeTitle(     showTitleInPaperMode, paperMode, ...
+                                    'Initial guess',  ...
+                                    'Initial guess'   ); 
+                paperSave(savePlots, [plotPath 'initial.pdf']);  
+            
         end
         %_____________________________________________________________
         
@@ -1298,7 +1377,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             if this.params.noESB == 0
                 this.sim.model.p = this.data.results.p;
             end
-            this.sim.model.setInitialStates( this.sim.model.ref.random.q_ref(:,1), this.sim.model.ref.random.q_d_ref(:,1) )
+            this.sim.model.setInitialStates( this.sim.model.ref.random.q_ref(:,1), zeros(this.sim.model.leg.N/2,1) )
   
             fprintf('\n');disp('Resimulating for found solution');
             this.sim.run(1);
@@ -1316,6 +1395,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             end
             fprintf('\n');disp('Rerun animation with this.sim.animate');     
          end
+
         %_____________________________________________________________
         function plot_matdata(this)
             

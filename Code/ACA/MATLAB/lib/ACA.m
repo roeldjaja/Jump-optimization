@@ -29,7 +29,7 @@ classdef ACA < handle
         outputIdx_tau_pb    % Indexes in output y that correspond to tau_pb
         outputIdx_tau_p     % Indexes in output y that correspond to tau_p
         outputIdx_tau       % Indexes in output y that correspond to tau
-        % x = [x_1_d; p_d; dL_pb, dL_p; x_1; p]
+        % x = [x_1_d; p_d; dL_pb; dL_p; x_1; p]
         stateIdx_x_1_d      % x_1_d state index
         stateIdx_p_d        % p_d state index
         stateIdx_dL_pb      % dL_pb state index

@@ -22,6 +22,7 @@
 \usepackage{amsmath} % assumes amsmath package installed
 \usepackage{amssymb}  % assumes amsmath package installed
 \usepackage{accents}
+\usepackage{graphicx}
 \newcommand\ubar[1]{%
 	\underaccent{\bar}{#1}}
 \usepackage{framed}
@@ -126,7 +127,7 @@ The leg consists out of four links which are connected by the actuated ankle, kn
 	\caption{Leg model}
 	\label{fig:leg}
 \end{figure}
-The links have masses $m_1,m_2,m_3,m_4$ and rotational inertiae $J_1,J_2,J_3,J_4$. Their CoM is assumed to be located on the line connecting the proximal and distal joints at a distance of $r_1,r_2,r_3,r_4$ from the proximal joint for all links except for the foot; the model includes a floating base to allow for realistic modelling of the ground reaction forces (GRF). Together, the configurations of the bodies describe the system:
+The links have masses $m_1,m_2,m_3,m_4$ and rotational inertiae $J_1,J_2,J_3,J_4$. Their centre of mass (CoM) is assumed to be located on the line connecting the proximal and distal joints at a distance of $r_1,r_2,r_3,r_4$ from the proximal joint for all links except for the foot; the model includes a floating base to allow for realistic modelling of the ground reaction forces (GRF). Together, the configurations of the bodies describe the system:
  \begin{equation}
 x = [x_1,y_1,\theta_1,x_2,y_2,\theta_2, x_3,y_3,\theta_3,x_4,y_4,\theta_4]^T. 
 \end{equation}
@@ -236,11 +237,11 @@ In the following objective criteria, $c_1$, $c_2$, $c_3$, $c_4$, $c_5$ and $c_6$
 \subsubsection{Performance}
 For the performance of the leg we distinguish two different objectives: 
 \begin{enumerate}
-	\item Jumping a maximum height, where the height is defined as the $y$-coordinate of the centre of mass of the leg with respect to the ground:
+	\item Jumping a maximum height, where the height is defined as the $y$-coordinate of the CoM of the leg with respect to the ground:
  \begin{equation}
 	J_{performane} = -c_1 \cdot y_{CoM}^2
  \end{equation}
-	\item Jumping to a certain height efficiently, where the maximum $y$-coordinate reached by the centre of mass of the leg $y_{COM}$ is to equal a set height $y_{COM}'$ and the energy use is to be minimized:
+	\item Jumping to a certain height efficiently, where the maximum $y$-coordinate reached by the CoM of the leg $y_{COM}$ is to equal a set height $y_{COM}'$ and the energy use is to be minimized:
  \begin{equation}
 	J_{performane} =  c_1 \cdot E^2 + c_2 \cdot |y_{COM}'-y_{COM}|
  \end{equation}
@@ -258,15 +259,15 @@ J_{torque}= c_3 \cdot || \boldsymbol{\tau}_a - \boldsymbol{\tau}_{ESB} ||_2^2
  \end{equation}
 
 \subsubsection{Stability}
-To ensure postural stability a stability criterion is introduced. The leg posture is considered stable when the $x$-coordinate of the centre of mass of the leg is equal to its initial $x$-coordinate, $x_{CoM}=0$, at the end of the jump, i.e. when the centre of mass reaches its maximum height. Also, the motion is assumed to be stable when the mean value of the absolute x-coordinates of the centre of mass equals zero. Higher stability is also assumed for a low rotational momentum $L$ at maximum height of centre of mass. For an $N$ number of time segments, this is achieved with the minimization of:
+To ensure postural stability a stability criterion is introduced. The leg posture is considered stable when the $x$-coordinate of the CoM of the leg is equal to its initial $x$-coordinate at the end of the jump, i.e. when the CoM reaches its maximum height. Also, the motion is assumed to be stable when the mean value of the absolute x-coordinates of the CoM equals zero. Higher stability is also assumed for a low rotational momentum $L$ at maximum height of CoM. For an $N$ number of time segments, this is achieved with the minimization of:
  \begin{equation}
  \begin{aligned}
-&J_{stability}  =  \\ & c_4\cdot x_{CoM}(t_h)^2  +c_5\cdot  {\sum^{N}_{i=1}\frac{| x_{CoM}(t)_i |}{N}}^2   
-				  + c_6  \cdot   L(t_h)^2
+&J_{stability}  =  \\ & c_4\cdot \Big( x_{CoM}(t_h)-x_{CoM}(t_s) \Big)^2  +c_5\cdot  {\sum^{N}_{i=1}\frac{| x_{CoM}(t)_i |}{N}}^2   
+				  + c_6  \cdot   L(t_h)^2 
  \end{aligned}
  \end{equation}
  
-Here, $t_h$ denotes the point in time where the centre of mass reaches its maximum height. Let $t_f$ denote the final time segment of the optimisation motion where either the maximum CoM height $y_{CoM}$ has been reached or the jump is unsuccessful and the leg has fallen over. For successful jumps $t_h=t_f$. \\
+Here, $t_s$ denotes the starting time and $t_h$ denotes the point in time where the CoM reaches its maximum height. Let $t_f$ denote the final time segment of the optimisation motion where either the maximum CoM height $y_{CoM}$ has been reached or the jump is unsuccessful and the leg has fallen over. For successful jumps $t_h=t_f$. \\
 
 \subsection{Algorithm}
 
@@ -289,31 +290,31 @@ The objective criteria described above require information concerning the kinema
 
 
 
-   \begin{figure}[thpb]
+   \begin{figure}[b]
       \centering
-      \framebox{\parbox{3in}{Figure of initial motion
+      \framebox{\parbox{3in}{\includegraphics[scale=0.7]{initialguess}
 }}
-      %\includegraphics[scale=1.0]{figurefile}
-      \caption{Initial motion}
+      
+      \caption{Initial motion, final position in black with CoM in red}
       \label{fig:seq}
    \end{figure}
    
 \section{Results} \label{sec:results}
 
-The optimisation has been performed for the upward movement of the leg performing a jumping motion with a maximum duration of 0.3 seconds. The initial position of the leg yields a squatting posture and the optimisation is concluded when the centre of mass reaches its highest point for successful jumps or when the leg has fallen over for unsuccessful jumps. The initial guess is a manually constructed motion as shown in Fig. \ref{fig:seq}. The optimization results for the objectives presented in Section \ref{sec:dynamicOptimisation} are shown in Tables \ref{maxheight} and \ref{minenergy}.
+The optimisation has been performed for the upward movement of the leg performing a jumping motion with a maximum duration of 0.4 seconds. The initial position of the leg yields a squatting posture and the optimisation is concluded when the CoM reaches its highest point for successful jumps or when the leg has fallen over for unsuccessful jumps. The initial guess is a manually constructed motion as shown in Fig. \ref{fig:seq}. The optimization results for the objectives presented in Section \ref{sec:dynamicOptimisation} are shown in Tables \ref{maxheight} and \ref{minenergy}.
 
 \begin{table}[h]
 	\caption{Maximum jump height for different configurations}
 	\label{maxheight}
 	\begin{center}
-		\begin{tabular}{c||c|c}
-		\textit{Configuration}	& \textit{Maximum jump height} [m] & \textit{Pretension positions} [m]\\
+		\begin{tabular}{c||c|c|c|c|c|c}
+		\textit{Configuration}	& \textit{Height} [m] & \textit{Pretension} [m] & \textit{f} & \textit{J}$_{\text{\textit{perf.}}}$ & \textit{J}$_{\text{\textit{stab.}}}$ & \textit{J}$_{\text{\textit{torque}}}$\\
 			\hline
-			Only SEA &  & \\
+			Only SEA &  &  &  &  &  & \\
 			\hline
-			Mono-articulated & & \\
+			Mono-articulated & &  &  &  &  &\\
 			\hline
-			Bi-articulated & &
+			Bi-articulated & &  &  &  &  &
 		\end{tabular}
 	\end{center}
 \end{table}
@@ -322,14 +323,14 @@ The optimisation has been performed for the upward movement of the leg performin
 	\caption{Minimum energy use for different configurations}
 	\label{minenergy}
 	\begin{center}
-		\begin{tabular}{c||c|c}
-			\textit{Configuration}	& \textit{Minimum energy use} [J] & \textit{Pretension positions} [m] \\
+		\begin{tabular}{c||c|c|c|c|c|c}
+			\textit{Configuration}	& \textit{E}$_{\text{\textit{consumed}}}$ [J] & \textit{Pretension} [m] & \textit{f} & \textit{J}$_{\text{\textit{perf.}}}$ & \textit{J}$_{\text{\textit{stab.}}}$ & \textit{J}$_{\text{\textit{torque}}}$ \\
 			\hline
-			Only SEA &   &\\
+			Only SEA &   &   &  &  &  &\\
 			\hline
-			Mono-articulated &  &\\
+			Mono-articulated &  &   &  &  &  &\\
 			\hline
-			Bi-articulated & &
+			Bi-articulated & &   &  &  &  &
 		\end{tabular}
 	\end{center}
 \end{table}
