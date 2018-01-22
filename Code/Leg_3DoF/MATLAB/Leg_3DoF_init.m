@@ -13,7 +13,7 @@ addpath(genpath('params'));
 % Include projects
 addpath(genpath('Leg_3DoF_ACA_optimizer'));
 addpath(genpath('Leg_3DoF_ACA_simulator'));
-addpath(genpath('Leg_3DoF_interactive'));
+addpath(genpath('Leg_3DoF_interactive'))
 
 addpath(genpath('Leg_3DoF_noAct_simulator'));
 addpath(genpath('Leg_3DoF_ACA_jumpref_simulator'));

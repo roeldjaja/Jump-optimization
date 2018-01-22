@@ -940,7 +940,7 @@ classdef Leg_3DoF_ACA_jumpref < handle
             % Generate an ankle extension profile
             ankleExtension = zeros(1,n);
             % Time instances when things happen
-            t1 = 0.29;  % Start ankle extension
+            t1 = 0.01;  % Start ankle extension
             t2 = 0.6;   % End ankle extension
             t3 = 0.6;   % End ankle flexion
             for i=1:n

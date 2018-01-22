@@ -14,7 +14,7 @@ bi      = Leg_3DoF_ACA_jumpref_optimizer('actuatorParams_biarticulated.mat','Leg
 load noESB.mat
 noESB.load_matdata
 
-load mono
+load mono.mat
 mono.load_matdata
 
 load bi.mat

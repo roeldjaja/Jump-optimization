@@ -90,7 +90,10 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.params.t = 0 : this.sim.params.Ts : this.sim.params.tspan(2);
             
             % Control point parameters 
-            this.params.cpres           = 100;       % Get cp at t(1) and every t(cpres+1)  
+            this.params.cpres           = 100;       % Get cp at t(1) and every t(cpres+1) 
+            this.params.tcp = this.params.t(1 : this.params.cpres : end);
+            this.params.n   = length((this.params.t(1 : this.params.cpres : end)));
+            this.params.tn  = this.params.n*3;
             
             % Minimal Jumping height
             this.params.CoM_y_ref       = 0.87;
@@ -98,6 +101,8 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             % Initial pretension positions (third = 0, is reset in optimization)
             this.data.p_init = [0.0001 0.0001 eps];
             
+            % Initial control points (placeholder, changed in optimization)
+            this.data.cp_init = ones(1,this.params.tn);
             
             % Optimization options
             this.params.DiffMinChange           = 1e-3;     % Default 0
@@ -105,6 +110,22 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.params.InitTrustRegionRadius   = 1;        % Default sqrt(number of variables)
             this.params.MaxFunctionEvaluations  = 6000;     % Default 3000
             
+            % Select proper typical x
+            if this.params.noESB == 1
+                this.params.TypicalX = this.data.cp_init;
+            elseif this.params.noESB == 0
+                this.params.TypicalX = [this.data.cp_init this.data.p_init];
+            end
+                                    
+           % Optimization options
+            this.params.options = optimoptions( 'fmincon',...           
+                                        'Display','iter',...
+                                        'Algorithm','interior-point',...
+                                        'InitTrustRegionRadius', this.params.InitTrustRegionRadius,... 
+                                        'DiffMinChange',this.params.DiffMinChange,...
+                                        'DiffMaxChange',this.params.DiffMaxChange,...  
+                                        'TypicalX',this.params.TypicalX,...
+                                        'MaxFunctionEvaluations',this.params.MaxFunctionEvaluations);
             % Status
             disp('Initialized Leg_3DoF_ACA_jumpref_optimizer with default parameters.');
             
@@ -152,11 +173,6 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.list.cp            = [];
             this.list.p             = [];
             
-            % Control point parameters
-            this.params.tcp = this.params.t(1 : this.params.cpres : end);
-            this.params.n   = length((this.params.t(1 : this.params.cpres : end)));
-            this.params.tn  = this.params.n*3;
-            
             % Time and numbers shorthand
             t   = this.params.t;
             n   = this.params.n;
@@ -179,7 +195,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             cp_init(:,1) = q_init(1:this.params.cpres:end,4); % q1
             cp_init(:,2) = q_init(1:this.params.cpres:end,5); % q2
             cp_init(:,3) = q_init(1:this.params.cpres:end,6); % q3
-            cp_init = reshape(cp_init,[1,tn]); %Reshape to one long row
+            this.data.cp_init = reshape(cp_init,[1,tn]); %Reshape to one long row
             
             % Downscale time to control point time tcp
             tcp = t(1:this.params.cpres:end);
@@ -189,7 +205,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 % Run optimization with control points [x] = [cp1 cp2 cp3]
                 % corresponding to [q1 q2 q3]
 
-                x0  = cp_init; %initial guess configuration in [3*n,1] vector corresonding to [q1.. q2.. q3..]'
+                x0  = this.data.cp_init; %initial guess configuration in [3*n,1] vector corresonding to [q1.. q2.. q3..]'
 
                 A   = [];
                 b   = [];
@@ -206,19 +222,8 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 ub(n+1:2*n)     = this.sim.model.leg.params.q_limits(2,2);    %ub q2
                 ub(2*n+1:3*n)   = this.sim.model.leg.params.q_limits(3,2);    %ub q3
 
-                % Optimization options
-                options = optimoptions( 'fmincon',...           
-                                        'Display','iter',...
-                                        'Algorithm','interior-point',...
-                                        'InitTrustRegionRadius',this.params.InitTrustRegionRadius,...
-                                        'DiffMinChange',this.params.DiffMinChange,...
-                                        'DiffMaxChange',this.params.DiffMaxChange,...
-                                        'MaxFunctionEvaluations', this.params.MaxFunctionEvaluations,...
-                                        'TypicalX',cp_init);%,...
-                                        % 'FiniteDifferenceStepSize',1e-3,...
-
                 % Optimization
-                [x, fval, exitflag, output, lambda] = fmincon(@(x)this.jumphigh_obj(x),x0,A,b,Aeq,beq,lb,ub,@(x)this.jumpcon(x),options);
+                [x, fval, exitflag, output, lambda] = fmincon(@(x)this.jumphigh_obj(x),x0,A,b,Aeq,beq,lb,ub,@(x)this.jumpcon(x),this.params.options);
 
                 this.results.cp     = x;
                 this.results.f      = fval;
@@ -282,7 +287,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 
                 % Run optimization with control points [x] = [cp1 cp2 cp3 p]
                 % corresponding to [q1 q2 q3 p]
-                x0 = [cp_init this.data.p_init]; %initial guess configuration in [3*n + 3, 1] vector corresonding to [q1.. q2.. q3.. p]'
+                x0 = [this.data.cp_init this.data.p_init]; %initial guess configuration in [3*n + 3, 1] vector corresonding to [q1.. q2.. q3.. p]'
 
                 A   = [];
                 b   = [];
@@ -299,20 +304,10 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                 ub(1:n)         = this.sim.model.leg.params.q_limits(1,2);    %ub q1
                 ub(n+1:2*n)     = this.sim.model.leg.params.q_limits(2,2);    %ub q2
                 ub(2*n+1:3*n)   = this.sim.model.leg.params.q_limits(3,2);    %ub q3
-                ub(3*n+1:3*n+3) = p_range(4:6)';                              %ub p  
-
-                % Optimization options
-                options = optimoptions( 'fmincon',...           
-                                        'Display','iter',...
-                                        'Algorithm','interior-point',...
-                                        'InitTrustRegionRadius', this.params.InitTrustRegionRadius,... 
-                                        'DiffMinChange',this.params.DiffMinChange,...
-                                        'DiffMaxChange',this.params.DiffMaxChange,...  
-                                        'TypicalX',[cp_init this.data.p_init]);
- 
+                ub(3*n+1:3*n+3) = p_range(4:6)';                              %ub p   
                                        
                 % Optimization
-                [x, fval, exitflag, output, lambda] = fmincon(@(x)this.ESBjumphigh_obj(x),x0,A,b,Aeq,beq,lb,ub,@(x)this.jumpcon(x),options);
+                [x, fval, exitflag, output, lambda] = fmincon(@(x)this.ESBjumphigh_obj(x),x0,A,b,Aeq,beq,lb,ub,@(x)this.jumpcon(x),this.params.options);
 
                 this.results.cp     = x(1:end-3);
                 this.results.p      = x(end-2:end);
@@ -497,6 +492,9 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                         if max(max(abs(tau_IK))) >= 204
                             fprintf('\n');disp('Torque limit violated: f = NaN');fprintf('\n');
                             f = NaN;
+                        elseif CoM_y <= 0
+                            fprintf('\n');disp('Maximum height is negative: f = NaN');fprintf('\n');
+                            f = NaN;
                         else
                             
                             J_torque = this.params.c_torq * norm(tau_IK)^2;  
@@ -670,6 +668,9 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                         % Ignore evaluation if max active torque >= 204
                         if max(max(abs(tau_IK))) >= 204
                             fprintf('\n');disp('Torque limit violated: f = NaN');fprintf('\n');
+                            f = NaN;
+                        elseif CoM_y <= 0
+                            fprintf('\n');disp('Maximum height is negative: f = NaN');fprintf('\n');
                             f = NaN;
                         else
                             
@@ -1016,7 +1017,6 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             paperSave(savePlots, [plotPath 'q3_traj.pdf']);  
             
             % Plot evolution of criteria
-            xf =length(this.list.f);
             figure 
             resizeFig(gcf, figSize(1), 500);
             
