@@ -1295,7 +1295,18 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
         
         %_____________________________________________________________
         function plot_q_init(this)
-
+            
+            % Plots optimization results 
+            paperMode = confirm('Generate plots in paper mode? [y/N]', 0);
+            savePlots = confirm('Save plots as PDF? [y/N]', 0);
+            
+             % Get plot size depending on paperMode
+            if (paperMode)
+                figSize = this.plots.sizePaperMode;
+            else
+                figSize = this.plots.sizeNormal;
+            end
+            
             % Load q_init
             load('q_init','q_init')
             
@@ -1312,9 +1323,11 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             
             % Plot directory
             plotPath    = 'plots/';
-            if (~exist(plotPath, 'dir'))
-                   mkdir(plotPath); 
-            end
+            if (savePlots)
+                if (~exist(plotPath, 'dir'))
+                       mkdir(plotPath); 
+                end
+            end            
             
             % Clear current axes
             cla; hold on;

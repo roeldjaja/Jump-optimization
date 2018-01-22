@@ -27,6 +27,9 @@
 	\underaccent{\bar}{#1}}
 \usepackage{framed}
 \usepackage{cite}
+\usepackage{float}
+\usepackage{subcaption}
+
 
 \title{\LARGE \bf
 Energy Efficient Explosive Motion with Compliant Actuation Arrangements in Articulated Robots
@@ -292,10 +295,11 @@ The objective criteria described above require information concerning the kinema
 
    \begin{figure}[b]
       \centering
-      \framebox{\parbox{3in}{\includegraphics[scale=0.7]{initialguess}
-}}
+%      \framebox{\parbox{3in}
+      	{\includegraphics[scale=0.7]{initialguess}
+}%}
       
-      \caption{Initial motion, final position in black with CoM in red}
+      \caption{Initial motion}
       \label{fig:seq}
    \end{figure}
    
@@ -319,29 +323,132 @@ The optimisation has been performed for the upward movement of the leg performin
 	\end{center}
 \end{table}
 
-\begin{table}[h]
-	\caption{Minimum energy use for different configurations}
-	\label{minenergy}
-	\begin{center}
-		\begin{tabular}{c||c|c|c|c|c|c}
-			\textit{Configuration}	& \textit{E}$_{\text{\textit{consumed}}}$ [J] & \textit{Pretension} [m] & \textit{f} & \textit{J}$_{\text{\textit{perf.}}}$ & \textit{J}$_{\text{\textit{stab.}}}$ & \textit{J}$_{\text{\textit{torque}}}$ \\
-			\hline
-			Only SEA &   &   &  &  &  &\\
-			\hline
-			Mono-articulated &  &   &  &  &  &\\
-			\hline
-			Bi-articulated & &   &  &  &  &
-		\end{tabular}
-	\end{center}
-\end{table}
+%\begin{table}[h]
+%	\caption{Minimum energy use for different configurations}
+%	\label{minenergy}
+%	\begin{center}
+%		\begin{tabular}{c||c|c|c|c|c|c}
+%			\textit{Configuration}	& \textit{E}$_{\text{\textit{consumed}}}$ [J] & \textit{Pretension} [m] & \textit{f} & \textit{J}$_{\text{\textit{perf.}}}$ & \textit{J}$_{\text{\textit{stab.}}}$ & \textit{J}$_{\text{\textit{torque}}}$ \\
+%			\hline
+%			Only SEA &   &   &  &  &  &\\
+%			\hline
+%			Mono-articulated &  &   &  &  &  &\\
+%			\hline
+%			Bi-articulated & &   &  &  &  &
+%		\end{tabular}
+%	\end{center}
+%\end{table}
+
 
 \section{Discussion} \label{sec:discussion}
 
 Comparison of actuation topologies.
 
-\section{Conclusions} \label{sec:conclusions}
+\section{Conclusions} \label{sec:conclusions} 
 
 Conclusions
+
+\newpage
+\begin{figure}[H]    
+	\begin{minipage}[ht]{0.45\textwidth}
+		\includegraphics[width=\linewidth]{noESB/q1_traj}
+	\end{minipage}
+		
+	\begin{minipage}[ht]{0.45\textwidth}
+		\includegraphics[width=\linewidth]{noESB/q2_traj}
+	\end{minipage}
+	
+	\begin{minipage}[ht]{0.45\textwidth}
+		\includegraphics[width=\linewidth]{noESB/q3_traj}
+	\end{minipage}
+	\caption{No ESB: joint trajectory evolution}
+	
+	\begin{minipage}[ht]{0.45\textwidth}
+	\includegraphics[width=\linewidth]{noESB/crit_high}
+	\end{minipage}
+	\caption{No ESB: criteria evolution}
+
+	\begin{minipage}[ht]{0.45\textwidth}
+	\includegraphics[width=\linewidth]{noESB/ESB_storage}
+	\end{minipage}
+\end{figure}
+
+\begin{figure}[H]    
+	\begin{minipage}[ht]{0.45\textwidth}
+		\includegraphics[width=\linewidth]{q1_traj}
+	\end{minipage}
+	
+	\begin{minipage}[ht]{0.45\textwidth}
+		\includegraphics[width=\linewidth]{q2_traj}
+	\end{minipage}
+	
+	\begin{minipage}[ht]{0.45\textwidth}
+		\includegraphics[width=\linewidth]{q3_traj}
+	\end{minipage}
+	\caption{Mono-articulated: joint trajectory evolution}
+	
+	\begin{minipage}[ht]{0.45\textwidth}
+	\includegraphics[width=\linewidth]{crit_high}
+	\end{minipage}
+	\caption{No ESB: criteria evolution}
+	
+	\begin{minipage}[ht]{0.45\textwidth}
+	\includegraphics[width=\linewidth]{ESB_storage}
+	\end{minipage}
+\end{figure}
+
+\newpage
+%	\begin{figure}[H]    
+%		\begin{minipage}[ht]{0.45\textwidth}
+%		\includegraphics[width=\linewidth]{q_1_torques}
+%	\end{minipage}
+%	
+%	\begin{minipage}[ht]{0.45\textwidth}
+%		\includegraphics[width=\linewidth]{q_2_torques}
+%	\end{minipage}
+%	
+%	\begin{minipage}[ht]{0.45\textwidth}
+%		\includegraphics[width=\linewidth]{q_3_torques}
+%	\end{minipage}
+%  
+%	\begin{minipage}[ht]{0.45\textwidth}
+%		\includegraphics[width=\linewidth]{q_1_torques}
+%	\end{minipage}
+%	
+%	\begin{minipage}[ht]{0.45\textwidth}
+%		\includegraphics[width=\linewidth]{q_2_torques}
+%	\end{minipage}
+%	
+%	\begin{minipage}[ht]{0.45\textwidth}
+%		\includegraphics[width=\linewidth]{q_3_torques}
+%	\end{minipage}
+%\end{figure}
+
+\begin{figure}[H]    
+	\begin{minipage}[ht]{0.45\textwidth}
+		\includegraphics[width=\linewidth]{q1_traj}
+	\end{minipage}
+	
+	\begin{minipage}[ht]{0.45\textwidth}
+		\includegraphics[width=\linewidth]{q2_traj}
+	\end{minipage}
+	
+	\begin{minipage}[ht]{0.45\textwidth}
+		\includegraphics[width=\linewidth]{q3_traj}
+	\end{minipage}
+	\caption{Bi-articulated: joint trajectory evolution}	
+	
+	\begin{minipage}[ht]{0.45\textwidth}
+		\includegraphics[width=\linewidth]{crit_high}
+	\end{minipage}
+	\caption{Bi-articulated: criteria evolution}
+		
+	\begin{minipage}[ht]{0.45\textwidth}
+		\includegraphics[width=\linewidth]{ESB_storage}
+	\end{minipage}
+	\caption{Bi-articulated: energy storage}
+\end{figure}
+
 
 
 \addtolength{\textheight}{-12cm}   % This command serves to balance the column lengths
@@ -362,8 +469,7 @@ Conclusions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\section*{ACKNOWLEDGMENT}
-
+\section{ACKNOWLEDGMENT}
 Supported by European Commission projects WALK-MAN (611832), CENTAURO (644839), CoglMon (644727)
 
 

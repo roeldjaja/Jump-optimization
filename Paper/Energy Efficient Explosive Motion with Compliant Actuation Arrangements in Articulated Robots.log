@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6500 64-bit) (preloaded format=pdflatex 2017.12.4)  22 JAN 2018 10:32
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6500 64-bit) (preloaded format=pdflatex 2017.12.4)  22 JAN 2018 16:40
 entering extended mode
 **"./Energy Efficient Explosive Motion with Compliant Actuation Arrangements in
  Articulated Robots.tex"
@@ -213,37 +213,83 @@ LaTeX Info: Redefining \cite on input line 302.
 LaTeX Info: Redefining \nocite on input line 332.
 Package: cite 2015/02/27  v 5.5
 )
+("C:\Program Files\MiKTeX 2.9\tex\latex\float\float.sty"
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count106
+\float@exts=\toks21
+\float@box=\box29
+\@float@everytoks=\toks22
+\@floatcapt=\box30
+)
+(C:\Users\Roel\AppData\Roaming\MiKTeX\2.9\tex\latex\caption\subcaption.sty
+Package: subcaption 2016/05/22 v1.1-161 Sub-captions (AR)
+
+(C:\Users\Roel\AppData\Roaming\MiKTeX\2.9\tex\latex\caption\caption.sty
+Package: caption 2016/02/21 v3.3-144 Customizing captions (AR)
+
+(C:\Users\Roel\AppData\Roaming\MiKTeX\2.9\tex\latex\caption\caption3.sty
+Package: caption3 2016/05/22 v1.7-166 caption3 kernel (AR)
+Package caption3 Info: TeX engine: e-TeX on input line 67.
+\captionmargin=\dimen130
+\captionmargin@=\dimen131
+\captionwidth=\dimen132
+\caption@tempdima=\dimen133
+\caption@indent=\dimen134
+\caption@parindent=\dimen135
+\caption@hangindent=\dimen136
+Package caption Info: Unknown document class (or package),
+(caption)             standard defaults will be used.
+)
+
+Package caption Warning: Unsupported document class (or package) detected,
+(caption)                usage of the caption package is not recommended.
+See the caption package documentation for explanation.
+
+Package caption Info: \@makecaption = \long macro:#1#2->\ifx \@captype \@IEEEta
+blestring \begin {center}{\footnotesize #1}\\{\footnotesize \scshape #2}\end {c
+enter}\@IEEEtablecaptionsepspace \else \@IEEEfigurecaptionsepspace \setbox \@te
+mpboxa \hbox {\footnotesize #1.~~ #2}\ifdim \wd \@tempboxa >\hsize \setbox \@te
+mpboxa \hbox {\footnotesize #1.~~ }\parbox [t]{\hsize }{\footnotesize \noindent
+ \unhbox \@tempboxa #2}\else \ifcenterfigcaptions \hbox to\hsize {\footnotesize
+ \hfil \box \@tempboxa \hfil }\else \hbox to\hsize {\footnotesize \box \@tempbo
+xa \hfil }\fi \fi \fi .
+\c@ContinuedFloat=\count107
+Package caption Info: float package is loaded.
+)
+\c@subfigure=\count108
+\c@subtable=\count109
+)
 ("Energy Efficient Explosive Motion with Compliant Actuation Arrangements in Ar
 ticulated Robots.aux")
 \openout1 = `"Energy Efficient Explosive Motion with Compliant Actuation Arrang
 ements in Articulated Robots.aux"'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 48.
-LaTeX Font Info:    ... okay on input line 48.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 48.
-LaTeX Font Info:    ... okay on input line 48.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 48.
-LaTeX Font Info:    ... okay on input line 48.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 48.
-LaTeX Font Info:    ... okay on input line 48.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 48.
-LaTeX Font Info:    ... okay on input line 48.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 48.
-LaTeX Font Info:    ... okay on input line 48.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
 
 (C:\Users\Roel\AppData\Roaming\MiKTeX\2.9\tex\context\base\supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count106
-\scratchdimen=\dimen130
-\scratchbox=\box29
-\nofMPsegments=\count107
-\nofMParguments=\count108
-\everyMPshowfont=\toks21
-\MPscratchCnt=\count109
-\MPscratchDim=\dimen131
-\MPnumerator=\count110
-\makeMPintoPDFobject=\count111
-\everyMPtoPDFconversion=\toks22
+\scratchcounter=\count110
+\scratchdimen=\dimen137
+\scratchbox=\box31
+\nofMPsegments=\count111
+\nofMParguments=\count112
+\everyMPshowfont=\toks23
+\MPscratchCnt=\count113
+\MPscratchDim=\dimen138
+\MPnumerator=\count114
+\makeMPintoPDFobject=\count115
+\everyMPtoPDFconversion=\toks24
 ) ("C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\epstopdf-base.sty"
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
 
@@ -296,31 +342,33 @@ Package grfext Info: Graphics extension search list:
 G,.JBIG2,.JB2,.eps]
 (grfext)             \AppendGraphicsExtensions on input line 456.
 )
-LaTeX Font Info:    Calculating math sizes for size <11> on input line 52.
-LaTeX Font Info:    Try loading font information for U+msa on input line 52.
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
+LaTeX Font Info:    Calculating math sizes for size <11> on input line 55.
+LaTeX Font Info:    Try loading font information for U+msa on input line 55.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsa.fd"
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 52.
+LaTeX Font Info:    Try loading font information for U+msb on input line 55.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\umsb.fd"
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Try loading font information for OT1+pcr on input line 52.
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 55.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\psnfss\ot1pcr.fd"
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
-LaTeX Font Info:    Try loading font information for OMS+pcr on input line 52.
+LaTeX Font Info:    Try loading font information for OMS+pcr on input line 55.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\psnfss\omspcr.fd"
 File: omspcr.fd 
 )
 LaTeX Font Info:    Font shape `OMS/pcr/m/n' in size <8> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 52.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 55.
 
-Underfull \hbox (badness 1931) in paragraph at lines 52--52
+Underfull \hbox (badness 1931) in paragraph at lines 55--55
 [][][]$[]$\OT1/ptm/m/n/8 Wesley Rooz-ing and Niko-laos G. Tsagarakis are with t
 he De-
  []
@@ -332,88 +380,190 @@ Missing character: There is no ™ in font ptmr7t!
 
 
 ]
-LaTeX Font Info:    Try loading font information for U+euf on input line 134.
+LaTeX Font Info:    Try loading font information for U+euf on input line 137.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\ueuf.fd"
 File: ueuf.fd 2013/01/14 v3.01 Euler Fraktur
 )
-Underfull \hbox (badness 10000) in paragraph at lines 141--143
+Underfull \hbox (badness 10000) in paragraph at lines 144--146
 \OT1/ptm/m/n/10 Here, the damp-ing ma-trix is de-noted by $\OML/cmm/m/it/10 D \
 OT1/cmr/m/n/10 =
  []
 
 
-Underfull \hbox (badness 3209) in paragraph at lines 141--143
+Underfull \hbox (badness 3209) in paragraph at lines 144--146
 []\OT1/cmr/m/n/10 (0\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 0\OML/cmm/m/it/10 ; \OT1
 /cmr/m/n/10 0\OML/cmm/m/it/10 ; d[]; d[]; d[]\OT1/cmr/m/n/10 )$\OT1/ptm/m/n/10 
 , the gen-er-alised ac-tu-a-tion forces
  []
 
 
-Underfull \hbox (badness 2096) in paragraph at lines 141--143
+Underfull \hbox (badness 2096) in paragraph at lines 144--146
 \OT1/ptm/m/n/10 Spring-dampers de-fine $\OT1/cmr/bx/n/10 F[]$ \OT1/ptm/m/n/10 i
 n the ver-ti-cal di-rec-tion
  []
 
 [2]
-Underfull \hbox (badness 10000) in paragraph at lines 234--236
+Underfull \hbox (badness 10000) in paragraph at lines 237--239
 
  []
 
 
-Overfull \hbox (33.14822pt too wide) detected at line 268
+Overfull \hbox (33.14822pt too wide) detected at line 271
 [][]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 270--271
+Underfull \hbox (badness 10000) in paragraph at lines 273--274
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 274--275
+Underfull \hbox (badness 10000) in paragraph at lines 277--278
 
  []
 
 [3]
-Underfull \hbox (badness 10000) in paragraph at lines 278--279
+Underfull \hbox (badness 10000) in paragraph at lines 281--282
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 283--284
+Underfull \hbox (badness 10000) in paragraph at lines 286--287
 
  []
 
 <initialguess.pdf, id=30, pagebox=cropbox, 295.60437pt x 291.0875pt>
 File: initialguess.pdf Graphic file (type pdf)
 <use initialguess.pdf>
-Package pdftex.def Info: initialguess.pdf  used on input line 296. on input lin
-e 296.
+Package pdftex.def Info: initialguess.pdf  used on input line 299. on input lin
+e 299.
 Package pdftex.def Info: Requested size: 206.92163pt x 203.75984pt on input lin
-e 296.
+e 299.
 
-Overfull \hbox (35.27373pt too wide) in paragraph at lines 310--319
+LaTeX Warning: Reference `minenergy' on page 4 undefined on input line 308.
+
+
+Overfull \hbox (35.27373pt too wide) in paragraph at lines 314--323
  [] 
  []
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
+[4 <./initialguess.pdf>]
+<noESB/q1_traj.pdf, id=39, pagebox=cropbox, 338.5147pt x 134.21143pt>
+File: noESB/q1_traj.pdf Graphic file (type pdf)
+<use noESB/q1_traj.pdf>
+Package pdftex.def Info: noESB/q1_traj.pdf  used on input line 354. on input li
+ne 354.
+Package pdftex.def Info: Requested size: 227.64894pt x 90.25908pt on input line
+ 354.
+<noESB/q2_traj.pdf, id=40, pagebox=cropbox, 335.50343pt x 134.21143pt>
+File: noESB/q2_traj.pdf Graphic file (type pdf)
+<use noESB/q2_traj.pdf>
+Package pdftex.def Info: noESB/q2_traj.pdf  used on input line 358. on input li
+ne 358.
+Package pdftex.def Info: Requested size: 227.64894pt x 91.06595pt on input line
+ 358.
+<noESB/q3_traj.pdf, id=41, pagebox=cropbox, 330.23375pt x 134.21143pt>
+File: noESB/q3_traj.pdf Graphic file (type pdf)
+<use noESB/q3_traj.pdf>
+Package pdftex.def Info: noESB/q3_traj.pdf  used on input line 362. on input li
+ne 362.
+Package pdftex.def Info: Requested size: 227.64894pt x 92.522pt on input line 3
+62.
+<noESB/crit_high.pdf, id=42, pagebox=cropbox, 332.49219pt x 346.79562pt>
+File: noESB/crit_high.pdf Graphic file (type pdf)
+<use noESB/crit_high.pdf>
+Package pdftex.def Info: noESB/crit_high.pdf  used on input line 367. on input 
+line 367.
+Package pdftex.def Info: Requested size: 227.64894pt x 237.44244pt on input lin
+e 367.
+<noESB/ESB_storage.pdf, id=43, pagebox=cropbox, 327.2225pt x 134.21143pt>
+File: noESB/ESB_storage.pdf Graphic file (type pdf)
+<use noESB/ESB_storage.pdf>
+Package pdftex.def Info: noESB/ESB_storage.pdf  used on input line 372. on inpu
+t line 372.
+Package pdftex.def Info: Requested size: 227.64894pt x 93.36984pt on input line
+ 372.
+<q1_traj.pdf, id=44, pagebox=cropbox, 338.5147pt x 134.21143pt>
+File: q1_traj.pdf Graphic file (type pdf)
+<use q1_traj.pdf>
+Package pdftex.def Info: q1_traj.pdf  used on input line 378. on input line 378
+.
+Package pdftex.def Info: Requested size: 227.64894pt x 90.25908pt on input line
+ 378.
+<q2_traj.pdf, id=45, pagebox=cropbox, 335.50343pt x 134.21143pt>
+File: q2_traj.pdf Graphic file (type pdf)
+<use q2_traj.pdf>
+Package pdftex.def Info: q2_traj.pdf  used on input line 382. on input line 382
+.
+Package pdftex.def Info: Requested size: 227.64894pt x 91.06595pt on input line
+ 382.
+<q3_traj.pdf, id=46, pagebox=cropbox, 330.23375pt x 134.21143pt>
+File: q3_traj.pdf Graphic file (type pdf)
+<use q3_traj.pdf>
+Package pdftex.def Info: q3_traj.pdf  used on input line 386. on input line 386
+.
+Package pdftex.def Info: Requested size: 227.64894pt x 92.522pt on input line 3
+86.
+<crit_high.pdf, id=47, pagebox=cropbox, 332.49219pt x 346.79562pt>
+File: crit_high.pdf Graphic file (type pdf)
+<use crit_high.pdf>
+Package pdftex.def Info: crit_high.pdf  used on input line 391. on input line 3
+91.
+Package pdftex.def Info: Requested size: 227.64894pt x 237.44244pt on input lin
+e 391.
+<ESB_storage.pdf, id=48, pagebox=cropbox, 327.2225pt x 134.21143pt>
+File: ESB_storage.pdf Graphic file (type pdf)
+<use ESB_storage.pdf>
+Package pdftex.def Info: ESB_storage.pdf  used on input line 396. on input line
+ 396.
+Package pdftex.def Info: Requested size: 227.64894pt x 93.36984pt on input line
+ 396.
 
-Overfull \hbox (39.96973pt too wide) in paragraph at lines 326--335
- [] 
- []
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
+ [5 <./noESB/q1_traj.pdf> <./noESB/q2_traj.pdf> <./noESB/q3_traj.pdf> <./noESB/
+crit_high.pdf> <./noESB/ESB_storage.pdf> <./q1_traj.pdf> <./q2_traj.pdf> <./q3_
+traj.pdf> <./crit_high.pdf> <./ESB_storage.pdf>]
+File: q1_traj.pdf Graphic file (type pdf)
+<use q1_traj.pdf>
+Package pdftex.def Info: q1_traj.pdf  used on input line 429. on input line 429
+.
+Package pdftex.def Info: Requested size: 227.64894pt x 90.25908pt on input line
+ 429.
+File: q2_traj.pdf Graphic file (type pdf)
+<use q2_traj.pdf>
+Package pdftex.def Info: q2_traj.pdf  used on input line 433. on input line 433
+.
+Package pdftex.def Info: Requested size: 227.64894pt x 91.06595pt on input line
+ 433.
+File: q3_traj.pdf Graphic file (type pdf)
+<use q3_traj.pdf>
+Package pdftex.def Info: q3_traj.pdf  used on input line 437. on input line 437
+.
+Package pdftex.def Info: Requested size: 227.64894pt x 92.522pt on input line 4
+37.
+File: crit_high.pdf Graphic file (type pdf)
+<use crit_high.pdf>
+Package pdftex.def Info: crit_high.pdf  used on input line 442. on input line 4
+42.
+Package pdftex.def Info: Requested size: 227.64894pt x 237.44244pt on input lin
+e 442.
+File: ESB_storage.pdf Graphic file (type pdf)
+<use ESB_storage.pdf>
+Package pdftex.def Info: ESB_storage.pdf  used on input line 447. on input line
+ 447.
+Package pdftex.def Info: Requested size: 227.64894pt x 93.36984pt on input line
+ 447.
 
 ("Energy Efficient Explosive Motion with Compliant Actuation Arrangements in Ar
-ticulated Robots.bbl" [4 <./initialguess.pdf>]
-Underfull \vbox (badness 4132) has occurred while \output is active []
+ticulated Robots.bbl"
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
-)
+ [6])
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -425,39 +575,45 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the US letter (8.5in X 11in) paper size.
 
-[5]
+[7
+
+]
 ("Energy Efficient Explosive Motion with Compliant Actuation Arrangements in Ar
-ticulated Robots.aux") ) 
+ticulated Robots.aux")
+
+LaTeX Warning: There were undefined references.
+
+ ) 
 Here is how much of TeX's memory you used:
- 3261 strings out of 493312
- 47608 string characters out of 3138902
- 113849 words of memory out of 3000000
- 6734 multiletter control sequences out of 15000+200000
- 50794 words of font info for 118 fonts, out of 3000000 for 9000
+ 4476 strings out of 493312
+ 69632 string characters out of 3138902
+ 136280 words of memory out of 3000000
+ 7930 multiletter control sequences out of 15000+200000
+ 50177 words of font info for 117 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 41i,17n,26p,1440b,306s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/base/8r.en
-c}<C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Pr
-ogram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx7.pfb><C:/Program Fil
-es/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Program Files/MiKTe
-X 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program Files/MiKTeX 2.9/fo
-nts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1
-/public/amsfonts/cm/cmmib10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public
-/amsfonts/cm/cmr10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts
-/cm/cmr6.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.p
-fb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Pro
-gram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Fil
-es/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Program Files/MiKTeX
- 2.9/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Program Files/MiKTeX 2.9/font
-s/type1/public/amsfonts/euler/eufm10.pfb><C:/Program Files/MiKTeX 2.9/fonts/typ
-e1/urw/courier/ucrr8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/ut
-mb8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/utmbi8a.pfb><C:/Pro
-gram Files/MiKTeX 2.9/fonts/type1/urw/times/utmr8a.pfb><C:/Program Files/MiKTeX
- 2.9/fonts/type1/urw/times/utmri8a.pfb>
+ 42i,17n,40p,1440b,333s stack positions out of 5000i,500n,10000p,200000b,50000s
+{C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/base/8r.enc}<C:/Program Files/Mi
+KTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Program Files/MiKTeX 2.9
+/fonts/type1/public/amsfonts/cm/cmbx7.pfb><C:/Program Files/MiKTeX 2.9/fonts/ty
+pe1/public/amsfonts/cm/cmex10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/publ
+ic/amsfonts/cm/cmmi10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfo
+nts/cm/cmmi7.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cm
+mib10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb
+><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Progr
+am Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Program Files/M
+iKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Program Files/MiKTeX 2.9/
+fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files/MiKTeX 2.9/fonts/ty
+pe1/public/amsfonts/cm/cmsy7.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/publi
+c/amsfonts/cm/cmsy8.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfont
+s/euler/eufm10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/courier/ucrr8a.
+pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times/utmb8a.pfb><C:/Program F
+iles/MiKTeX 2.9/fonts/type1/urw/times/utmbi8a.pfb><C:/Program Files/MiKTeX 2.9/
+fonts/type1/urw/times/utmr8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/t
+imes/utmri8a.pfb>
 Output written on "Energy Efficient Explosive Motion with Compliant Actuation A
-rrangements in Articulated Robots.pdf" (5 pages, 226822 bytes).
+rrangements in Articulated Robots.pdf" (7 pages, 5709302 bytes).
 PDF statistics:
- 101 PDF objects out of 1000 (max. 8388607)
+ 169 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 6 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 56 words of extra memory for PDF output out of 10000 (max. 10000000)
 
