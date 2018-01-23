@@ -11,6 +11,8 @@
 
 \overrideIEEEmargins                                      % Needed to meet printer requirements.
 
+
+
 % See the \addtolength command later in the file to balance the column lengths
 % on the last page of the document
 
@@ -23,16 +25,14 @@
 \usepackage{amssymb}  % assumes amsmath package installed
 \usepackage{accents}
 \usepackage{graphicx}
-\newcommand\ubar[1]{%
-	\underaccent{\bar}{#1}}
-\usepackage{framed}
-\usepackage{cite}
-\usepackage{float}
+\usepackage[font=small,labelfont=bf]{caption}
 \usepackage{subcaption}
-
+%\usepackage{float}
+%\usepackage{framed}
+\usepackage{cite}
 
 \title{\LARGE \bf
-Energy Efficient Explosive Motion with Compliant Actuation Arrangements in Articulated Robots
+Explosive Motion with Compliant Actuation Arrangements in Articulated Robots
 }
 
 
@@ -61,7 +61,7 @@ Energy Efficient Explosive Motion with Compliant Actuation Arrangements in Artic
 \begin{abstract}
 
 This paper presents the trajectory and elastic element pretensions optimisation for a jumping motion of a 3-DoF leg using recently introduced asymmetric compliant actuator configurations which provide energy efficient actuation for explosive motions. Two actuation branches
-with significantly different stiffness and energy storage capacity properties driving a single joint make up the actuator design. An optimisation problem is formulated to optimise the elastic element pretensions and the joint trajectories for energy efficient vertical jumping motions. Several configurations of the asymmetric compliant actuators have been investigated. Optimization studies of the jumping motions demonstrate SOMETHING. 
+with significantly different stiffness and energy storage capacity properties driving a single joint make up the actuator design. An optimisation problem is formulated to optimise the elastic element pretensions and the joint trajectories for vertical jumping motions. Several configurations of the asymmetric compliant actuators have been investigated. Optimization studies of the jumping motions demonstrate SOMETHING. 
 
 \end{abstract}
 
@@ -90,12 +90,24 @@ The design of the 3-DoF leg model is inspired by the human lower limb. The dimen
 For the concept of Assymetric Compliant Actuation, or \textit{ACA}, a combination of two parallel actuation branches with very different power and stiffness properties is used as shown in Fig. \ref{fig:ACA}.
 \begin{figure}[b]
 	\centering
-	\framebox{\parbox{3in}{Picture of ACA branches
-	}}
-	%\includegraphics[scale=1.0]{figurefile}
+	\includegraphics[scale=1.0]{actuationConcept}
 	\caption{ACA branches}
 	\label{fig:ACA}
 \end{figure}
+
+
+  \begin{figure}[t]
+	\centering
+	%      \framebox{\parbox{3in}
+	{\includegraphics[scale=0.5]{initialguess}
+	}%}
+	
+	\caption{Initial motion}
+	\label{fig:seq}
+\end{figure}
+
+
+
  The Power Branch (\textit{PB}) is a rotary \textit{SEA} which consists of a high power motor \textit{M1} in series with a torsional elastic element \textit{SE}. The Energy Storage Branch (\textit{ESB}) consists of a lower power motor \textit{M2} with a high reduction linear transmission which transfers its power through a unidirectional series elastic element \textit{PE}.
 
 \subsection{Configurations}
@@ -235,38 +247,39 @@ The objective function is comprised out of three criteria which 1) reward the pe
  \begin{equation}
 \min_{\mathbf{p}}\limits J =  J_{performane}+ J_{torque}+ J_{stability}
  \end{equation}
-In the following objective criteria, $c_1$, $c_2$, $c_3$, $c_4$, $c_5$ and $c_6$ denote scaling constants.\\
+In the following objective criteria, $c_1$, $c_2$, $c_3$, $c_4$ and $c_5$ denote scaling constants.\\
 
 \subsubsection{Performance}
-For the performance of the leg we distinguish two different objectives: 
-\begin{enumerate}
-	\item Jumping a maximum height, where the height is defined as the $y$-coordinate of the CoM of the leg with respect to the ground:
+%For the performance of the leg we distinguish two different objectives: 
+%\begin{enumerate}
+%	\item 
+For the performance of the leg we consider the maximum jumping height, where the height is defined as the $y$-coordinate of the CoM of the leg with respect to the ground. The performance criterion yields:
  \begin{equation}
 	J_{performane} = -c_1 \cdot y_{CoM}^2
  \end{equation}
-	\item Jumping to a certain height efficiently, where the maximum $y$-coordinate reached by the CoM of the leg $y_{COM}$ is to equal a set height $y_{COM}'$ and the energy use is to be minimized:
- \begin{equation}
-	J_{performane} =  c_1 \cdot E^2 + c_2 \cdot |y_{COM}'-y_{COM}|
- \end{equation}
-	Here, $E$ is defined as the cumulative electrical energy consumption in Joules according to the integrated positive power model \cite{verstraten2016energy}:
-	 \begin{equation}
-	E_{elec,pos} = \int max(0,P_{source}(t))dt
-	\end{equation}
-\end{enumerate}
+%	\item Jumping to a certain height efficiently, where the maximum $y$-coordinate reached by the CoM of the leg $y_{COM}$ is to equal a set height $y_{COM}'$ and the energy use is to be minimized:
+% \begin{equation}
+%	J_{performane} =  c_1 \cdot E^2 + c_2 \cdot |y_{COM}'-y_{COM}|
+% \end{equation}
+%	Here, $E$ is defined as the cumulative electrical energy consumption in Joules according to the integrated positive power model \cite{verstraten2016energy}:
+%	 \begin{equation}
+%	E_{elec,pos} = \int max(0,P_{source}(t))dt
+%	\end{equation}
+%\end{enumerate}
 
 \subsubsection{Torque}
-The active torques pose a problem as the upper and lower bound constraints on the applied torques can become non-linear. Therefore it is chosen to express the torque limits by means of a penalty function in the objective criteria and to terminate the simulation when the torque limits are violated.
-The active torque $\boldsymbol{\tau}_a$ is to be kept low and within the maximum and minimum deliverable torque. This is enforced by means of a penalty function which incorporates the 2-norm of the realised values of $\boldsymbol{\tau}_a$ while eliminating the influence of the \textit{ESB}:  
+The active torques pose a problem as the upper and lower bound constraints on the applied torques can become non-linear. Therefore it is chosen to express the torque limits by means of a penalty function in the objective criteria and to only terminate the simulation when the utmost torque limits are violated.
+The active torque $\boldsymbol{\tau}_a$ is to be kept low and within the maximum and minimum deliverable torque. This is enforced by means of a penalty function which incorporates the 2-norm of the realised values of $\boldsymbol{\tau}_a$ computed in Section \ref{sec:dynamicModel} while eliminating the influence of the \textit{ESB}'s:  
  \begin{equation}
-J_{torque}= c_3 \cdot || \boldsymbol{\tau}_a - \boldsymbol{\tau}_{ESB} ||_2^2
+J_{torque}= c_2 \cdot || \boldsymbol{\tau}_a - \boldsymbol{\tau}_{ESB} ||_2^2
  \end{equation}
 
 \subsubsection{Stability}
 To ensure postural stability a stability criterion is introduced. The leg posture is considered stable when the $x$-coordinate of the CoM of the leg is equal to its initial $x$-coordinate at the end of the jump, i.e. when the CoM reaches its maximum height. Also, the motion is assumed to be stable when the mean value of the absolute x-coordinates of the CoM equals zero. Higher stability is also assumed for a low rotational momentum $L$ at maximum height of CoM. For an $N$ number of time segments, this is achieved with the minimization of:
  \begin{equation}
  \begin{aligned}
-&J_{stability}  =  \\ & c_4\cdot \Big( x_{CoM}(t_h)-x_{CoM}(t_s) \Big)^2  +c_5\cdot  {\sum^{N}_{i=1}\frac{| x_{CoM}(t)_i |}{N}}^2   
-				  + c_6  \cdot   L(t_h)^2 
+&J_{stability}  =  \\ & c_3\cdot \Big( x_{CoM}(t_h)-x_{CoM}(t_s) \Big)^2  +c_4\cdot  {\sum^{N}_{i=1}\frac{| x_{CoM}(t)_i |}{N}}^2   
+				  + c_5  \cdot   L(t_h)^2 
  \end{aligned}
  \end{equation}
  
@@ -289,57 +302,31 @@ The objective criteria described above require information concerning the kinema
 
 	
 
-
-
-
-
-   \begin{figure}[b]
-      \centering
-%      \framebox{\parbox{3in}
-      	{\includegraphics[scale=0.7]{initialguess}
-}%}
-      
-      \caption{Initial motion}
-      \label{fig:seq}
-   \end{figure}
-   
-\section{Results} \label{sec:results}
-
-The optimisation has been performed for the upward movement of the leg performing a jumping motion with a maximum duration of 0.4 seconds. The initial position of the leg yields a squatting posture and the optimisation is concluded when the CoM reaches its highest point for successful jumps or when the leg has fallen over for unsuccessful jumps. The initial guess is a manually constructed motion as shown in Fig. \ref{fig:seq} for actuation without energy storage branches. The optimization results for the objectives presented in Section \ref{sec:dynamicOptimisation} are shown in Tables \ref{maxheight} and \ref{minenergy}.
-
-\begin{table}[h]
+\begin{table*}[ht]
 	\caption{Maximum jump height for different configurations}
 	\label{maxheight}
 	\begin{center}
-		\begin{tabular}{c||c|c|c|c|c|c}
-		\textit{Configuration}	& \textit{Height} [m] & \textit{Pretension} [m] & \textit{f} & \textit{J}$_{\text{\textit{perf.}}}$ & \textit{J}$_{\text{\textit{stab.}}}$ & \textit{J}$_{\text{\textit{torque}}}$\\
+		\begin{tabular}[t]{c||c|c|c|c|c|c|c}
+			\textit{Articulation}	& \textit{Height} [m] & \textit{Pretension} [m] & \textit{f} & \textit{E}$_{\text{\textit{consumed}}}$ [J] & \textit{J}$_{\text{\textit{performance}}}$ & \textit{J}$_{\text{\textit{stability}}}$ & \textit{J}$_{\text{\textit{torque}}}$\\ 
 			\hline
-			Only SEA &  &  &  &  &  & \\
+			SEA only& 0.917 & 0, 0, 0 &-370.26  & 805.66 & 426.16  &0.85  &   55.05\\
 			\hline
-			Mono-articulated & &  &  &  &  &\\
+			Mono &0.951 & 0.060, -0.014, 0  & -402.90 & 567.64& 451.77 & 1.26 &47.61 \\
 			\hline
-			Bi-articulated & &  &  &  &  &
+			Bi &1.013 & 0.044, 0.029, 0 & -478.73 & 867.35 & 526.27 & 0.96 & 46.58
 		\end{tabular}
 	\end{center}
-\end{table}
+\end{table*}
+ 
+\section{Results} \label{sec:results}
 
-%\begin{table}[h]
-%	\caption{Minimum energy use for different configurations}
-%	\label{minenergy}
-%	\begin{center}
-%		\begin{tabular}{c||c|c|c|c|c|c}
-%			\textit{Configuration}	& \textit{E}$_{\text{\textit{consumed}}}$ [J] & \textit{Pretension} [m] & \textit{f} & \textit{J}$_{\text{\textit{perf.}}}$ & \textit{J}$_{\text{\textit{stab.}}}$ & \textit{J}$_{\text{\textit{torque}}}$ \\
-%			\hline
-%			Only SEA &   &   &  &  &  &\\
-%			\hline
-%			Mono-articulated &  &   &  &  &  &\\
-%			\hline
-%			Bi-articulated & &   &  &  &  &
-%		\end{tabular}
-%	\end{center}
-%\end{table}
+The optimisation has been performed for the upward movement of the leg performing a jumping motion with a maximum duration of 0.4 seconds. The initial position of the leg yields a squatting posture and the optimisation is concluded when the CoM reaches its highest point for successful jumps or when the leg has fallen over for unsuccessful jumps. The initial guess is a manually constructed motion as shown in Fig. \ref{fig:seq} for actuation without energy storage branches. The optimization results for the objective presented in Section \ref{sec:dynamicOptimisation} are shown in Table \ref{maxheight}.
 
 
+
+
+
+The evolution of the joint trajectories during the optimization 
 \section{Discussion} \label{sec:discussion}
 
 Comparison of actuation topologies.
@@ -348,110 +335,152 @@ Comparison of actuation topologies.
 
 Conclusions
 
-\newpage
-\begin{figure}[H]    
-	\begin{minipage}[ht]{0.45\textwidth}
-		\includegraphics[width=\linewidth]{noESB/q1_traj}
-	\end{minipage}
-		
-	\begin{minipage}[ht]{0.45\textwidth}
-		\includegraphics[width=\linewidth]{noESB/q2_traj}
-	\end{minipage}
+  \begin{figure}[t]
+	\centering
+	%      \framebox{\parbox{3in}
+	{\includegraphics[scale=0.5]{initialguess}
+	}%}
 	
-	\begin{minipage}[ht]{0.45\textwidth}
-		\includegraphics[width=\linewidth]{noESB/q3_traj}
-	\end{minipage}
-	\caption{No ESB: joint trajectory evolution}
-	
-	\begin{minipage}[ht]{0.45\textwidth}
-	\includegraphics[width=\linewidth]{noESB/crit_high}
-	\end{minipage}
-	\caption{No ESB: criteria evolution}
-
-	\begin{minipage}[ht]{0.45\textwidth}
-	\includegraphics[width=\linewidth]{noESB/ESB_storage}
-	\end{minipage}
+	\caption{Initial motion}
+	\label{fig:seq}
 \end{figure}
 
-\begin{figure}[H]    
-	\begin{minipage}[ht]{0.45\textwidth}
-		\includegraphics[width=\linewidth]{q1_traj}
-	\end{minipage}
+% Large figure with all the experimental results
+\begin{figure*}[ht]
+	\centering
 	
-	\begin{minipage}[ht]{0.45\textwidth}
-		\includegraphics[width=\linewidth]{q2_traj}
-	\end{minipage}
+	% Joint tracking
+	\begin{subfigure}[t]{0.32\linewidth}
+		\includegraphics[width=\linewidth]{noESB/crit_high}
+		\caption{No ESB: Joint tracking.}
+		\label{fig:exp_noESB_joints}
+	\end{subfigure}
+	%
+	\begin{subfigure}[t]{0.32\linewidth}
+		\includegraphics[width=\linewidth]{mono/crit_high}
+		\caption{Monoarticulated: Joint tracking.}
+		\label{fig:exp_mono_joints}
+	\end{subfigure}
+	%
+	\begin{subfigure}[t]{0.32\linewidth}
+		\includegraphics[width=\linewidth]{bi/crit_high}
+		\caption{Biarticulated: Joint tracking.}
+		\label{fig:exp_bi_joints}
+	\end{subfigure}
 	
-	\begin{minipage}[ht]{0.45\textwidth}
-		\includegraphics[width=\linewidth]{q3_traj}
-	\end{minipage}
-	\caption{Mono-articulated: joint trajectory evolution}
+	\vspace{2mm}
 	
-	\begin{minipage}[ht]{0.45\textwidth}
-	\includegraphics[width=\linewidth]{crit_high}
-	\end{minipage}
-	\caption{No ESB: criteria evolution}
+	% Tracking errors
+	\begin{subfigure}[t]{0.32\linewidth}
+		\includegraphics[width=\linewidth]{noESB/q_1_torques}
+		\caption{No ESB: Tracking errors.}
+		\label{fig:exp_noESB_joints_errors}
+	\end{subfigure}
+	%
+	\begin{subfigure}[t]{0.32\linewidth}
+		\includegraphics[width=\linewidth]{mono/q_1_torques}
+		\caption{Monoarticulated: Tracking errors.}
+		\label{fig:exp_mono_joints_errors}
+	\end{subfigure}
+	%
+	\begin{subfigure}[t]{0.32\linewidth}
+		\includegraphics[width=\linewidth]{bi/q_1_torques}
+		\caption{Biarticulated: Tracking errors.}
+		\label{fig:exp_bi_joints_errors}
+	\end{subfigure}
 	
-	\begin{minipage}[ht]{0.45\textwidth}
-	\includegraphics[width=\linewidth]{ESB_storage}
-	\end{minipage}
-\end{figure}
+	\vspace{2mm}
+	
+	% Ankle torques
+	\begin{subfigure}[t]{0.32\linewidth}
+		\includegraphics[width=\linewidth]{noESB/q_2_torques}
+		\caption{No ESB: Ankle ($q_1$) torques.}
+		\label{fig:exp_noESB_ankle_torques}
+	\end{subfigure}
+	%
+	\begin{subfigure}[t]{0.32\linewidth}
+		\includegraphics[width=\linewidth]{mono/q_2_torques}
+		\caption{Monoarticulated: Ankle ($q_1$) torques.}
+		\label{fig:exp_mono_ankle_torques}
+	\end{subfigure}
+	%
+	\begin{subfigure}[t]{0.32\linewidth}
+		\includegraphics[width=\linewidth]{bi/q_2_torques}
+		\caption{Biarticulated: Ankle ($q_1$) torques.}
+		\label{fig:exp_bi_ankle_torques}
+	\end{subfigure}
+	
+	\vspace{2mm}
+	
+	% Knee torques
+	\begin{subfigure}[t]{0.32\linewidth}
+		\includegraphics[width=\linewidth]{noESB/q_3_torques}
+		\caption{No ESB: Knee ($q_2$) torques.}
+		\label{fig:exp_noESB_knee_torques}
+	\end{subfigure}
+	%
+	\begin{subfigure}[t]{0.32\linewidth}
+		\includegraphics[width=\linewidth]{mono/q_3_torques}
+		\caption{Monoarticulated: Knee ($q_2$) torques.}
+		\label{fig:exp_mono_knee_torques}
+	\end{subfigure}
+	%
+	\begin{subfigure}[t]{0.32\linewidth}
+		\includegraphics[width=\linewidth]{bi/q_3_torques}
+		\caption{Biarticulated: Knee ($q_2$) torques.}
+		\label{fig:exp_bi_knee_torques}
+	\end{subfigure}
+	
+	\vspace{2mm}
+	
+	% Hip torques
+	\begin{subfigure}[t]{0.32\linewidth}
+		\includegraphics[width=\linewidth]{noESB/P_q}
+		\caption{No ESB: Hip ($q_3$) torques.}
+		\label{fig:exp_noESB_hip_torques}
+	\end{subfigure}
+	%
+	\begin{subfigure}[t]{0.32\linewidth}
+		\includegraphics[width=\linewidth]{mono/P_q}
+		\caption{Monoarticulated: Hip ($q_3$) torques.}
+		\label{fig:exp_mono_hip_torques}
+	\end{subfigure}
+	%
+	\begin{subfigure}[t]{0.32\linewidth}
+		\includegraphics[width=\linewidth]{bi/P_q}
+		\caption{Biarticulated: Hip ($q_3$) torques.}
+		\label{fig:exp_bi_hip_torques}
+	\end{subfigure}
+	
+	\vspace{2mm}
+	
+	% Linear tendon forces
+	\begin{subfigure}[t]{0.32\linewidth}
+		\centering
+		\raisebox{0pt}[0pt][0pt]{%
+			\raisebox{15mm}{\texttt{~~No ESB tendons.}}%
+		}
+	\end{subfigure}
+	%
+	\begin{subfigure}[t]{0.32\linewidth}
+		\includegraphics[width=\linewidth]{mono/ESB_storage}
+		\caption{Monoarticulated: Linear tendon forces.}
+		\label{fig:exp_mono_tendon_forces}
+	\end{subfigure}
+	%
+	\begin{subfigure}[t]{0.32\linewidth}
+		\includegraphics[width=\linewidth]{bi/ESB_storage}
+		\caption{Biarticulated: Linear tendon forces.}
+		\label{fig:exp_bi_tendon_forces}
+	\end{subfigure}
+	
+	\caption{Experimental results. blablabla.}
+	\label{fig:exp_results}
+\end{figure*}
 
-\newpage
-%	\begin{figure}[H]    
-%		\begin{minipage}[ht]{0.45\textwidth}
-%		\includegraphics[width=\linewidth]{q_1_torques}
-%	\end{minipage}
-%	
-%	\begin{minipage}[ht]{0.45\textwidth}
-%		\includegraphics[width=\linewidth]{q_2_torques}
-%	\end{minipage}
-%	
-%	\begin{minipage}[ht]{0.45\textwidth}
-%		\includegraphics[width=\linewidth]{q_3_torques}
-%	\end{minipage}
-%  
-%	\begin{minipage}[ht]{0.45\textwidth}
-%		\includegraphics[width=\linewidth]{q_1_torques}
-%	\end{minipage}
-%	
-%	\begin{minipage}[ht]{0.45\textwidth}
-%		\includegraphics[width=\linewidth]{q_2_torques}
-%	\end{minipage}
-%	
-%	\begin{minipage}[ht]{0.45\textwidth}
-%		\includegraphics[width=\linewidth]{q_3_torques}
-%	\end{minipage}
-%\end{figure}
-
-\begin{figure}[H]    
-	\begin{minipage}[ht]{0.45\textwidth}
-		\includegraphics[width=\linewidth]{q1_traj}
-	\end{minipage}
-	
-	\begin{minipage}[ht]{0.45\textwidth}
-		\includegraphics[width=\linewidth]{q2_traj}
-	\end{minipage}
-	
-	\begin{minipage}[ht]{0.45\textwidth}
-		\includegraphics[width=\linewidth]{q3_traj}
-	\end{minipage}
-	\caption{Bi-articulated: joint trajectory evolution}	
-	
-	\begin{minipage}[ht]{0.45\textwidth}
-		\includegraphics[width=\linewidth]{crit_high}
-	\end{minipage}
-	\caption{Bi-articulated: criteria evolution}
-		
-	\begin{minipage}[ht]{0.45\textwidth}
-		\includegraphics[width=\linewidth]{ESB_storage}
-	\end{minipage}
-	\caption{Bi-articulated: energy storage}
-\end{figure}
 
 
-
-\addtolength{\textheight}{-12cm}   % This command serves to balance the column lengths
+\addtolength{\textheight}{-10cm}   % This command serves to balance the column lengths
                                   % on the last page of the document manually. It shortens
                                   % the textheight of the last page by a suitable amount.
                                   % This command does not take effect until the next page

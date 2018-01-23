@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6500 64-bit) (preloaded format=pdflatex 2017.12.4)  22 JAN 2018 16:40
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (MiKTeX 2.9.6500 64-bit) (preloaded format=pdflatex 2017.12.4)  23 JAN 2018 20:03
 entering extended mode
 **"./Energy Efficient Explosive Motion with Compliant Actuation Arrangements in
  Articulated Robots.tex"
@@ -200,43 +200,19 @@ File: pdftex.def 2017/06/24 v1.0g Graphics/color driver for pdftex
 \Gin@req@height=\dimen124
 \Gin@req@width=\dimen125
 )
-(C:\Users\Roel\AppData\Roaming\MiKTeX\2.9\tex\latex\framed\framed.sty
-Package: framed 2011/10/22 v 0.96: framed or shaded text with page breaks
-\OuterFrameSep=\skip50
-\fb@frw=\dimen126
-\fb@frh=\dimen127
-\FrameRule=\dimen128
-\FrameSep=\dimen129
-)
-(C:\Users\Roel\AppData\Roaming\MiKTeX\2.9\tex\latex\cite\cite.sty
-LaTeX Info: Redefining \cite on input line 302.
-LaTeX Info: Redefining \nocite on input line 332.
-Package: cite 2015/02/27  v 5.5
-)
-("C:\Program Files\MiKTeX 2.9\tex\latex\float\float.sty"
-Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count106
-\float@exts=\toks21
-\float@box=\box29
-\@float@everytoks=\toks22
-\@floatcapt=\box30
-)
-(C:\Users\Roel\AppData\Roaming\MiKTeX\2.9\tex\latex\caption\subcaption.sty
-Package: subcaption 2016/05/22 v1.1-161 Sub-captions (AR)
-
 (C:\Users\Roel\AppData\Roaming\MiKTeX\2.9\tex\latex\caption\caption.sty
 Package: caption 2016/02/21 v3.3-144 Customizing captions (AR)
 
 (C:\Users\Roel\AppData\Roaming\MiKTeX\2.9\tex\latex\caption\caption3.sty
 Package: caption3 2016/05/22 v1.7-166 caption3 kernel (AR)
 Package caption3 Info: TeX engine: e-TeX on input line 67.
-\captionmargin=\dimen130
-\captionmargin@=\dimen131
-\captionwidth=\dimen132
-\caption@tempdima=\dimen133
-\caption@indent=\dimen134
-\caption@parindent=\dimen135
-\caption@hangindent=\dimen136
+\captionmargin=\dimen126
+\captionmargin@=\dimen127
+\captionwidth=\dimen128
+\caption@tempdima=\dimen129
+\caption@indent=\dimen130
+\caption@parindent=\dimen131
+\caption@hangindent=\dimen132
 Package caption Info: Unknown document class (or package),
 (caption)             standard defaults will be used.
 )
@@ -253,14 +229,23 @@ mpboxa \hbox {\footnotesize #1.~~ }\parbox [t]{\hsize }{\footnotesize \noindent
  \unhbox \@tempboxa #2}\else \ifcenterfigcaptions \hbox to\hsize {\footnotesize
  \hfil \box \@tempboxa \hfil }\else \hbox to\hsize {\footnotesize \box \@tempbo
 xa \hfil }\fi \fi \fi .
-\c@ContinuedFloat=\count107
-Package caption Info: float package is loaded.
+\c@ContinuedFloat=\count106
+) (C:\Users\Roel\AppData\Roaming\MiKTeX\2.9\tex\latex\caption\subcaption.sty
+Package: subcaption 2016/05/22 v1.1-161 Sub-captions (AR)
+\c@subfigure=\count107
+\c@subtable=\count108
 )
-\c@subfigure=\count108
-\c@subtable=\count109
+(C:\Users\Roel\AppData\Roaming\MiKTeX\2.9\tex\latex\cite\cite.sty
+LaTeX Info: Redefining \cite on input line 302.
+LaTeX Info: Redefining \nocite on input line 332.
+Package: cite 2015/02/27  v 5.5
 )
 ("Energy Efficient Explosive Motion with Compliant Actuation Arrangements in Ar
-ticulated Robots.aux")
+ticulated Robots.aux"
+
+LaTeX Warning: Label `fig:seq' multiply defined.
+
+)
 \openout1 = `"Energy Efficient Explosive Motion with Compliant Actuation Arrang
 ements in Articulated Robots.aux"'.
 
@@ -276,20 +261,19 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 51.
 LaTeX Font Info:    ... okay on input line 51.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 51.
 LaTeX Font Info:    ... okay on input line 51.
-
-(C:\Users\Roel\AppData\Roaming\MiKTeX\2.9\tex\context\base\supp-pdf.mkii
+ (C:\Users\Roel\AppData\Roaming\MiKTeX\2.9\tex\context\base\supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count110
-\scratchdimen=\dimen137
-\scratchbox=\box31
-\nofMPsegments=\count111
-\nofMParguments=\count112
-\everyMPshowfont=\toks23
-\MPscratchCnt=\count113
-\MPscratchDim=\dimen138
-\MPnumerator=\count114
-\makeMPintoPDFobject=\count115
-\everyMPtoPDFconversion=\toks24
+\scratchcounter=\count109
+\scratchdimen=\dimen133
+\scratchbox=\box29
+\nofMPsegments=\count110
+\nofMParguments=\count111
+\everyMPshowfont=\toks21
+\MPscratchCnt=\count112
+\MPscratchDim=\dimen134
+\MPnumerator=\count113
+\makeMPintoPDFobject=\count114
+\everyMPtoPDFconversion=\toks22
 ) ("C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\epstopdf-base.sty"
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
 
@@ -380,52 +364,51 @@ Missing character: There is no ™ in font ptmr7t!
 
 
 ]
-LaTeX Font Info:    Try loading font information for U+euf on input line 137.
+<actuationConcept.pdf, id=13, pagebox=cropbox, 181.2288pt x 180.00397pt>
+File: actuationConcept.pdf Graphic file (type pdf)
+<use actuationConcept.pdf>
+Package pdftex.def Info: actuationConcept.pdf  used on input line 93. on input 
+line 93.
+Package pdftex.def Info: Requested size: 181.22835pt x 180.00352pt on input lin
+e 93.
+<initialguess.pdf, id=14, pagebox=cropbox, 295.60437pt x 291.0875pt>
+File: initialguess.pdf Graphic file (type pdf)
+<use initialguess.pdf>
+Package pdftex.def Info: initialguess.pdf  used on input line 102. on input lin
+e 102.
+Package pdftex.def Info: Requested size: 147.80182pt x 145.54338pt on input lin
+e 102.
+LaTeX Font Info:    Try loading font information for U+euf on input line 149.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\amsfonts\ueuf.fd"
 File: ueuf.fd 2013/01/14 v3.01 Euler Fraktur
 )
-Underfull \hbox (badness 10000) in paragraph at lines 144--146
+Underfull \hbox (badness 10000) in paragraph at lines 156--158
 \OT1/ptm/m/n/10 Here, the damp-ing ma-trix is de-noted by $\OML/cmm/m/it/10 D \
 OT1/cmr/m/n/10 =
  []
 
 
-Underfull \hbox (badness 3209) in paragraph at lines 144--146
+Underfull \hbox (badness 3209) in paragraph at lines 156--158
 []\OT1/cmr/m/n/10 (0\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 0\OML/cmm/m/it/10 ; \OT1
 /cmr/m/n/10 0\OML/cmm/m/it/10 ; d[]; d[]; d[]\OT1/cmr/m/n/10 )$\OT1/ptm/m/n/10 
 , the gen-er-alised ac-tu-a-tion forces
  []
 
 
-Underfull \hbox (badness 2096) in paragraph at lines 144--146
+Underfull \hbox (badness 2096) in paragraph at lines 156--158
 \OT1/ptm/m/n/10 Spring-dampers de-fine $\OT1/cmr/bx/n/10 F[]$ \OT1/ptm/m/n/10 i
 n the ver-ti-cal di-rec-tion
  []
 
-[2]
-Underfull \hbox (badness 10000) in paragraph at lines 237--239
-
- []
-
-
-Overfull \hbox (33.14822pt too wide) detected at line 271
-[][]
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 273--274
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 277--278
+[2 <./actuationConcept.pdf> <./initialguess.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 249--251
 
  []
 
 [3]
-Underfull \hbox (badness 10000) in paragraph at lines 281--282
-
+Overfull \hbox (33.14822pt too wide) detected at line 284
+[][]
  []
 
 
@@ -433,137 +416,152 @@ Underfull \hbox (badness 10000) in paragraph at lines 286--287
 
  []
 
-<initialguess.pdf, id=30, pagebox=cropbox, 295.60437pt x 291.0875pt>
-File: initialguess.pdf Graphic file (type pdf)
-<use initialguess.pdf>
-Package pdftex.def Info: initialguess.pdf  used on input line 299. on input lin
-e 299.
-Package pdftex.def Info: Requested size: 206.92163pt x 203.75984pt on input lin
-e 299.
 
-LaTeX Warning: Reference `minenergy' on page 4 undefined on input line 308.
+Underfull \hbox (badness 10000) in paragraph at lines 290--291
 
-
-Overfull \hbox (35.27373pt too wide) in paragraph at lines 314--323
- [] 
  []
 
 
-LaTeX Warning: `h' float specifier changed to `ht'.
+Underfull \hbox (badness 10000) in paragraph at lines 294--295
 
-[4 <./initialguess.pdf>]
-<noESB/q1_traj.pdf, id=39, pagebox=cropbox, 338.5147pt x 134.21143pt>
-File: noESB/q1_traj.pdf Graphic file (type pdf)
-<use noESB/q1_traj.pdf>
-Package pdftex.def Info: noESB/q1_traj.pdf  used on input line 354. on input li
-ne 354.
-Package pdftex.def Info: Requested size: 227.64894pt x 90.25908pt on input line
- 354.
-<noESB/q2_traj.pdf, id=40, pagebox=cropbox, 335.50343pt x 134.21143pt>
-File: noESB/q2_traj.pdf Graphic file (type pdf)
-<use noESB/q2_traj.pdf>
-Package pdftex.def Info: noESB/q2_traj.pdf  used on input line 358. on input li
-ne 358.
-Package pdftex.def Info: Requested size: 227.64894pt x 91.06595pt on input line
- 358.
-<noESB/q3_traj.pdf, id=41, pagebox=cropbox, 330.23375pt x 134.21143pt>
-File: noESB/q3_traj.pdf Graphic file (type pdf)
-<use noESB/q3_traj.pdf>
-Package pdftex.def Info: noESB/q3_traj.pdf  used on input line 362. on input li
-ne 362.
-Package pdftex.def Info: Requested size: 227.64894pt x 92.522pt on input line 3
-62.
-<noESB/crit_high.pdf, id=42, pagebox=cropbox, 332.49219pt x 346.79562pt>
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 299--300
+
+ []
+
+File: initialguess.pdf Graphic file (type pdf)
+<use initialguess.pdf>
+Package pdftex.def Info: initialguess.pdf  used on input line 341. on input lin
+e 341.
+Package pdftex.def Info: Requested size: 147.80182pt x 145.54338pt on input lin
+e 341.
+<noESB/crit_high.pdf, id=68, pagebox=cropbox, 332.49219pt x 261.72781pt>
 File: noESB/crit_high.pdf Graphic file (type pdf)
 <use noESB/crit_high.pdf>
-Package pdftex.def Info: noESB/crit_high.pdf  used on input line 367. on input 
-line 367.
-Package pdftex.def Info: Requested size: 227.64894pt x 237.44244pt on input lin
-e 367.
-<noESB/ESB_storage.pdf, id=43, pagebox=cropbox, 327.2225pt x 134.21143pt>
-File: noESB/ESB_storage.pdf Graphic file (type pdf)
-<use noESB/ESB_storage.pdf>
-Package pdftex.def Info: noESB/ESB_storage.pdf  used on input line 372. on inpu
-t line 372.
-Package pdftex.def Info: Requested size: 227.64894pt x 93.36984pt on input line
- 372.
-<q1_traj.pdf, id=44, pagebox=cropbox, 338.5147pt x 134.21143pt>
-File: q1_traj.pdf Graphic file (type pdf)
-<use q1_traj.pdf>
-Package pdftex.def Info: q1_traj.pdf  used on input line 378. on input line 378
-.
-Package pdftex.def Info: Requested size: 227.64894pt x 90.25908pt on input line
- 378.
-<q2_traj.pdf, id=45, pagebox=cropbox, 335.50343pt x 134.21143pt>
-File: q2_traj.pdf Graphic file (type pdf)
-<use q2_traj.pdf>
-Package pdftex.def Info: q2_traj.pdf  used on input line 382. on input line 382
-.
-Package pdftex.def Info: Requested size: 227.64894pt x 91.06595pt on input line
- 382.
-<q3_traj.pdf, id=46, pagebox=cropbox, 330.23375pt x 134.21143pt>
-File: q3_traj.pdf Graphic file (type pdf)
-<use q3_traj.pdf>
-Package pdftex.def Info: q3_traj.pdf  used on input line 386. on input line 386
-.
-Package pdftex.def Info: Requested size: 227.64894pt x 92.522pt on input line 3
-86.
-<crit_high.pdf, id=47, pagebox=cropbox, 332.49219pt x 346.79562pt>
-File: crit_high.pdf Graphic file (type pdf)
-<use crit_high.pdf>
-Package pdftex.def Info: crit_high.pdf  used on input line 391. on input line 3
-91.
-Package pdftex.def Info: Requested size: 227.64894pt x 237.44244pt on input lin
-e 391.
-<ESB_storage.pdf, id=48, pagebox=cropbox, 327.2225pt x 134.21143pt>
-File: ESB_storage.pdf Graphic file (type pdf)
-<use ESB_storage.pdf>
-Package pdftex.def Info: ESB_storage.pdf  used on input line 396. on input line
- 396.
-Package pdftex.def Info: Requested size: 227.64894pt x 93.36984pt on input line
- 396.
+Package pdftex.def Info: noESB/crit_high.pdf  used on input line 354. on input 
+line 354.
+Package pdftex.def Info: Requested size: 161.8885pt x 127.43303pt on input line
+ 354.
+<mono/crit_high.pdf, id=69, pagebox=cropbox, 333.99782pt x 261.72781pt>
+File: mono/crit_high.pdf Graphic file (type pdf)
+<use mono/crit_high.pdf>
+Package pdftex.def Info: mono/crit_high.pdf  used on input line 360. on input l
+ine 360.
+Package pdftex.def Info: Requested size: 161.8885pt x 126.86194pt on input line
+ 360.
+<bi/crit_high.pdf, id=70, pagebox=cropbox, 335.50343pt x 261.72781pt>
+File: bi/crit_high.pdf Graphic file (type pdf)
+<use bi/crit_high.pdf>
+Package pdftex.def Info: bi/crit_high.pdf  used on input line 366. on input lin
+e 366.
+Package pdftex.def Info: Requested size: 161.8885pt x 126.29085pt on input line
+ 366.
+<noESB/q_1_torques.pdf, id=71, pagebox=cropbox, 330.23375pt x 137.2327pt>
+File: noESB/q_1_torques.pdf Graphic file (type pdf)
+<use noESB/q_1_torques.pdf>
+Package pdftex.def Info: noESB/q_1_torques.pdf  used on input line 375. on inpu
+t line 375.
+Package pdftex.def Info: Requested size: 161.8885pt x 67.276pt on input line 37
+5.
+<mono/q_1_torques.pdf, id=72, pagebox=cropbox, 333.245pt x 137.2327pt>
+File: mono/q_1_torques.pdf Graphic file (type pdf)
+<use mono/q_1_torques.pdf>
+Package pdftex.def Info: mono/q_1_torques.pdf  used on input line 381. on input
+ line 381.
+Package pdftex.def Info: Requested size: 161.8885pt x 66.66875pt on input line 
+381.
+<bi/q_1_torques.pdf, id=73, pagebox=cropbox, 336.25626pt x 137.2327pt>
+File: bi/q_1_torques.pdf Graphic file (type pdf)
+<use bi/q_1_torques.pdf>
+Package pdftex.def Info: bi/q_1_torques.pdf  used on input line 387. on input l
+ine 387.
+Package pdftex.def Info: Requested size: 161.8885pt x 66.06985pt on input line 
+387.
+<noESB/q_2_torques.pdf, id=74, pagebox=cropbox, 336.25626pt x 137.2327pt>
+File: noESB/q_2_torques.pdf Graphic file (type pdf)
+<use noESB/q_2_torques.pdf>
+Package pdftex.def Info: noESB/q_2_torques.pdf  used on input line 396. on inpu
+t line 396.
+Package pdftex.def Info: Requested size: 161.8885pt x 66.06985pt on input line 
+396.
+<mono/q_2_torques.pdf, id=75, pagebox=cropbox, 337.00906pt x 137.2327pt>
+File: mono/q_2_torques.pdf Graphic file (type pdf)
+<use mono/q_2_torques.pdf>
+Package pdftex.def Info: mono/q_2_torques.pdf  used on input line 402. on input
+ line 402.
+Package pdftex.def Info: Requested size: 161.8885pt x 65.92328pt on input line 
+402.
+<bi/q_2_torques.pdf, id=76, pagebox=cropbox, 332.49219pt x 137.2327pt>
+File: bi/q_2_torques.pdf Graphic file (type pdf)
+<use bi/q_2_torques.pdf>
+Package pdftex.def Info: bi/q_2_torques.pdf  used on input line 408. on input l
+ine 408.
+Package pdftex.def Info: Requested size: 161.8885pt x 66.81741pt on input line 
+408.
+<noESB/q_3_torques.pdf, id=77, pagebox=cropbox, 332.49219pt x 137.2327pt>
+File: noESB/q_3_torques.pdf Graphic file (type pdf)
+<use noESB/q_3_torques.pdf>
+Package pdftex.def Info: noESB/q_3_torques.pdf  used on input line 417. on inpu
+t line 417.
+Package pdftex.def Info: Requested size: 161.8885pt x 66.81741pt on input line 
+417.
+<mono/q_3_torques.pdf, id=78, pagebox=cropbox, 333.245pt x 137.2327pt>
+File: mono/q_3_torques.pdf Graphic file (type pdf)
+<use mono/q_3_torques.pdf>
+Package pdftex.def Info: mono/q_3_torques.pdf  used on input line 423. on input
+ line 423.
+Package pdftex.def Info: Requested size: 161.8885pt x 66.66875pt on input line 
+423.
+<bi/q_3_torques.pdf, id=79, pagebox=cropbox, 330.23375pt x 137.2327pt>
+File: bi/q_3_torques.pdf Graphic file (type pdf)
+<use bi/q_3_torques.pdf>
+Package pdftex.def Info: bi/q_3_torques.pdf  used on input line 429. on input l
+ine 429.
+Package pdftex.def Info: Requested size: 161.8885pt x 67.276pt on input line 42
+9.
+<noESB/P_q.pdf, id=80, pagebox=cropbox, 336.25626pt x 137.2327pt>
+File: noESB/P_q.pdf Graphic file (type pdf)
+<use noESB/P_q.pdf>
+Package pdftex.def Info: noESB/P_q.pdf  used on input line 438. on input line 4
+38.
+Package pdftex.def Info: Requested size: 161.8885pt x 66.06985pt on input line 
+438.
+<mono/P_q.pdf, id=81, pagebox=cropbox, 337.00906pt x 137.2327pt>
+File: mono/P_q.pdf Graphic file (type pdf)
+<use mono/P_q.pdf>
+Package pdftex.def Info: mono/P_q.pdf  used on input line 444. on input line 44
+4.
+Package pdftex.def Info: Requested size: 161.8885pt x 65.92328pt on input line 
+444.
+<bi/P_q.pdf, id=82, pagebox=cropbox, 336.25626pt x 137.2327pt>
+File: bi/P_q.pdf Graphic file (type pdf)
+<use bi/P_q.pdf>
+Package pdftex.def Info: bi/P_q.pdf  used on input line 450. on input line 450.
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [5 <./noESB/q1_traj.pdf> <./noESB/q2_traj.pdf> <./noESB/q3_traj.pdf> <./noESB/
-crit_high.pdf> <./noESB/ESB_storage.pdf> <./q1_traj.pdf> <./q2_traj.pdf> <./q3_
-traj.pdf> <./crit_high.pdf> <./ESB_storage.pdf>]
-File: q1_traj.pdf Graphic file (type pdf)
-<use q1_traj.pdf>
-Package pdftex.def Info: q1_traj.pdf  used on input line 429. on input line 429
-.
-Package pdftex.def Info: Requested size: 227.64894pt x 90.25908pt on input line
- 429.
-File: q2_traj.pdf Graphic file (type pdf)
-<use q2_traj.pdf>
-Package pdftex.def Info: q2_traj.pdf  used on input line 433. on input line 433
-.
-Package pdftex.def Info: Requested size: 227.64894pt x 91.06595pt on input line
- 433.
-File: q3_traj.pdf Graphic file (type pdf)
-<use q3_traj.pdf>
-Package pdftex.def Info: q3_traj.pdf  used on input line 437. on input line 437
-.
-Package pdftex.def Info: Requested size: 227.64894pt x 92.522pt on input line 4
-37.
-File: crit_high.pdf Graphic file (type pdf)
-<use crit_high.pdf>
-Package pdftex.def Info: crit_high.pdf  used on input line 442. on input line 4
-42.
-Package pdftex.def Info: Requested size: 227.64894pt x 237.44244pt on input lin
-e 442.
-File: ESB_storage.pdf Graphic file (type pdf)
-<use ESB_storage.pdf>
-Package pdftex.def Info: ESB_storage.pdf  used on input line 447. on input line
- 447.
-Package pdftex.def Info: Requested size: 227.64894pt x 93.36984pt on input line
- 447.
+Package pdftex.def Info: Requested size: 161.8885pt x 66.06985pt on input line 
+450.
+<mono/ESB_storage.pdf, id=83, pagebox=cropbox, 327.97531pt x 134.21143pt>
+File: mono/ESB_storage.pdf Graphic file (type pdf)
+<use mono/ESB_storage.pdf>
+Package pdftex.def Info: mono/ESB_storage.pdf  used on input line 466. on input
+ line 466.
+Package pdftex.def Info: Requested size: 161.8885pt x 66.24747pt on input line 
+466.
+<bi/ESB_storage.pdf, id=84, pagebox=cropbox, 327.2225pt x 134.21143pt>
+File: bi/ESB_storage.pdf Graphic file (type pdf)
+<use bi/ESB_storage.pdf>
+Package pdftex.def Info: bi/ESB_storage.pdf  used on input line 472. on input l
+ine 472.
+Package pdftex.def Info: Requested size: 161.8885pt x 66.39902pt on input line 
+472.
 
 ("Energy Efficient Explosive Motion with Compliant Actuation Arrangements in Ar
-ticulated Robots.bbl"
-Underfull \vbox (badness 10000) has occurred while \output is active []
+ticulated Robots.bbl" [4]
+Underfull \vbox (badness 4168) has occurred while \output is active []
 
- [6])
+)
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -575,23 +573,133 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the US letter (8.5in X 11in) paper size.
 
-[7
+[5]
+! Output loop---100 consecutive dead cycles.
+\clearpage ...rite \m@ne {}\vbox {}\penalty -\@Mi 
+                                                  
+l.511 \end{document}
+                    
+I've concluded that your \output is awry; it never does a
+\shipout, so I'm shipping \box255 out myself. Next time
+increase \maxdeadcycles if you want me to be more patient!
+
+[6
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ]
 ("Energy Efficient Explosive Motion with Compliant Actuation Arrangements in Ar
 ticulated Robots.aux")
 
-LaTeX Warning: There were undefined references.
+LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 4476 strings out of 493312
- 69632 string characters out of 3138902
- 136280 words of memory out of 3000000
- 7930 multiletter control sequences out of 15000+200000
- 50177 words of font info for 117 fonts, out of 3000000 for 9000
+ 4426 strings out of 493312
+ 69563 string characters out of 3138902
+ 138591 words of memory out of 3000000
+ 7880 multiletter control sequences out of 15000+200000
+ 52453 words of font info for 126 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 42i,17n,40p,1440b,333s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 41i,17n,39p,1440b,451s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/base/8r.enc}<C:/Program Files/Mi
 KTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Program Files/MiKTeX 2.9
 /fonts/type1/public/amsfonts/cm/cmbx7.pfb><C:/Program Files/MiKTeX 2.9/fonts/ty
@@ -611,9 +719,9 @@ iles/MiKTeX 2.9/fonts/type1/urw/times/utmbi8a.pfb><C:/Program Files/MiKTeX 2.9/
 fonts/type1/urw/times/utmr8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/t
 imes/utmri8a.pfb>
 Output written on "Energy Efficient Explosive Motion with Compliant Actuation A
-rrangements in Articulated Robots.pdf" (7 pages, 5709302 bytes).
+rrangements in Articulated Robots.pdf" (6 pages, 335837 bytes).
 PDF statistics:
- 169 PDF objects out of 1000 (max. 8388607)
+ 154 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 56 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 96 words of extra memory for PDF output out of 10000 (max. 10000000)
 
