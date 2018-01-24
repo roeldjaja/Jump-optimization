@@ -27,9 +27,10 @@
 \usepackage{graphicx}
 \usepackage[font=small,labelfont=bf]{caption}
 \usepackage{subcaption}
-%\usepackage{float}
+\usepackage{float}
 %\usepackage{framed}
 \usepackage{cite}
+\usepackage[maxfloats=200]{morefloats}
 
 \title{\LARGE \bf
 Explosive Motion with Compliant Actuation Arrangements in Articulated Robots
@@ -88,25 +89,16 @@ The design of the 3-DoF leg model is inspired by the human lower limb. The dimen
 \subsection{Assymmetric Compliant Actuation}
 
 For the concept of Assymetric Compliant Actuation, or \textit{ACA}, a combination of two parallel actuation branches with very different power and stiffness properties is used as shown in Fig. \ref{fig:ACA}.
+
+
+%%% Figure assymmetric compliant actuation branches
+
 \begin{figure}[b]
 	\centering
 	\includegraphics[scale=1.0]{actuationConcept}
 	\caption{ACA branches}
 	\label{fig:ACA}
 \end{figure}
-
-
-  \begin{figure}[t]
-	\centering
-	%      \framebox{\parbox{3in}
-	{\includegraphics[scale=0.5]{initialguess}
-	}%}
-	
-	\caption{Initial motion}
-	\label{fig:seq}
-\end{figure}
-
-
 
  The Power Branch (\textit{PB}) is a rotary \textit{SEA} which consists of a high power motor \textit{M1} in series with a torsional elastic element \textit{SE}. The Energy Storage Branch (\textit{ESB}) consists of a lower power motor \textit{M2} with a high reduction linear transmission which transfers its power through a unidirectional series elastic element \textit{PE}.
 
@@ -121,14 +113,15 @@ In nature, bi-articulated muscle structures, muscle structures that actuate mult
 The leg actuation configurations are shown in Fig \ref{fig:configurations}. The designs of the actuation configurations have been optimised to select actuation
 parameters that yield high electrical energy efficiency and reduction in peak torque and electrical power requirements \cite{roozing2016design}.
 
-\begin{figure}[b]
+
+%%% Figure 3 actuation configurations
+
+\begin{figure*}[ht]
 	\centering
-	\framebox{\parbox{3in}{Picture of configurations
-	}}
-	%\includegraphics[scale=1.0]{figurefile}
+	\includegraphics[width=\linewidth]{3-DoF_leg_concept}
 	\caption{Actuation configurations}
 	\label{fig:configurations}
-\end{figure}
+\end{figure*}
 
 \section{Dynamic Model} \label{sec:dynamicModel}
 
@@ -300,7 +293,15 @@ The objective criteria described above require information concerning the kinema
 	\item[$\diamond$] Exit if local minimum is reached, \\ else, vary control points and pretension positions and repeat $\diamond$ steps
 \end{itemize}
 
-	
+\section{Results} \label{sec:results}
+
+The optimisation has been performed for the upward movement of the leg performing a jumping motion with a maximum duration of 0.4 seconds. The initial position of the leg yields a squatting posture and the optimisation is concluded when the CoM reaches its highest point for successful jumps or when the leg has fallen over for unsuccessful jumps. The initial guess is a manually constructed motion as shown in Fig. \ref{fig:seq} for actuation without energy storage branches. The optimization results for the objective presented in Section \ref{sec:dynamicOptimisation} are shown in Table \ref{maxheight}.
+
+
+
+
+
+The evolution of the joint trajectories during the optimization 
 
 \begin{table*}[ht]
 	\caption{Maximum jump height for different configurations}
@@ -317,16 +318,8 @@ The objective criteria described above require information concerning the kinema
 		\end{tabular}
 	\end{center}
 \end{table*}
- 
-\section{Results} \label{sec:results}
-
-The optimisation has been performed for the upward movement of the leg performing a jumping motion with a maximum duration of 0.4 seconds. The initial position of the leg yields a squatting posture and the optimisation is concluded when the CoM reaches its highest point for successful jumps or when the leg has fallen over for unsuccessful jumps. The initial guess is a manually constructed motion as shown in Fig. \ref{fig:seq} for actuation without energy storage branches. The optimization results for the objective presented in Section \ref{sec:dynamicOptimisation} are shown in Table \ref{maxheight}.
 
 
-
-
-
-The evolution of the joint trajectories during the optimization 
 \section{Discussion} \label{sec:discussion}
 
 Comparison of actuation topologies.
@@ -335,126 +328,127 @@ Comparison of actuation topologies.
 
 Conclusions
 
-  \begin{figure}[t]
+  \begin{figure}[b]
 	\centering
 	%      \framebox{\parbox{3in}
 	{\includegraphics[scale=0.5]{initialguess}
 	}%}
 	
-	\caption{Initial motion}
-	\label{fig:seq}
+	\caption{Initial motion} \label{fig:seq}
+	
 \end{figure}
+
 
 % Large figure with all the experimental results
 \begin{figure*}[ht]
 	\centering
 	
-	% Joint tracking
+	% Criteria evolution
 	\begin{subfigure}[t]{0.32\linewidth}
 		\includegraphics[width=\linewidth]{noESB/crit_high}
-		\caption{No ESB: Joint tracking.}
-		\label{fig:exp_noESB_joints}
+		\caption{No ESB: Criterion evolution.}
+		\label{fig:noESB_crit_high}
 	\end{subfigure}
 	%
 	\begin{subfigure}[t]{0.32\linewidth}
 		\includegraphics[width=\linewidth]{mono/crit_high}
-		\caption{Monoarticulated: Joint tracking.}
-		\label{fig:exp_mono_joints}
+		\caption{Monoarticulated: Criterion evolution.}
+		\label{fig:mono_crit_high}
 	\end{subfigure}
 	%
 	\begin{subfigure}[t]{0.32\linewidth}
 		\includegraphics[width=\linewidth]{bi/crit_high}
-		\caption{Biarticulated: Joint tracking.}
-		\label{fig:exp_bi_joints}
+		\caption{Biarticulated: Criterion evolution.}
+		\label{fig:bi_crit_high}
 	\end{subfigure}
 	
-	\vspace{2mm}
+	\vspace{1mm}
 	
-	% Tracking errors
+	% Ankle torques
 	\begin{subfigure}[t]{0.32\linewidth}
 		\includegraphics[width=\linewidth]{noESB/q_1_torques}
-		\caption{No ESB: Tracking errors.}
-		\label{fig:exp_noESB_joints_errors}
+		\caption{No ESB: Ankle ($q_1$) torques.}
+		\label{fig:noESB_q_1_torques}
 	\end{subfigure}
 	%
 	\begin{subfigure}[t]{0.32\linewidth}
 		\includegraphics[width=\linewidth]{mono/q_1_torques}
-		\caption{Monoarticulated: Tracking errors.}
-		\label{fig:exp_mono_joints_errors}
+		\caption{Monoarticulated: Ankle ($q_1$) torques.}
+		\label{fig:mono__q_1_torques}
 	\end{subfigure}
 	%
 	\begin{subfigure}[t]{0.32\linewidth}
 		\includegraphics[width=\linewidth]{bi/q_1_torques}
-		\caption{Biarticulated: Tracking errors.}
-		\label{fig:exp_bi_joints_errors}
+		\caption{Biarticulated: Ankle ($q_1$) torques.}
+		\label{fig:bi_q_1_torques}
 	\end{subfigure}
 	
-	\vspace{2mm}
+	\vspace{1mm}
 	
-	% Ankle torques
+	% Knee torques
 	\begin{subfigure}[t]{0.32\linewidth}
 		\includegraphics[width=\linewidth]{noESB/q_2_torques}
-		\caption{No ESB: Ankle ($q_1$) torques.}
-		\label{fig:exp_noESB_ankle_torques}
+		\caption{No ESB: Knee ($q_2$) torques.}
+		\label{fig:noESB_q_2_torques}
 	\end{subfigure}
 	%
 	\begin{subfigure}[t]{0.32\linewidth}
 		\includegraphics[width=\linewidth]{mono/q_2_torques}
-		\caption{Monoarticulated: Ankle ($q_1$) torques.}
-		\label{fig:exp_mono_ankle_torques}
+		\caption{Monoarticulated: Knee ($q_2$) torques.}
+		\label{fig:mono__q_2_torques}
 	\end{subfigure}
 	%
 	\begin{subfigure}[t]{0.32\linewidth}
 		\includegraphics[width=\linewidth]{bi/q_2_torques}
-		\caption{Biarticulated: Ankle ($q_1$) torques.}
-		\label{fig:exp_bi_ankle_torques}
+		\caption{Biarticulated: Knee ($q_2$) torques.}
+		\label{fig:bi_q_3_torques}
 	\end{subfigure}
 	
-	\vspace{2mm}
+	\vspace{1mm}
 	
-	% Knee torques
+	% Hip torques
 	\begin{subfigure}[t]{0.32\linewidth}
 		\includegraphics[width=\linewidth]{noESB/q_3_torques}
-		\caption{No ESB: Knee ($q_2$) torques.}
-		\label{fig:exp_noESB_knee_torques}
+		\caption{No ESB: Hip ($q_3$) torques.}
+		\label{fig:noESB_q_3_torqes}
 	\end{subfigure}
 	%
 	\begin{subfigure}[t]{0.32\linewidth}
 		\includegraphics[width=\linewidth]{mono/q_3_torques}
-		\caption{Monoarticulated: Knee ($q_2$) torques.}
-		\label{fig:exp_mono_knee_torques}
+		\caption{Monoarticulated: Hip ($q_3$) torques.}
+		\label{fig:mono_q_3_torqes}
 	\end{subfigure}
 	%
 	\begin{subfigure}[t]{0.32\linewidth}
 		\includegraphics[width=\linewidth]{bi/q_3_torques}
-		\caption{Biarticulated: Knee ($q_2$) torques.}
-		\label{fig:exp_bi_knee_torques}
+		\caption{Biarticulated: Hip ($q_3$) torques.}
+		\label{fig:bi_q_3_torqes}
 	\end{subfigure}
 	
-	\vspace{2mm}
+	\vspace{1mm}
 	
-	% Hip torques
+	% Net Joint power
 	\begin{subfigure}[t]{0.32\linewidth}
 		\includegraphics[width=\linewidth]{noESB/P_q}
-		\caption{No ESB: Hip ($q_3$) torques.}
-		\label{fig:exp_noESB_hip_torques}
+		\caption{No ESB: Net joint power.}
+		\label{fig:noESB_P_q}
 	\end{subfigure}
 	%
 	\begin{subfigure}[t]{0.32\linewidth}
 		\includegraphics[width=\linewidth]{mono/P_q}
-		\caption{Monoarticulated: Hip ($q_3$) torques.}
-		\label{fig:exp_mono_hip_torques}
+		\caption{Monoarticulated: Net joint power}
+		\label{fig:mono_P_q}
 	\end{subfigure}
 	%
 	\begin{subfigure}[t]{0.32\linewidth}
 		\includegraphics[width=\linewidth]{bi/P_q}
-		\caption{Biarticulated: Hip ($q_3$) torques.}
-		\label{fig:exp_bi_hip_torques}
+		\caption{Biarticulated: Net joint power}
+		\label{fig:bi_P_q}
 	\end{subfigure}
 	
-	\vspace{2mm}
+	\vspace{1mm}
 	
-	% Linear tendon forces
+	% ESB storage
 	\begin{subfigure}[t]{0.32\linewidth}
 		\centering
 		\raisebox{0pt}[0pt][0pt]{%
@@ -464,20 +458,19 @@ Conclusions
 	%
 	\begin{subfigure}[t]{0.32\linewidth}
 		\includegraphics[width=\linewidth]{mono/ESB_storage}
-		\caption{Monoarticulated: Linear tendon forces.}
-		\label{fig:exp_mono_tendon_forces}
+		\caption{Monoarticulated: Tendon energy storage.}
+		\label{fig:mono_ESB}
 	\end{subfigure}
 	%
 	\begin{subfigure}[t]{0.32\linewidth}
 		\includegraphics[width=\linewidth]{bi/ESB_storage}
-		\caption{Biarticulated: Linear tendon forces.}
-		\label{fig:exp_bi_tendon_forces}
+		\caption{Biarticulated: Tendon energy storage.}
+		\label{fig:bi_ESB}
 	\end{subfigure}
 	
-	\caption{Experimental results. blablabla.}
-	\label{fig:exp_results}
+	\caption{Optimization results.}
+	\label{fig:opt_results}
 \end{figure*}
-
 
 
 \addtolength{\textheight}{-10cm}   % This command serves to balance the column lengths
