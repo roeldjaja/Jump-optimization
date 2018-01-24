@@ -60,8 +60,7 @@ Explosive Motion with Compliant Actuation Arrangements in Articulated Robots
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}
 
-This paper presents the trajectory and elastic element pretensions optimisation for a jumping motion of a 3-DoF leg using recently introduced asymmetric compliant actuator configurations which provide actuation for explosive motions. Two actuation branches
-with significantly different stiffness and energy storage capacity properties driving a single joint make up the actuator design. An optimisation problem is formulated to optimise the elastic element pretensions and the joint trajectories for vertical jumping motions. Several configurations of the asymmetric compliant actuators have been investigated. Optimization studies of the jumping motions demonstrate that a biarticulated configuration of the assymmetric compliant actuators yields the best results of all configurations compared in terms of jumping the largest vertical distance and reaching the highest net joint power. The leg jumps almost 4\% higher with a monoarticulated configuration and over 10\% higher with a biarticulated configuration compared to a configuration without the asymmetric compliant actuators.
+This paper presents the optimisation of joint trajectories and elastic element pretension for jumping of a 3-DoF leg prototype. The leg is based on the recently introduced asymmetric compliant actuator scheme, in which a series-elastic main drive is augmented in parallel with a secondary adjustable compliant branch with significantly different stiffness and energy storage capacity properties. The leg prototype implements two such actuation configurations, one of which includes a biarticulated branch, and they are compared to a conventional series-elastic based actuation structure. An optimisation problem is formulated to optimise the joint trajectories and elastic element pretension to maximise vertical jumping height and minimise active drive torque. The optimization results demonstrate that a biarticulated configuration of the secondary branches yields the maximum jumping height, and reaches the highest net joint power. Compared to series-elastic based actuation, the leg with augmented actuation jumps almost 4\% higher with a monoarticulated parallel compliance configuration while using less energy, and over 10\% higher with a biarticulated configuration.
 
 \end{abstract}
 
@@ -85,12 +84,12 @@ The paper is structured as follows. Section \ref{sec:legDesign} describes a 3-Do
 
 The design of the 3-DoF leg model is inspired by the human lower limb. The dimensions and mass distribution of the human limb were investigated, and compared with those of existing humanoid designs such as WALK-MAN \cite{tsagarakis2017walk} to set specifications for a semi-anthropomorphic design. The leg, shown in Fig. \ref{fig:configurations}, features three actuated degrees of freedom: ankle, knee and hip. \textit{SEA}'s drive the joints, which are mounted above the joints for the knee and ankle and transmit their forces through four bar linkages to decrease the leg’s moment of inertia with respect to the hip joint. The trunk is weighted with mass corresponding to that of a full humanoid robot.
 
-\subsection{Assymmetric Compliant Actuation}
+\subsection{Asymmetric Compliant Actuation}
 
-For the concept of Assymetric Compliant Actuation, or \textit{ACA}, a combination of two parallel actuation branches with very different power and stiffness properties is used as shown in Fig. \ref{fig:ACA}.
+For the concept of Asymmetric Compliant Actuation (ACA), a combination of two parallel actuation branches with very different power and stiffness properties is used as shown in Fig. \ref{fig:ACA}.
 
 
-%%% Figure assymmetric compliant actuation branches
+%%% Figure asymmetric compliant actuation branches
 
 \begin{figure}[b]
 	\centering
