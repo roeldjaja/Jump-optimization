@@ -32,19 +32,19 @@
 \usepackage{cite}
 
 \title{\LARGE \bf
-Explosive Motion with Compliant Actuation Arrangements in Articulated Robots
+	Explosive Motion with Compliant Actuation Arrangements in Articulated Robots
 }
 
 
 \author{Roel Djajadiningrat$^{1}$, Wesley Roozing$^{2}$ and Nikolaos G. Tsagarakis$^{2}$% <-this % stops a space
-\thanks{$^{1}$ Roel Djajadiningrat is a M.Sc student at the Department of Mechanical Engineering, TU Delft and a visiting student at Istituto Italiano di Tecnologia;
-        {\tt\ r.djajadiningrat@student.tudelft.nl}
-  }%
-\thanks{$^{2}$Wesley Roozing and Nikolaos G. Tsagarakis are with the Department of Advanced Robotics,
-	(Fondazione) Istituto Italiano di Tecnologia, via Morego,
-	30, 16163 Genova, Italy.
-        {\tt\ \{wesley.roozing, nikos.tsagarakis\}@iit.it}
-     }%
+	\thanks{$^{1}$ Roel Djajadiningrat is a M.Sc student at the Department of Mechanical Engineering, TU Delft and a visiting student at Istituto Italiano di Tecnologia;
+		{\tt\ r.djajadiningrat@student.tudelft.nl}
+	}%
+	\thanks{$^{2}$Wesley Roozing and Nikolaos G. Tsagarakis are with the Department of Advanced Robotics,
+		(Fondazione) Istituto Italiano di Tecnologia, via Morego,
+		30, 16163 Genova, Italy.
+		{\tt\ \{wesley.roozing, nikos.tsagarakis\}@iit.it}
+	}%
 }
 
 
@@ -70,11 +70,9 @@ This paper presents the optimisation of joint trajectories and elastic element p
 
 In the past robot applications were found predominantly in static industrial settings, but over the past years robots have been introduced to more dynamic settings, operating with and among humans. This change in application is accompanied by a change in requirements of robots. One of the primary challenges today is letting robots match human-like behaviour in terms of motion. This requires light-weight actuation systems that allow for energy efficient explosive motion, large instantaneous forces with short duration, and matching motion planning and control. A prime example of an explosive motion in humans is the vertical jump.
 
-Several approaches have been investigated over the years to design robotic systems capable of energy efficient explosive motion. Sensorising moving parts of rigid machines and active control tends to be costly, cumbersome, and unreliable. \textbf{TODO Wat bedoel je hier precies te zeggen? Iets over strain gauges?} Therefore, often systems with compliant properties are used. The `Bow Leg' hopping robot \cite{zeglin1999bow} is a compliant hopping leg with a curved leaf spring made of laminated fibreglass and strings that hold the leg in compression to store elastic energy, showing that low power motors can be sufficient active actuation when such energy storage is used. A small bipedal jumping robot called `Mowgli' \cite{niiyama2007mowgli} uses compliant muscles antagonistic to its pneumatic artificial muscles \textbf{TODO check this} made of rubber tubes, able to store and release energy rapidly, enabling it to jump as high as 0.5\,m. A switchable form of Parallel-Elastic Actuation (\textit{PEA}) was shown to combine the benefits of compliant properties while maintaining a high degree of control and energy efficiency when the parallel compliance is not needed \cite{liu2015spear}. The introduction of Series-Elastic Actuation (\textit{SEA}) ensured more accurate and stable force control leading to increased energy efficiency over \textit{PEA} \cite{pratt1995series,yesilevskiy2015comparison} \textbf{?????? TODO ???????}.
+Several approaches have been investigated over the years to design robotic systems capable of energy efficient explosive motion. The use of traditional rigid actuation poses problems with weight and resulting insufficient performance. Therefore, often systems with compliant properties are used. The `Bow Leg' hopping robot \cite{zeglin1999bow} is a compliant hopping leg with a curved leaf spring made of laminated fibreglass and strings that hold the leg in compression to store elastic energy, showing that low power motors can be sufficient active actuation when such energy storage is used. A small bipedal jumping robot called `Mowgli' \cite{niiyama2007mowgli} uses compliant muscles antagonistic to its pneumatic artificial muscles \textbf{TODO check this} made of rubber tubes, able to store and release energy rapidly, enabling it to jump as high as 0.5\,m. A switchable form of Parallel-Elastic Actuation (\textit{PEA}) was shown to combine the benefits of compliant properties while maintaining a high degree of control and energy efficiency when the parallel compliance is not needed \cite{liu2015spear}. It has been shown that accurate and stable force control during natural tasks is can be achieved with Series Elastic Actuation (\textit{SEA}) \cite{pratt1995series}. Analytical research shows that a \textit{SEA} performing a hammering task can reach a speed up to four times that of the actuator’s prime mover \cite{garabini2011optimality}. A comparison with \textit{PEA} showed that a hopper with \textit{SEA} is more energetically efficient than one with \textit{PEA} when looking at positive actuator work and electrical work \cite{yesilevskiy2015comparison}.
 
-Further optimisation of synchronized variation of stiffness and velocity for movement in the shortest time while limiting possible impact forces has been reached using Variable Stiffness Actuation (\textit{VSA}) \cite{garabini2011optimality} \textbf{TODO what does this mean?}. The importance of the optimisation of joint trajectories besides the actuation parameters has been shown to be a major factor in the increase of energy efficiency \cite{velasco2013soft}. In biomechanics, bi-articulation, spanning multiple joints simultaneously with a single muscle, has been shown to drastically increase explosive power performance in humans \cite{schenau1989rotation,prilutsky1994tendon}. In robotics, comparative jumping experiments with single-actuator bi-articulated robots and multiple-actuator robots also demonstrate increased performance of bi-articulation configurations \cite{oshima2007jumping,babivc2009biarticulated,hyon2002development}.
-
-\textbf{TODO: bi-articulated or biarticulated. Choose one and be consistent with it.}
+The importance of the optimisation of joint trajectories besides the actuation parameters has been shown to be a major factor in the increase of energy efficiency \cite{velasco2013soft}. In biomechanics, biarticulation, spanning multiple joints simultaneously with a single muscle, has been shown to drastically increase explosive power performance in humans \cite{schenau1989rotation,prilutsky1994tendon}. In robotics, comparative jumping experiments with single-actuator biarticulated robots and multiple-actuator robots also demonstrate increased performance of biarticulation configurations \cite{oshima2007jumping,babivc2009biarticulated,hyon2002development}.
 
 More recently, Roozing et al. \cite{roozing2016development, roozing2016design} presented the development and control of a novel Asymmetric Compliant Actuation (\textit{ACA}) scheme characterised by large energy storage capacity that enables efficient execution of motions, as well as a novel method to select the design parameters of such structures to maximise the energy efficiency of multi-DoF articulated robots powered by this type of actuators. This paper extends these previous works, and contributes by using the \textit{ACA} concept to execute optimal explosive vertical jumping motions on the model of a recently developed 3-DoF leg prototype. The optimisation problem is formulated with joint trajectories and secondary branch pretension positions as variables. Jumping height is maximised and active joint torque is minimised simultaneously. Two augmented actuation designs, one of which includes a biarticulated branch between ankle and knee, are compared to a more conventional SEA based actuation structure, which demonstrates significant benefits of such actuation approaches.
 
@@ -107,17 +105,17 @@ For the concept of Asymmetric Compliant Actuation (ACA), a combination of two pa
 	\label{fig:ACA}
 \end{figure}
 
- The Power Branch (\textit{PB}) is a rotary \textit{SEA} which consists of a high power motor \textit{M1} in series with a torsional elastic element \textit{SE}. The Energy Storage Branch (\textit{ESB}) consists of a lower power motor \textit{M2} with a high reduction linear transmission which transfers its power through a unidirectional series elastic element \textit{PE}.
+The Power Branch (\textit{PB}) is a rotary \textit{SEA} which consists of a high power motor \textit{M1} in series with a torsional elastic element \textit{SE}. The Energy Storage Branch (\textit{ESB}) consists of a lower power motor \textit{M2} with a high reduction linear transmission which transfers its power through a unidirectional series elastic element \textit{PE}.
  
  \textbf{TODO This also needs to discuss biarticulation, as it is depicted in Fig. \ref{fig:ACA}.}
 
 \subsection{Actuation Configurations}
-In nature, bi-articulated muscle structures, in which a single muscle actuates multiple joints simultaneously, can be found on humans and other animals. An example of a bi-articulated muscle structure are the hamstrings, which span both the hip and knee joint. \textit{ACA}'s can be utilized to realize bi-articulated actuation by letting the \textit{PB} drive a joint directly, and letting the \textit{ESB} tendon span a second joint by means of a pulley. Bi-articulation is one of three actuation configurations of the leg considered for the jumping optimisation:
+In nature, biarticulated muscle structures, in which a single muscle actuates multiple joints simultaneously, can be found on humans and other animals. An example of a biarticulated muscle structure are the hamstrings, which span both the hip and knee joint. \textit{ACA}'s can be utilized to realize biarticulated actuation by letting the \textit{PB} drive a joint directly, and letting the \textit{ESB} tendon span a second joint by means of a pulley. Biarticulation is one of three actuation configurations of the leg considered for the jumping optimisation:
 
 \begin{enumerate}
 	\item The \textit{ACA}'s are not considered and jumping optimisations are performed for the leg with fixed compliance SEA's only.
-	\item The \textit{ACA}'s are introduced to perform jumping optimisations on a mono-articulated version of the leg. 
-	\item A bi-articulated version of the leg is considered for optimisation.
+	\item The \textit{ACA}'s are introduced to perform jumping optimisations on a monoarticulated version of the leg. 
+	\item A biarticulated version of the leg is considered for optimisation.
 \end{enumerate}
 The leg actuation configurations are shown in Fig \ref{fig:configurations}. The designs of the actuation configurations have been optimised to select actuation
 parameters that yield high electrical energy efficiency and reduction in peak torque and electrical power requirements \cite{roozing2016design}.
@@ -137,34 +135,34 @@ parameters that yield high electrical energy efficiency and reduction in peak to
 \subsection{Forward Dynamics} 
 The leg consists of four links which are connected by the actuated ankle, knee and hip joints, denoted $q_1,q_2,q_3$, with net actuation torques $\tau_1,\tau_2,\tau_3$. % as shown in Fig. \ref{fig:leg}. 
 The links have masses $m_1,m_2,m_3,m_4$ and rotational inertiae $J_1,J_2,J_3,J_4$. \textbf{TODO there needs to be a figure of the model here}. Their centre of mass (CoM) is assumed to be located on the line connecting the proximal and distal joints at a distance of $r_1,r_2,r_3,r_4$ from the proximal joint for all links except for the foot; the model includes a floating base to allow for realistic modelling of the ground reaction forces (GRF). Together, the configurations of the bodies describe the system:
- \begin{equation}
+\begin{equation}
 x = [x_1,y_1,\theta_1,x_2,y_2,\theta_2, x_3,y_3,\theta_3,x_4,y_4,\theta_4]^T. 
 \end{equation}
 The Euler-Lagrange formulism with generalised coordinates $\mathbf{q} \in \mathfrak{Q} \subset \mathfrak{R}^{6}$ is used to derive the dynamic equations for the system:
- \begin{equation}
+\begin{equation}
 \mathbf{q}=[x_1,y_1,\theta_1,q_1,q_2,q_3]^T \label{eq:q}
- \end{equation}
+\end{equation}
 leading to:
- \begin{equation}
+\begin{equation}
 M(\mathbf{q})\mathbf{\ddot q} = \mathbf{\boldsymbol{\tau} + G(q)} - C\mathbf{(q,\dot q)\dot q -} D \mathbf{\dot q} + J_{GRF}^T \mathbf{F}_{GRF}
 \label{eq:fwddyn}
- \end{equation}
+\end{equation}
 Here, the damping matrix is denoted by $D = \text{diag} (0,0,0,d_1,d_2,d_3)$, the generalised actuation forces are denoted by $\boldsymbol{\tau} = [0,0,0,\tau_1,\tau_2,\tau_3]$, the generalised gravitational forces are denoted by $\mathbf{G(q)}$, the Coriolis matrix is denoted by $C\mathbf{(q, \dot q)}$, and the generalised inertia matrix is denoted by $M(\mathbf{q})$. The Jacobian for the heel and toe is denoted by $J_{GRF}^T$ and the ground forces in generalised coordinates are subsequently expressed as $J_{GRF}^T \mathbf{F}_{GRF}$. Spring-dampers define $\mathbf{F}_{GRF}$ in the vertical direction and Coulomb and viscous friction define the horizontal component, proportionally to the vertical forces.
- 
- %% Figure leg model
- %\begin{figure}[b]
- %	\centering
- %	\framebox{\parbox{3in}{Picture leg 
- %	}}
- %	%\includegraphics[scale=1.0]{figurefile}
- %	\caption{Leg model}
- %	\label{fig:leg}
- %\end{figure}
- 
- 
+
+%% Figure leg model
+%\begin{figure}[b]
+%	\centering
+%	\framebox{\parbox{3in}{Picture leg 
+%	}}
+%	%\includegraphics[scale=1.0]{figurefile}
+%	\caption{Leg model}
+%	\label{fig:leg}
+%\end{figure}
+
+
 \subsection{Inverse Dynamics}
 For formulation of the optimisation problem described in Sec. \ref{sec:dynamicOptimisation}, we first derive the inverse dynamics of the system in order to compute the applied active torques \cite{nakanishi2007inverse}. The configuration vector $\mathbf{q}$ can be split in its passive and active joint components, $\mathbf{q}_p$ and $\mathbf{q}_a$, respectively:
- \begin{equation}
+\begin{equation}
 \mathbf{q} =
 \begin{bmatrix}
 	\mathbf{q}_p \\
@@ -172,7 +170,7 @@ For formulation of the optimisation problem described in Sec. \ref{sec:dynamicOp
 \end{bmatrix},
 \end{equation}
 with
- \begin{equation}
+\begin{equation}
 \mathbf{q}_p = [x_1,y_1,\theta_1]^T, \quad  
 \mathbf{q}_a = [q_1,q_1,q_3]^T.
 \end{equation}
@@ -238,7 +236,7 @@ The search for an optimal motion requires finding active joint trajectories over
 \subsection{Trajectory Parametrization}
 
 One can use basis splines, or $B$-splines, combined with a time-scale factor to reduce the complex problem into a parameter optimisation \cite{ude2000planning,babivc2009biarticulated,wang1999weight,albro2001optimal}. A $B$-spline curve can be described by its basis functions $B_i(t)$ and control points $\mathbf{P}=\left[p_1,\dots,p_n\right]$ which are evenly spaced over time. The active joint trajectories are then computed:   
- \begin{equation}
+\begin{equation}
 q_a(t,p) = \sum_{i=1}^{n} B_i (t) p_i
 \end{equation}
 Using the control points as optimisation variables, an optimal set of control points can be determined and the corresponding $B$-splines yield optimal trajectories for the joint angle displacements, velocities and accelerations. 
@@ -254,9 +252,9 @@ This formulation allows for the optimisation of $p_m$, with $m \in \{1,2,3\}$.
 \subsection{Objective criteria}
 
 The objective function is comprised out of three criteria which 1) reward the performance of the leg, 2) penalize excessive torque needed to complete a movement and 3) maintain the postural stability of the leg. A minimization of the objective functions with these criteria is represented by:   
- \begin{equation}
+\begin{equation}
 \min_{\mathbf{p}}\limits J =  J_{performance}+ J_{torque}+ J_{stability}
- \end{equation}
+\end{equation}
 In the following objective criteria, $c_1$, $c_2$, $c_3$, $c_4$ and $c_5$ denote scaling constants.\\
 
 \subsubsection{Performance}
@@ -264,9 +262,9 @@ In the following objective criteria, $c_1$, $c_2$, $c_3$, $c_4$ and $c_5$ denote
 %\begin{enumerate}
 %	\item 
 For the performance of the leg we consider the maximum jumping height, where the height is defined as the $y$-coordinate of the CoM of the leg with respect to the ground. The performance criterion yields:
- \begin{equation}
+\begin{equation}
 	J_{performance} = -c_1 \cdot y_{CoM}^2
- \end{equation}
+\end{equation}
 %	\item Jumping to a certain height efficiently, where the maximum $y$-coordinate reached by the CoM of the leg $y_{COM}$ is to equal a set height $y_{COM}'$ and the energy use is to be minimized:
 % \begin{equation}
 %	J_{performance} =  c_1 \cdot E^2 + c_2 \cdot |y_{COM}'-y_{COM}|
@@ -280,19 +278,19 @@ For the performance of the leg we consider the maximum jumping height, where the
 \subsubsection{Torque}
 The active torques pose a problem as the upper and lower bound constraints on the applied torques can become non-linear. Therefore it is chosen to express the torque limits by means of a penalty function in the objective criteria and to only terminate the simulation when the utmost torque limits are violated.
 The active torque $\boldsymbol{\tau}_a$ is to be kept low and within the maximum and minimum deliverable torque. This is enforced by means of a penalty function which incorporates the 2-norm of the realised values of $\boldsymbol{\tau}_a$ computed in Section \ref{sec:dynamicModel} while eliminating the influence of the \textit{ESB}'s:  
- \begin{equation}
-J_{torque}= c_2 \cdot || \boldsymbol{\tau}_a - \boldsymbol{\tau}_{ESB} ||_2^2
- \end{equation}
+\begin{equation}
+	J_{torque}= c_2 \cdot || \boldsymbol{\tau}_a - \boldsymbol{\tau}_{ESB} ||_2^2
+\end{equation}
 
 \subsubsection{Stability}
 To ensure postural stability a stability criterion is introduced. The leg posture is considered stable when the $x$-coordinate of the CoM of the leg is equal to its initial $x$-coordinate at the end of the jump, i.e. when the CoM reaches its maximum height. Also, the motion is assumed to be stable when the mean value of the absolute x-coordinates of the CoM equals zero. Higher stability is also assumed for a low rotational momentum $L$ at maximum height of CoM. For an $N$ number of time segments, this is achieved with the minimization of:
- \begin{equation}
- \begin{aligned}
-J_{stability} & =  c_3\cdot \Big( x_{CoM}(t_h)-x_{CoM}(t_s) \Big)^2  \\ & +c_4\cdot  {\sum^{N}_{i=1}\frac{| x_{CoM}(t)_i |}{N}}^2   
-				  + c_5  \cdot   L(t_h)^2 
- \end{aligned}
- \end{equation}
- 
+\begin{equation}
+	\begin{aligned}
+		J_{stability} & =  c_3\cdot \Big( x_{CoM}(t_h)-x_{CoM}(t_s) \Big)^2  \\ & +c_4\cdot  {\sum^{N}_{i=1}\frac{| x_{CoM}(t)_i |}{N}}^2   
+				  			+ c_5  \cdot   L(t_h)^2 
+	\end{aligned}
+\end{equation}
+
 Here, $t_s$ denotes the starting time and $t_h$ denotes the point in time where the CoM reaches its maximum height. Let $t_f$ denote the final time segment of the optimisation motion where either the maximum CoM height $y_{CoM}$ has been reached or the jump is unsuccessful and the leg has fallen over. For successful jumps $t_h=t_f$. \\
 
 \subsection{Algorithm}
@@ -313,10 +311,10 @@ The objective criteria described above require information concerning the kinema
 \section{Results} \label{sec:results}
 
 The optimisation has been performed for the upward movement of the leg performing a jumping motion with a maximum duration of 0.4 seconds. The initial position of the leg yields a squatting posture and the optimisation is concluded when the CoM reaches its highest point for successful jumps or when the leg has fallen over for unsuccessful jumps. The initial guess is a manually constructed motion as shown in Fig. \ref{fig:seq} for actuation without energy storage branches. The optimization results for the objective presented in Section \ref{sec:dynamicOptimisation} are shown in Table \ref{maxheight}. For the three actuation configurations, Fig. \ref{fig:opt_results} displays the objective criterion values during the optimization, the joint torques, their net power and the \textit{ESB} tendon energy storage. %% verander subscript p in grafieken in ESB
- The video corresponding to this paper shows a visualization of the optimized jumping motion on all three actuation configurations.
+The video corresponding to this paper shows a visualization of the optimized jumping motion on all three actuation configurations.
 
 % initial guess
-  \begin{figure}[b]
+\begin{figure}[b]
 	\centering
 	%      \framebox{\parbox{3in}
 	{\includegraphics[scale=0.5]{initialguess}
@@ -329,37 +327,40 @@ The optimisation has been performed for the upward movement of the leg performin
 
 \section{Discussion} \label{sec:discussion}
 
- For the optimized jumping motion similar strategies are used on all three actuation configurations; ankle extension is primarily used to generate an upwards motion from squat position, with lift-off following after a toe push-off. The pretension optimization results show maximum pretension of the \textit{ESB} on the bottom of the ankle for monoarticulation and the pretension of the \textit{ESB} on the bottom of the thigh for biarticulation. Although the movements are similar some key differences can be pointed out:
- \begin{enumerate}
- \item Fig. \ref{fig:noESB_q_1_torques} to \ref{fig:bi_q_1_torques} show that the \textit{PB} ankle torque used by the biarticulated configuration is significantly lower than that of the other configurations but its \textit{ESB} torque is significantly higher than that of the monoarticulated configuration resulting in the heighest ankle torque for biarticulation. 
- 
-\item While Fig. \ref{fig:noESB_q_2_torques} shows slightly higher peak \textit{PB} torques for the knee joint than the \textit{ESB} configurations in Fig. \ref{fig:mono_q_2_torques} and \ref{fig:bi_q_2_torques}, knee extension is nearly absent for the configuration without \textit{ESB}. The jumps with mono and biarticulation do show knee extension at approximately 0.2 seconds into the motion. Fig. \ref{fig:bi_q_2_torques} shows that this extension is preceded by counteracting \textit{PB} and \textit{ESB} torques. For the biarticulated configuration the \textit{PB} knee torque counteracts the \textit{ESB} torque after 0.1 seconds, but stops this counteraction instantly which allows for an explosive increase in torque around 0.2 seconds. This allows for explosive knee movement without exceeding torque limits.
+For the optimized jumping motion similar strategies are used on all three actuation configurations; ankle extension is primarily used to generate an upwards motion from squat position, with lift-off following after a toe push-off. The pretension optimization results show maximum pretension of the \textit{ESB} on the bottom of the ankle for monoarticulation and the pretension of the \textit{ESB} on the bottom of the thigh for biarticulation. Although the movements are similar some key differences can be pointed out:
 
-\item The limitation by torque restriction for the configuration without \textit{ESB} is implied by Fig. \ref{fig:noESB_crit_high}, which shows an increase in the torque criterion resulting in a higher torque criterion than the legs with \textit{ESB} as shown in Table \ref{maxheight}. Restrictions in time and the number of control points may also be an influence on the moderate use of knee joint torque to execute the jump for the configuration without \textit{ESB}.
-
-\item Whereas the configuration without \textit{ESB} and the monoarticulated configuration use hip extension extensively during the early stages of the upwards motion of the jump, Fig. \ref{fig:noESB_q_3_torques} to \ref{fig:bi_q_3_torques} show that the biarticulated configuration uses far less hip extension. The biarticulated leg extends its hip at the end of the upwards motion to increase its CoM height whereas the leg without \textit{ESB} flexes its hip to maintain upwards momentum.
-
-\item Fig. \ref{fig:noESB_P_q} to \ref{fig:bi_P_q} show that the biarticulated configuration net joint power exceeds that of the other configurations. A comparison with Fig. \ref{fig:mono_ESB} and \ref{fig:bi_ESB} shows that for the \textit{ESB} configurations the largest change in power is largely synchronous with release of energy in the \textit{ESB} tendons.
+\begin{enumerate}
+	\item Fig. \ref{fig:noESB_q_1_torques} to \ref{fig:bi_q_1_torques} show that the \textit{PB} ankle torque used by the biarticulated configuration is significantly lower than that of the other configurations but its \textit{ESB} torque is significantly higher than that of the monoarticulated configuration resulting in the heighest ankle torque for biarticulation. 
+	
+	\item While Fig. \ref{fig:noESB_q_2_torques} shows slightly higher peak \textit{PB} torques for the knee joint than the \textit{ESB} configurations in Fig. \ref{fig:mono_q_2_torques} and \ref{fig:bi_q_2_torques}, knee extension is nearly absent for the configuration without \textit{ESB}. The jumps with mono and biarticulation do show knee extension at approximately 0.2 seconds into the motion. Fig. \ref{fig:bi_q_2_torques} shows that this extension is preceded by counteracting \textit{PB} and \textit{ESB} torques. For the biarticulated configuration the \textit{PB} knee torque counteracts the \textit{ESB} torque after 0.1 seconds, but stops this counteraction instantly which allows for an explosive increase in torque around 0.2 seconds. This allows for explosive knee movement without exceeding torque limits.
+	
+	\item The limitation by torque restriction for the configuration without \textit{ESB} is implied by Fig. \ref{fig:noESB_crit_high}, which shows an increase in the torque criterion resulting in a higher torque criterion than the legs with \textit{ESB} as shown in Table \ref{maxheight}. Restrictions in time and the number of control points may also be an influence on the moderate use of knee joint torque to execute the jump for the configuration without \textit{ESB}.
+	
+	\item Whereas the configuration without \textit{ESB} and the monoarticulated configuration use hip extension extensively during the early stages of the upwards motion of the jump, Fig. \ref{fig:noESB_q_3_torques} to \ref{fig:bi_q_3_torques} show that the biarticulated configuration uses far less hip extension. The biarticulated leg extends its hip at the end of the upwards motion to increase its CoM height whereas the leg without \textit{ESB} flexes its hip to maintain upwards momentum.
+	
+	\item Fig. \ref{fig:noESB_P_q} to \ref{fig:bi_P_q} show that the biarticulated configuration net joint power exceeds that of the other configurations. A comparison with Fig. \ref{fig:mono_ESB} and \ref{fig:bi_ESB} shows that for the \textit{ESB} configurations the largest change in power is largely synchronous with release of energy in the \textit{ESB} tendons.
 \end{enumerate}
 
 \section{Conclusions} \label{sec:conclusions} 
 
-This paper has presented the trajectory and elastic element pretensions optimisation for the explosive jumping motion of a 3-DoF leg with using asymmetric compliant actuators in three different configurations. The results show improvements in terms of torque requirements of the main actuators, as well as interesting collaboration between the elastic elements and the main actuators in order to reach joint torques that allow for explosive motions.\\
-The leg jumps almost 4\% higher with a monoarticulated configuration and over 10\% higher with a biarticulated configuration compared to a configuration without \textit{ESB}.\\
+This paper has presented the trajectory and elastic element pretensions optimisation for the explosive jumping motion of a 3-DoF leg using asymmetric compliant actuators in three different configurations. The results show improvements in terms of torque requirements of the main actuators, as well as interesting collaboration between the elastic elements and the main actuators in order to reach joint torques that allow for explosive motions.
+
+The leg jumps almost 4\% higher with a monoarticulated configuration and over 10\% higher with a biarticulated configuration compared to a configuration without \textit{ESB}.
+
 While these results are promising, experiments with an already existing hardware prototype undergoing mechanical revisions are still to be performed. Also, for this research only fixed pretension positions of the parallel branches have been used. The integration of variable pretension positions may allow for more accurate optimization. These developments and their results will be presented in future works.
 
 \begin{table*}[ht]
 	\caption{Jumping optimization results for different configurations}
 	\label{maxheight}
 	\begin{center}
-		\begin{tabular}[t]{c||c|c|c|c|c|c|c}
-			\textit{Articulation}	& \textit{Height} [m] & \textit{Pretension} [m] & \textit{f} & \textit{E}$_{\text{\textit{consumed}}}$ [J] & \textit{J}$_{\text{\textit{performance}}}$ & \textit{J}$_{\text{\textit{stability}}}$ & \textit{J}$_{\text{\textit{torque}}}$\\ 
+		\begin{tabular}[t]{c|c|c||c|c|c|c|c|c|c}
+			\textit{Articulation} &  $y_{CoM,\text{max}}$ [m] & $y_{CoM,\text{initial}}$ [m]& $y_{CoM,\text{change}}$ [m]& \textit{Pretension} [m] & \textit{f} & \textit{E}$_{\text{\textit{consumed}}}$ [J] & \textit{J}$_{\text{\textit{performance}}}$ & \textit{J}$_{\text{\textit{stability}}}$ & \textit{J}$_{\text{\textit{torque}}}$\\ 
 			\hline
-			SEA only& 0.917 & - &-370.26  & 805.66 & 426.16  &0.85  &   55.05\\
+			SEA only& 0.917 &0.760  &0.157 &- &-370.26  & 805.66 & 426.16  &0.85  &   55.05\\
 			\hline
-			Mono &0.951 & 0.060, -0.014, 0  & -402.90 & 567.64& 451.77 & 1.26 &47.61 \\
+			Mono &0.951 &0.703 &0.247 &  0.060, -0.014, 0  & -402.90 & 567.64& 451.77 & 1.26 &47.61 \\
 			\hline
-			Bi &1.013 & 0.044, 0.029, 0 & -478.73 & 867.35 & 526.27 & 0.96 & 46.58
+			Bi &1.013 &0.724 &0.290 &  0.044, 0.029, 0 & -478.73 & 867.35 & 526.27 & 0.96 & 46.58
 		\end{tabular}
 	\end{center}
 \end{table*}
