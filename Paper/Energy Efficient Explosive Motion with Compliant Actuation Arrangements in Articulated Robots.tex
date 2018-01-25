@@ -227,7 +227,8 @@ J_{EXT}^T \, \mathbf{F}_{EXT}\mathbf{(q, \dot q)},
 we obtain the passive joint accelerations $\mathbf{\ddot q}_p$ and active joint torques $\boldsymbol{\tau}_a$ by inversion of the left-hand side mass matrix. \textbf{TODO: $J_{EXT}^T \, \mathbf{F}_{EXT}\mathbf{(q, \dot q)} \equiv J_{GRF}^T \, \mathbf{F}_{GRF}\mathbf{(q, \dot q)}$, correct? If yes, make sure you use naming consistent with \eqref{eq:fwddyn}.}
 
 
-\subsection{Actuation Torques}
+\subsection{Actuation Modelling}
+\label{subsec:actuationModel}
 \textbf{TODO describe how the torques $\boldsymbol{\tau}$ on the system come about. I would refrain from the whole actuation topology matrix formulation as it is lengthy.}
 
 
@@ -238,35 +239,38 @@ Finding an optimal motion requires finding the active joint trajectories over ti
 \textbf{TODO describe briefly what happens per section.}
 
 \subsection{Trajectory Parametrization}
-A common approach to reduce the dimensionality of trajectory optimisation problems is through basis splines, or $B$-splines, combined with a time-scale factor \cite{ude2000planning,babivc2009biarticulated,wang1999weight,albro2001optimal}. A $B$-spline curve can be described by its basis functions $B_i(t)$ and control points $\mathbf{P}=\left[p_1,\dots,p_n\right]$ which are evenly spaced over time. \textbf{TODO What are $i$ and $n$? I suppose $i \in \left\lbrace 1,2,3 \right\rbrace$ for 3 joints and $n$ = total time divided by resolution?} The active joint trajectories are then computed as   
+A common approach to reduce the dimensionality of trajectory optimisation problems is through basis splines, or $B$-splines, combined with a time-scale factor \cite{ude2000planning,babivc2009biarticulated,wang1999weight,albro2001optimal}. A $B$-spline curve can be described by its basis functions $B_i(t)$ and control points $\mathbf{P}=\left[p_1,\dots,p_n\right]$ which are evenly spaced over time. \textbf{TODO What are $i$ and $n$? I suppose $i 1 \dots n$ and $n$ = total time divided by resolution, i.e. the number of control points per joint?} The active joint trajectories are then computed as   
 \begin{equation}
-	q_a(t,p) = \sum_{i=1}^{n} B_i (t) p_i.
+	q_a(t,p) = \sum_{i=1}^{n} B_i (t) \, p_i.
 \end{equation}
-\textbf{TODO shouldn't $q_a$ be a vector somehow?}
-Using the control points as optimisation variables, an optimal set of control points can be determined and the corresponding $B$-splines yield optimal trajectories for the joint angle displacements, velocities and accelerations. 
+\textbf{As $q_a$ and $p$ are not written as vectors, is this per joint? Make this more clear}
+Using the control points as optimisation variables, the corresponding $B$-splines describe the optimal joint trajectories, velocities, and accelerations over time. 
 
-\subsection{Pretension positions}
-The series elastic element in the \textit{ACA} scheme described in Sec. \ref{sec:legDesign} can be set up with a pretension by deformation of the \textit{ESB} elastic element. The elastic element pretension is an interesting parameter to include in the optimisation as different pretensions will yield different jumping behaviour. The pretension can be defined with the pretension position $p$; the position of the elastic element attachment relative to its undeformed attachment position. For each actuation configuration described in Sec. \ref{sec:legDesign} an \textit{ESB} topology matrix $T \in \mathfrak{R}^{M x N}$ with $M=3$ actuators and $N=6$ leg DoFs is formulated to fully describe the location and articulation of all three \textit{ESB}s. For actuator $m$, a corresponding topology row vector $\mathbf{t}_m \in \mathfrak{R}^6$ from $T$ maps the positions of the leg DoFs to the deformation of the \textit{ESB} elastic element of that actuator:
+\subsection{Pretension Positions}
+\textbf{TODO without a proper description of what pretension is (e.g. through Sec. \ref{subsec:actuationModel}), this section is very unclear. After updating the previous Sections we should check back here whether it makes sense.}
+The series elastic element in the \textit{ACA} scheme described in Sec. \ref{sec:legDesign} can be set up with a pretension by deformation of the \textit{ESB} elastic element. The elastic element pretension is an interesting parameter to include in the optimisation as different pretensions will yield different jumping behaviour. The pretension can be defined with the pretension position $p$; the position of the elastic element attachment relative to its undeformed attachment position.
+
+\textbf{TODO the remainder of this Section should be part of the corresponding modelling Section \ref{subsec:actuationModel} (although I think directly stating the forms of the torques is clearer than using the $T$ matrix or $\mathbf{t}$ vectors respectively).} For each actuation configuration described in Sec. \ref{sec:legDesign} an \textit{ESB} topology matrix $T \in \mathfrak{R}^{M x N}$ with $M=3$ actuators and $N=6$ leg DoFs is formulated to fully describe the location and articulation of all three \textit{ESB}s. For actuator $m$, a corresponding topology row vector $\mathbf{t}_m \in \mathfrak{R}^6$ from $T$ maps the positions of the leg DoFs to the deformation of the \textit{ESB} elastic element of that actuator:
 \begin{equation}
 \Delta_{p,m} = p_m + \mathbf{t}_m \mathbf{q}
 \end{equation}
 This formulation allows for the optimisation of $p_m$, with $m \in \{1,2,3\}$.
 
-\subsection{Objective criteria}
-The objective function is comprised out of three criteria which 1) reward the performance of the leg, 2) penalize excessive torque needed to complete a movement and 3) maintain the postural stability of the leg. A minimization of the objective functions with these criteria is represented by:   
+\subsection{Objective Criteria}
+The objective function is comprised of three criteria which 1) reward the performance of the leg, 2) penalize excessive torque needed to complete a movement and 3) maintain the postural stability of the leg. A minimization of the objective functions with these criteria is represented by:
 \begin{equation}
-\min_{\mathbf{p}}\limits J =  J_{performance}+ J_{torque}+ J_{stability}
+	\min_{\mathbf{p}} J = -J_{performance} + J_{torque} + J_{stability}
 \end{equation}
-In the following objective criteria, $c_1$, $c_2$, $c_3$, $c_4$ and $c_5$ denote scaling constants.\\
+In the following, $c_1 \dots c_5$ denote suitable scaling constants.
 
 \subsubsection{Performance}
+For the performance of the leg we consider the maximum jumping height, where the height is defined as the $y$-coordinate of the CoM of the leg with respect to ground, as follows:
+\begin{equation}
+	J_{performance} = c_1 \: y_{CoM,max}^2
+\end{equation}
+
 %For the performance of the leg we distinguish two different objectives: 
 %\begin{enumerate}
-%	\item 
-For the performance of the leg we consider the maximum jumping height, where the height is defined as the $y$-coordinate of the CoM of the leg with respect to the ground. The performance criterion yields:
-\begin{equation}
-	J_{performance} = -c_1 \cdot y_{CoM}^2
-\end{equation}
 %	\item Jumping to a certain height efficiently, where the maximum $y$-coordinate reached by the CoM of the leg $y_{COM}$ is to equal a set height $y_{COM}'$ and the energy use is to be minimized:
 % \begin{equation}
 %	J_{performance} =  c_1 \cdot E^2 + c_2 \cdot |y_{COM}'-y_{COM}|
@@ -278,25 +282,34 @@ For the performance of the leg we consider the maximum jumping height, where the
 %\end{enumerate}
 
 \subsubsection{Torque}
-The active torques pose a problem as the upper and lower bound constraints on the applied torques can become non-linear. Therefore it is chosen to express the torque limits by means of a penalty function in the objective criteria and to only terminate the simulation when the utmost torque limits are violated.
-The active torque $\boldsymbol{\tau}_a$ is to be kept low and within the maximum and minimum deliverable torque. This is enforced by means of a penalty function which incorporates the 2-norm of the realised values of $\boldsymbol{\tau}_a$ computed in Section \ref{sec:modelling} while eliminating the influence of the \textit{ESB}'s:  
+%The active torques pose a problem as the upper and lower bound constraints on the applied torques can become non-linear. Therefore it is chosen to express the torque limits by means of a penalty function in the objective criteria and to only terminate the simulation when the utmost torque limits are violated.
+To ensure the system effectively utilises the elastic energy storage and minimise electrical energy expenditure, the active SEA torque is minimised. To do so, we compute the squared $l_2$-norm of the torque contribution of the SEAs, by removing the \textit{ESB} contributions from the net active joint torques:
+%the realised values of $\boldsymbol{\tau}_a$ computed in Section \ref{sec:modelling} while eliminating the influence of the \textit{ESB}s:  
 \begin{equation}
-	J_{torque}= c_2 \cdot || \boldsymbol{\tau}_a - \boldsymbol{\tau}_{ESB} ||_2^2
+	J_{torque}= c_2 \: \| \boldsymbol{\tau}_a - \boldsymbol{\tau}_{ESB} \|_2^2
 \end{equation}
+Furthermore, through the optimisation algorithm which is elaborated on in Sec. \ref{subsec:algorithm}, the SEA torques are required to stay within the limits defined by the current limits of the physical system.
 
 \subsubsection{Stability}
-To ensure postural stability a stability criterion is introduced. The leg posture is considered stable when the $x$-coordinate of the CoM of the leg is equal to its initial $x$-coordinate at the end of the jump, i.e. when the CoM reaches its maximum height. Also, the motion is assumed to be stable when the mean value of the absolute x-coordinates of the CoM equals zero. Higher stability is also assumed for a low rotational momentum $L$ at maximum height of CoM. For an $N$ number of time segments, this is achieved with the minimization of:
+To ensure stable jumps, a stability criterion is introduced. This criterion minimises several terms:
+\begin{itemize}
+	\item Mean and final horizontal deviation of the CoM to ensure vertical jumping motion;
+	\item Rotational momentum $L$ of the robot at the maximum CoM height, which ensures the robot would land back on its foot.
+\end{itemize}
+ %The leg posture is considered stable when the $x$-coordinate of the CoM of the leg is equal to its initial $x$-coordinate at the end of the jump, i.e. when the CoM reaches its maximum height. Also, the motion is assumed to be stable when the mean value of the absolute x-coordinates of the CoM equals zero. Higher stability is also assumed for a low rotational momentum $L$ at maximum height of CoM.
+These goals are achieved with the minimization of:
 \begin{equation}
 	\begin{aligned}
-		J_{stability} & =  c_3\cdot \Big( x_{CoM}(t_h)-x_{CoM}(t_s) \Big)^2  \\ & +c_4\cdot  {\sum^{N}_{i=1}\frac{| x_{CoM}(t)_i |}{N}}^2   
+		J_{stability} & =  c_3\cdot \Big( x_{CoM}(t_h)-x_{CoM}(t_0) \Big)^2  \\ & +c_4\cdot  {\sum^{N}_{i=1}\frac{| x_{CoM}(t)_i |}{N}}^2   
 				  			+ c_5  \cdot   L(t_h)^2 
 	\end{aligned}
 \end{equation}
-
-Here, $t_s$ denotes the starting time and $t_h$ denotes the point in time where the CoM reaches its maximum height. Let $t_f$ denote the final time segment of the optimisation motion where either the maximum CoM height $y_{CoM}$ has been reached or the jump is unsuccessful and the leg has fallen over. For successful jumps $t_h=t_f$. \\
+where $N$ denotes the number of time segments, $t_0$ denotes the starting time, and $t_h$ denotes the point in time where the CoM reaches its maximum height. Let $t_f$ denote the final time, where either the maximum CoM height $y_{CoM}$ has been reached or the jump is unsuccessful and the leg has fallen over. For successful jumps $t_h=t_f$.
 
 \subsection{Algorithm}
-The objective criteria described above require information concerning the kinematic and dynamic state of the leg. Both forward and inverse dynamic calculations are to be performed while the leg states are set by adjusting the earlier described $B$-spline joint trajectories. This dependence is managed by the optimisation algorithm. The algorithm in words yields:\\
+\label{subsec:algorithm}
+\textbf{TODO: Ended review (for now) here..}
+The objective criteria described above require information concerning the kinematic and dynamic state of the leg. Both forward and inverse dynamic calculations are to be performed while the leg states are set by adjusting the earlier described $B$-spline joint trajectories. This dependence is managed by the optimisation algorithm. The algorithm in words yields:
 
 \begin{itemize}
 	\item Provide initial guess trajectory and pretension positions
@@ -314,6 +327,8 @@ The objective criteria described above require information concerning the kinema
 \section{Results} \label{sec:results}
 The optimisation has been performed for the upward movement of the leg performing a jumping motion with a maximum duration of 0.4 seconds. The initial position of the leg yields a squatting posture and the optimisation is concluded when the CoM reaches its highest point for successful jumps or when the leg has fallen over for unsuccessful jumps. The initial guess is a manually constructed motion as shown in Fig. \ref{fig:seq} for actuation without energy storage branches. The optimization results for the objective presented in Section \ref{sec:dynamicOptimisation} are shown in Table \ref{maxheight}. For the three actuation configurations, Fig. \ref{fig:opt_results} displays the objective criterion values during the optimization, the joint torques, their net power and the \textit{ESB} tendon energy storage. %% verander subscript p in grafieken in ESB
 The video corresponding to this paper shows a visualization of the optimized jumping motion on all three actuation configurations.
+
+\textbf{TODO: List used parameters}
 
 % initial guess
 \begin{figure}[b]
