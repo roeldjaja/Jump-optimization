@@ -197,14 +197,11 @@ M_{ap} & M_{aa}
 \boldsymbol{\tau}_a
 \end{array} \right] 
 +
-\left[\begin{array}{c}  
-J_1\\
-J_2
-\end{array} \right] 
-\mathbf{F}_{EXT}\mathbf{(q, \dot q)}
+J_{EXT}^T
+\mathbf{F}_{EXT} \, \mathbf{(q, \dot q)},
 \end{aligned} \label{eq:ik}
 \end{equation}		
-Where $\mathbf{B}$ denotes the gravitational, Coriolis and damping forces. 
+where $\mathbf{B}$ denotes the gravitational, Coriolis and damping forces. 
 Rearranging \eqref{eq:ik}:
 \begin{equation}
 \begin{aligned}
@@ -223,10 +220,10 @@ M_{aa}
 \end{array} \right] 
 \mathbf{\ddot q}_a-
 \mathbf{B(q, \dot q)}+
-J_{EXT}^T\mathbf{F}_{EXT}\mathbf{(q, \dot q)},
+J_{EXT}^T \, \mathbf{F}_{EXT}\mathbf{(q, \dot q)},
 \end{aligned}
 \end{equation}	
-we obtain the passive joint accelerations $\mathbf{\ddot q}_p$ and active joint torques $\boldsymbol{\tau}_a$ by inversion of the left-hand side mass matrix. 
+we obtain the passive joint accelerations $\mathbf{\ddot q}_p$ and active joint torques $\boldsymbol{\tau}_a$ by inversion of the left-hand side mass matrix. \textbf{TODO: $J_{EXT}^T \, \mathbf{F}_{EXT}\mathbf{(q, \dot q)} \equiv J_{GRF}^T \, \mathbf{F}_{GRF}\mathbf{(q, \dot q)}$, correct? If yes, make sure you use naming consistent with \eqref{eq:fwddyn}.}
 
 \section{Dynamic Optimisation} \label{sec:dynamicOptimisation}
 
