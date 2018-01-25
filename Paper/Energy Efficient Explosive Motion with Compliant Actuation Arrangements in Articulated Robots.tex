@@ -60,7 +60,7 @@
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\begin{abstract}
 		
-		This paper presents the optimisation of joint trajectories and elastic element pretension for jumping of a 3-DoF leg prototype. The leg is based on the recently introduced asymmetric compliant actuator scheme, in which a series-elastic main drive is augmented in parallel with a secondary adjustable compliant branch with significantly different stiffness and energy storage capacity properties. The leg prototype implements two such actuation configurations, one of which includes a biarticulated branch, and they are compared to a conventional series-elastic based actuation structure. An optimisation problem is formulated to optimise the joint trajectories and elastic element pretension to maximise vertical jumping height and minimise active drive torque. The optimization results demonstrate that a biarticulated configuration of the secondary branches yields the maximum jumping height, and reaches the highest net joint power. Compared to series-elastic based actuation, the leg with augmented actuation jumps almost 4\% higher with a monoarticulated parallel compliance configuration while using less energy, and over 10\% higher with a biarticulated configuration.
+		This paper presents the optimisation of joint trajectories and elastic element pretension for jumping of a 3-DoF leg prototype. The leg is based on the recently introduced asymmetric compliant actuator scheme, in which a series-elastic main drive is augmented in parallel with a secondary adjustable compliant branch with significantly different stiffness and energy storage capacity properties. The leg prototype implements two such actuation configurations, one of which includes a biarticulated branch, and they are compared to a conventional series-elastic based actuation structure. An optimisation problem is formulated to optimise the joint trajectories and elastic element pretensions to maximise vertical jumping height and minimise active drive torque. The optimization results demonstrate that a biarticulated configuration of the secondary branches yields the maximum jumping height, and reaches the highest net joint power. Compared to series-elastic based actuation, the leg with augmented actuation jumps almost 4\% higher with a monoarticulated parallel compliance configuration while using less energy, and over 10\% higher with a biarticulated configuration.
 		
 	\end{abstract}
 	
@@ -330,7 +330,7 @@
 	
 	\section{Conclusions} \label{sec:conclusions} 
 	
-	This paper has presented the trajectory and elastic element pretensions optimisation for the explosive jumping motion of a 3-DoF leg with using asymmetric compliant actuators in three different configurations. The results show improvements in terms of torque requirements of the main actuators, as well as interesting collaboration between the elastic elements and the main actuators in order to reach joint torques that allow for explosive motions.\\
+	This paper has presented the trajectory and elastic element pretensions optimisation for the explosive jumping motion of a 3-DoF leg using asymmetric compliant actuators in three different configurations. The results show improvements in terms of torque requirements of the main actuators, as well as interesting collaboration between the elastic elements and the main actuators in order to reach joint torques that allow for explosive motions.\\
 	The leg jumps almost 4\% higher with a monoarticulated configuration and over 10\% higher with a biarticulated configuration compared to a configuration without \textit{ESB}.\\
 	While these results are promising, experiments with an already existing hardware prototype undergoing mechanical revisions are still to be performed. Also, for this research only fixed pretension positions of the parallel branches have been used. The integration of variable pretension positions may allow for more accurate optimization. These developments and their results will be presented in future works.
 	
@@ -338,14 +338,14 @@
 		\caption{Jumping optimization results for different configurations}
 		\label{maxheight}
 		\begin{center}
-			\begin{tabular}[t]{c||c|c|c|c|c|c|c}
-				\textit{Articulation}	& \textit{Height} [m] & \textit{Pretension} [m] & \textit{f} & \textit{E}$_{\text{\textit{consumed}}}$ [J] & \textit{J}$_{\text{\textit{performance}}}$ & \textit{J}$_{\text{\textit{stability}}}$ & \textit{J}$_{\text{\textit{torque}}}$\\ 
+			\begin{tabular}[t]{c|c|c||c|c|c|c|c|c|c}
+				\textit{Articulation} &  $y_{CoM,\text{max}}$ [m] & $y_{CoM,\text{initial}}$ [m]& $y_{CoM,\text{change}}$ [m]& \textit{Pretension} [m] & \textit{f} & \textit{E}$_{\text{\textit{consumed}}}$ [J] & \textit{J}$_{\text{\textit{performance}}}$ & \textit{J}$_{\text{\textit{stability}}}$ & \textit{J}$_{\text{\textit{torque}}}$\\ 
 				\hline
-				SEA only& 0.917 & - &-370.26  & 805.66 & 426.16  &0.85  &   55.05\\
+				SEA only& 0.917 &0.760  &0.157 &- &-370.26  & 805.66 & 426.16  &0.85  &   55.05\\
 				\hline
-				Mono &0.951 & 0.060, -0.014, 0  & -402.90 & 567.64& 451.77 & 1.26 &47.61 \\
+				Mono &0.951 &0.703 &0.247 &  0.060, -0.014, 0  & -402.90 & 567.64& 451.77 & 1.26 &47.61 \\
 				\hline
-				Bi &1.013 & 0.044, 0.029, 0 & -478.73 & 867.35 & 526.27 & 0.96 & 46.58
+				Bi &1.013 &0.724 &0.290 &  0.044, 0.029, 0 & -478.73 & 867.35 & 526.27 & 0.96 & 46.58
 			\end{tabular}
 		\end{center}
 	\end{table*}
