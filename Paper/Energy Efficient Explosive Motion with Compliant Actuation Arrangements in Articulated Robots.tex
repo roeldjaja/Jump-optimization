@@ -81,11 +81,17 @@ More recently, Roozing et al. \cite{roozing2016development, roozing2016design} p
 This paper is structured as follows. Section \ref{sec:legDesign} describes the 3-DoF leg prototype, the actuation concepts, and the three different actuation configurations used to demonstrate the effectiveness of the \textit{ACA} design for the execution of explosive motions. Section \ref{sec:dynamicModel} describes the forward and inverse dynamics of the leg. Section \ref{sec:dynamicOptimisation} introduces the optimisation problem, followed by the results presented in Section \ref{sec:results}. The paper concludes with a discussion of the results in Section \ref{sec:discussion} and conclusions in Section \ref{sec:conclusions}.
 
 
-\section{Leg Design } \label{sec:legDesign}
+\section{Leg Design}
+\label{sec:legDesign}
 
 \subsection{3-DoF Leg Prototype}
+\textbf{I would swap Sec. II-A and II-B, so you can discuss the design more clearly (now the reader has no idea what PB and ESB means, or about the ACA concept in general)}
 
-The design of the 3-DoF leg model is inspired by the human lower limb. The dimensions and mass distribution of the human limb were investigated, and compared with those of existing humanoid designs such as WALK-MAN \cite{tsagarakis2017walk} to set specifications for a semi-anthropomorphic design. The leg, shown in Fig. \ref{fig:configurations}, features three actuated degrees of freedom: ankle, knee and hip. \textit{SEA}'s drive the joints, which are mounted above the joints for the knee and ankle and transmit their forces through four bar linkages to decrease the leg’s moment of inertia with respect to the hip joint. The trunk is weighted with mass corresponding to that of a full humanoid robot.
+The design of the 3-DoF leg prototype is inspired by the human lower limb. The dimensions and mass distribution of the human limb were investigated, and compared with those of existing humanoid designs such as WALK-MAN \cite{tsagarakis2017walk} to set specifications for a semi-anthropomorphic design. The leg, shown in Fig. \ref{fig:configurations}, features three actuated degrees of freedom: ankle, knee and hip. \textit{SEA}'s drive the joints, which are mounted above the joints for the knee and ankle and transmit their forces through four bar linkages to decrease the leg’s moment of inertia with respect to the hip joint. The trunk is weighted with mass corresponding to that of a full humanoid robot.
+
+\textbf{TODO Perhaps Sec. II-C can be added on to this Section (after placing the current Sec. II-B in front of this Section). Now the description ends up incomplete, the reader is only told about the SEAs.}
+
+\textbf{TODO for leg *design* I would suggest to place the annotated CAD image from the other paper. The current Fig. 2 is just a concept showing the original ideas of the design, and less relevant here.}
 
 \subsection{Asymmetric Compliant Actuation}
 
@@ -102,9 +108,11 @@ For the concept of Asymmetric Compliant Actuation (ACA), a combination of two pa
 \end{figure}
 
  The Power Branch (\textit{PB}) is a rotary \textit{SEA} which consists of a high power motor \textit{M1} in series with a torsional elastic element \textit{SE}. The Energy Storage Branch (\textit{ESB}) consists of a lower power motor \textit{M2} with a high reduction linear transmission which transfers its power through a unidirectional series elastic element \textit{PE}.
+ 
+ \textbf{TODO This also needs to discuss biarticulation, as it is depicted in Fig. \ref{fig:ACA}.}
 
 \subsection{Actuation Configurations}
-In nature, bi-articulated muscle structures, muscle structures that actuate multiple joints simultaneously, can be found on humans and other animals. An example of a bi-articulated muscle structure are the hamstrings, which span both the hip and knee joint. \textit{ACA}'s can be utilized to realize bi-articulated actuation by letting the \textit{PB} drive a joint directly, and letting the \textit{ESB} tendon span a second joint by means of a pulley. Bi-articulation is one of three actuation configurations of the leg considered for the jumping optimisation:
+In nature, bi-articulated muscle structures, in which a single muscle actuates multiple joints simultaneously, can be found on humans and other animals. An example of a bi-articulated muscle structure are the hamstrings, which span both the hip and knee joint. \textit{ACA}'s can be utilized to realize bi-articulated actuation by letting the \textit{PB} drive a joint directly, and letting the \textit{ESB} tendon span a second joint by means of a pulley. Bi-articulation is one of three actuation configurations of the leg considered for the jumping optimisation:
 
 \begin{enumerate}
 	\item The \textit{ACA}'s are not considered and jumping optimisations are performed for the leg with fixed compliance SEA's only.
@@ -127,8 +135,8 @@ parameters that yield high electrical energy efficiency and reduction in peak to
 \section{Dynamic Model} \label{sec:dynamicModel}
 
 \subsection{Forward Dynamics} 
-The leg consists out of four links which are connected by the actuated ankle, knee and hip joints, denoted $q_1,q_2,q_3$, with torques $\tau_1,\tau_2,\tau_3$. % as shown in Fig. \ref{fig:leg}. 
-The links have masses $m_1,m_2,m_3,m_4$ and rotational inertiae $J_1,J_2,J_3,J_4$. Their centre of mass (CoM) is assumed to be located on the line connecting the proximal and distal joints at a distance of $r_1,r_2,r_3,r_4$ from the proximal joint for all links except for the foot; the model includes a floating base to allow for realistic modelling of the ground reaction forces (GRF). Together, the configurations of the bodies describe the system:
+The leg consists of four links which are connected by the actuated ankle, knee and hip joints, denoted $q_1,q_2,q_3$, with net actuation torques $\tau_1,\tau_2,\tau_3$. % as shown in Fig. \ref{fig:leg}. 
+The links have masses $m_1,m_2,m_3,m_4$ and rotational inertiae $J_1,J_2,J_3,J_4$. \textbf{TODO there needs to be a figure of the model here}. Their centre of mass (CoM) is assumed to be located on the line connecting the proximal and distal joints at a distance of $r_1,r_2,r_3,r_4$ from the proximal joint for all links except for the foot; the model includes a floating base to allow for realistic modelling of the ground reaction forces (GRF). Together, the configurations of the bodies describe the system:
  \begin{equation}
 x = [x_1,y_1,\theta_1,x_2,y_2,\theta_2, x_3,y_3,\theta_3,x_4,y_4,\theta_4]^T. 
 \end{equation}
@@ -141,7 +149,7 @@ leading to:
 M(\mathbf{q})\mathbf{\ddot q} = \mathbf{\boldsymbol{\tau} + G(q)} - C\mathbf{(q,\dot q)\dot q -} D \mathbf{\dot q} + J_{GRF}^T \mathbf{F}_{GRF}
 \label{eq:fwddyn}
  \end{equation}
-Here, the damping matrix is denoted by $D = \text{diag} (0,0,0,d_1,d_2,d_3)$, the generalised actuation forces are denoted by $\boldsymbol{\tau} = [0,0,0,\tau_1,\tau_2,\tau_3]$, the generalised gravitational forces are denoted by $\mathbf{G(q)}$, the Coriolis matrix is denoted by $C\mathbf{(q, \dot q)}$ and the generalised inertia matrix is denoted by $M(\mathbf{q})$. The Jacobian for the heel and toe is denoted by $J_{GRF}^T$ and the ground forces in generalised coordinates are subsequently expressed as $J_{GRF}^T \mathbf{F}_{GRF}$. Spring-dampers define $\mathbf{F}_{GRF}$ in the vertical direction and Coulomb and viscous friction define the horizontal component, proportional to the vertical forces.
+Here, the damping matrix is denoted by $D = \text{diag} (0,0,0,d_1,d_2,d_3)$, the generalised actuation forces are denoted by $\boldsymbol{\tau} = [0,0,0,\tau_1,\tau_2,\tau_3]$, the generalised gravitational forces are denoted by $\mathbf{G(q)}$, the Coriolis matrix is denoted by $C\mathbf{(q, \dot q)}$, and the generalised inertia matrix is denoted by $M(\mathbf{q})$. The Jacobian for the heel and toe is denoted by $J_{GRF}^T$ and the ground forces in generalised coordinates are subsequently expressed as $J_{GRF}^T \mathbf{F}_{GRF}$. Spring-dampers define $\mathbf{F}_{GRF}$ in the vertical direction and Coulomb and viscous friction define the horizontal component, proportionally to the vertical forces.
  
  %% Figure leg model
  %\begin{figure}[b]
@@ -155,9 +163,13 @@ Here, the damping matrix is denoted by $D = \text{diag} (0,0,0,d_1,d_2,d_3)$, th
  
  
 \subsection{Inverse Dynamics}
-For formulation of the optimisation problem described in Sec. \ref{sec:dynamicOptimisation}, we first need to derive the inverse dynamics of the system in order to compute the applied active torques \cite{nakanishi2007inverse}. The configuration vector $\mathbf{q}$ can be split in its passive joint and active joint components:
+For formulation of the optimisation problem described in Sec. \ref{sec:dynamicOptimisation}, we first derive the inverse dynamics of the system in order to compute the applied active torques \cite{nakanishi2007inverse}. The configuration vector $\mathbf{q}$ can be split in its passive and active joint components, $\mathbf{q}_p$ and $\mathbf{q}_a$, respectively:
  \begin{equation}
-\mathbf{q} = \left[\mathbf{q}_p, \mathbf{q}_a\right]^T
+\mathbf{q} =
+\begin{bmatrix}
+	\mathbf{q}_p \\
+	\mathbf{q}_a
+\end{bmatrix},
 \end{equation}
 with
  \begin{equation}
@@ -195,7 +207,7 @@ J_2
 \end{aligned} \label{eq:ik}
 \end{equation}		
 Where $\mathbf{B}$ denotes the gravitational, Coriolis and damping forces. 
-Rearranging \eqref{eq:ik} allows for an inverse formulation:
+Rearranging \eqref{eq:ik}:
 \begin{equation}
 \begin{aligned}
 &\left[\begin{array}{cc}  
@@ -213,10 +225,10 @@ M_{aa}
 \end{array} \right] 
 \mathbf{\ddot q}_a-
 \mathbf{B(q, \dot q)}+
-J_{EXT}^T\mathbf{F}_{EXT}\mathbf{(q, \dot q)}.
+J_{EXT}^T\mathbf{F}_{EXT}\mathbf{(q, \dot q)},
 \end{aligned}
 \end{equation}	
-An expression for the active torques is now easily achieved by inversion of the left-hand side mass matrix. 
+we obtain the passive joint accelerations $\mathbf{\ddot q}_p$ and active joint torques $\boldsymbol{\tau}_a$ by inversion of the left-hand side mass matrix. 
 
 \section{Dynamic Optimisation} \label{sec:dynamicOptimisation}
 
