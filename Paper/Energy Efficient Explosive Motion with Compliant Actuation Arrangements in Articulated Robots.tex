@@ -308,27 +308,57 @@ where $N$ denotes the number of time segments, $t_0$ denotes the starting time, 
 
 \subsection{Algorithm}
 \label{subsec:algorithm}
-\textbf{TODO: Ended review (for now) here..}
-The objective criteria described above require information concerning the kinematic and dynamic state of the leg. Both forward and inverse dynamic calculations are to be performed while the leg states are set by adjusting the earlier described $B$-spline joint trajectories. This dependence is managed by the optimisation algorithm. The algorithm in words yields:
+%The objective criteria described above require information concerning the kinematic and dynamic state of the leg. Both forward and inverse dynamic calculations are to be performed while the leg states are set by adjusting the earlier described $B$-spline joint trajectories. This dependence is managed by the optimisation algorithm. The algorithm in words yields:
+Having set up the forward and inverse dynamics and optimisation criteria, we proceed to describe the optimisation algorithm. The algorithm takes a simple hand-tuned jumping trajectory as initial guess.
+
+\textbf{TODO the following is content from the next Section which should be here as text and/or part of the algorithm:}
+\textit{The initial position of the leg yields a squatting posture and the optimisation is concluded when the CoM reaches its highest point for successful jumps or when the leg has fallen over for unsuccessful jumps.}
 
 \begin{itemize}
-	\item Provide initial guess trajectory and pretension positions
-	\item Create control points\\
-	\item[$\diamond$] Create trajectory with $B$-splines
-	\item[$\diamond$] Check joint angles, continue if limits are not exceeded \\else, vary control points and repeat $\diamond$ steps
-	\item[$\diamond$] Run simulation of motion through forward dynamics
-	\item[$\diamond$] Calculate active torques through inverse dynamics,\\ continue if limits are not exceeded \\else, vary control points and repeat $\diamond$ steps
+	\item \textbf{these are algorithm inputs, maybe you can format it like that, see the package descriptions. Or perhaps remove as it is also stated above.} Provide initial guess trajectory and pretension positions
+	\item Compute control points from initial trajectory\\
+	\item[$\diamond$] Generate joint reference trajectories with $B$-splines
+	\item[$\diamond$] \textbf{this is an if statement} Check joint angles, continue if limits are not exceeded \\else, vary control points and repeat $\diamond$ steps
+	\item[$\diamond$] Run simulation of motion through forward dynamics \textbf{add stop condition(s)}
+	\item[$\diamond$] \textbf{this is an if statement} Calculate active torques through inverse dynamics,\\ continue if limits are not exceeded \\else, vary control points and repeat $\diamond$ steps \textbf{use goto}
 	\item[$\diamond$] Evaluate objective function\\
-	\item[$\diamond$] Exit if local minimum is reached, \\ else, vary control points and pretension positions and repeat $\diamond$ steps
+	\item[$\diamond$] Exit if local minimum is reached, \\ else, vary control points and pretension positions and repeat $\diamond$ steps \textbf{use goto}
 \end{itemize}
+
+\textbf{TODO I like having the algorithm description. But rather than itemisation, use one of the common solutions to format it: https://en.wikibooks.org/wiki/LaTeX/Algorithms. It's up to you which one to use, but the wiki page mentions this: \textit{The algorithmic package is suggested for IEEE journals as it is a part of their default style sheet.[1]}}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results} \label{sec:results}
-The optimisation has been performed for the upward movement of the leg performing a jumping motion with a maximum duration of 0.4 seconds. The initial position of the leg yields a squatting posture and the optimisation is concluded when the CoM reaches its highest point for successful jumps or when the leg has fallen over for unsuccessful jumps. The initial guess is a manually constructed motion as shown in Fig. \ref{fig:seq} for actuation without energy storage branches. The optimization results for the objective presented in Section \ref{sec:dynamicOptimisation} are shown in Table \ref{maxheight}. For the three actuation configurations, Fig. \ref{fig:opt_results} displays the objective criterion values during the optimization, the joint torques, their net power and the \textit{ESB} tendon energy storage. %% verander subscript p in grafieken in ESB
-The video corresponding to this paper shows a visualization of the optimized jumping motion on all three actuation configurations.
+The optimisation has been performed using a maximum duration of 0.4 seconds, and the initial trajectory is shown in Fig. \ref{fig:seq}. Computations were performed in MATLAB \textbf{TODO version}, with \texttt{fmincon} as the optimisation algorithm. The weighing constants $c_1 \dots c_5$ were chosen as $c_1 = 0, c_2 = 0, c_3 = 0, c_4 = 0, c_5 = 0$. \textbf{TODO if there's more than these or it becomes too ugly after formatting perhaps use an aligned equation such as the example below:}
+\begin{equation}
+	\begin{aligned}
+		&c_1 = 0, & c_4 = 0 \\
+		&c_2 = 0, & c_5 = 0 \\
+		&c_3 = 0 &
+	\end{aligned}
+\end{equation}
+\textbf{or even a table.}
 
-\textbf{TODO: List used parameters}
+The results for all three actuation configurations are shown in Fig. \ref{fig:opt_results}, and the results are summarised numerically in Table \ref{table:maxheight}. The video that accompanies this paper visualises the optimized jumping motions of all three actuation configurations.
+
+%% verander subscript p in grafieken in ESB
+
+\begin{table*}[ht]
+	\caption{Jumping optimization results for different configurations}
+	\label{table:maxheight}
+	\begin{center}
+		\begin{tabular}[t]{c|c|c||c|c|c|c|c|c|c}
+			\textit{Articulation} &  $y_{CoM,\text{max}}$ [m] & $y_{CoM,\text{initial}}$ [m]& $y_{CoM,\text{change}}$ [m]& \textit{Pretension} [m] & \textit{f} & \textit{E}$_{\text{\textit{consumed}}}$ [J] & \textit{J}$_{\text{\textit{performance}}}$ & \textit{J}$_{\text{\textit{stability}}}$ & \textit{J}$_{\text{\textit{torque}}}$\\ 
+			\hline
+			SEA only& 0.917 &0.760  &0.157 &- &-370.26  & 805.66 & 426.16  &0.85  &   55.05\\
+			\hline
+			Mono &0.951 &0.703 &0.247 &  0.060, -0.014, 0  & -402.90 & 567.64& 451.77 & 1.26 &47.61 \\
+			\hline
+			Bi &1.013 &0.724 &0.290 &  0.044, 0.029, 0 & -478.73 & 867.35 & 526.27 & 0.96 & 46.58
+		\end{tabular}
+	\end{center}
+\end{table*}
 
 % initial guess
 \begin{figure}[b]
@@ -342,6 +372,22 @@ The video corresponding to this paper shows a visualization of the optimized jum
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discussion} \label{sec:discussion}
+\textbf{TODO comments on the plots:}
+\begin{itemize}
+	\item Just have the x-axis label on the last plot (for the time plots), it saves space
+	\item Similar for the criteria plots, just one label, on the bottom one. Keep all the y-axis labels (otherwise horizontal shifting occurs), but change the name to $J_{performance}$ and so on. That should save space (it currently pops out above the plot). If that's insufficient you can add them as legend items instead.
+	\item The legend entries currently do not make sense; the symbols were never explained. I'm attaching a few scripts by email (the ones that generated the ICRA18 plots) which have text names for variables that you do not need to explain.
+	\item Equal y-axis scaling for all plots (horizontally) (seems to be already the case for the optimisation plots)
+	\item Somewhat less resampling, plots are very jagged now due to the short displayed time (mentioned in email) 0.005 or 0.0025 (try first) seconds should be fine.
+	\item Try to get the legend in a place where it's not in the way of the data and in a as consistent and as possible place.
+	\item Remove $E_{p,3}$ from the bottom plots
+	\item Enable grids on net joint power plots
+	\item I would generate the plots a bit smaller, legends are unreadable (there should be a (commented out?) size in the old code for 3 column plots. My standard paper size is [500 190], but in the ICRA18 paper I used [450 230] (a bit higher as there was plenty of y-space). I'll send you the relevant scripts as well.
+\end{itemize}
+\textbf{end plot comments}.
+
+\textbf{TODO reviewed up to here..}
+
 For the optimized jumping motion similar strategies are used on all three actuation configurations; ankle extension is primarily used to generate an upwards motion from squat position, with lift-off following after a toe push-off. The pretension optimization results show maximum pretension of the \textit{ESB} on the bottom of the ankle for monoarticulation and the pretension of the \textit{ESB} on the bottom of the thigh for biarticulation. Although the movements are similar some key differences can be pointed out:
 
 \begin{enumerate}
@@ -349,7 +395,7 @@ For the optimized jumping motion similar strategies are used on all three actuat
 	
 	\item While Fig. \ref{fig:noESB_q_2_torques} shows slightly higher peak \textit{PB} torques for the knee joint than the \textit{ESB} configurations in Fig. \ref{fig:mono_q_2_torques} and \ref{fig:bi_q_2_torques}, knee extension is nearly absent for the configuration without \textit{ESB}. The jumps with mono and biarticulation do show knee extension at approximately 0.2 seconds into the motion. Fig. \ref{fig:bi_q_2_torques} shows that this extension is preceded by counteracting \textit{PB} and \textit{ESB} torques. For the biarticulated configuration the \textit{PB} knee torque counteracts the \textit{ESB} torque after 0.1 seconds, but stops this counteraction instantly which allows for an explosive increase in torque around 0.2 seconds. This allows for explosive knee movement without exceeding torque limits.
 	
-	\item The limitation by torque restriction for the configuration without \textit{ESB} is implied by Fig. \ref{fig:noESB_crit_high}, which shows an increase in the torque criterion resulting in a higher torque criterion than the legs with \textit{ESB} as shown in Table \ref{maxheight}. Restrictions in time and the number of control points may also be an influence on the moderate use of knee joint torque to execute the jump for the configuration without \textit{ESB}.
+	\item The limitation by torque restriction for the configuration without \textit{ESB} is implied by Fig. \ref{fig:noESB_crit_high}, which shows an increase in the torque criterion resulting in a higher torque criterion than the legs with \textit{ESB} as shown in Table \ref{table:maxheight}. Restrictions in time and the number of control points may also be an influence on the moderate use of knee joint torque to execute the jump for the configuration without \textit{ESB}.
 	
 	\item Whereas the configuration without \textit{ESB} and the monoarticulated configuration use hip extension extensively during the early stages of the upwards motion of the jump, Fig. \ref{fig:noESB_q_3_torques} to \ref{fig:bi_q_3_torques} show that the biarticulated configuration uses far less hip extension. The biarticulated leg extends its hip at the end of the upwards motion to increase its CoM height whereas the leg without \textit{ESB} flexes its hip to maintain upwards momentum.
 	
@@ -365,22 +411,6 @@ This paper has presented the trajectory and elastic element pretensions optimisa
 The leg jumps almost 4\% higher with a monoarticulated configuration and over 10\% higher with a biarticulated configuration compared to a configuration without \textit{ESB}.
 
 While these results are promising, experiments with an already existing hardware prototype undergoing mechanical revisions are still to be performed. Also, for this research only fixed pretension positions of the parallel branches have been used. The integration of variable pretension positions may allow for more accurate optimization. These developments and their results will be presented in future works.
-
-\begin{table*}[ht]
-	\caption{Jumping optimization results for different configurations}
-	\label{maxheight}
-	\begin{center}
-		\begin{tabular}[t]{c|c|c||c|c|c|c|c|c|c}
-			\textit{Articulation} &  $y_{CoM,\text{max}}$ [m] & $y_{CoM,\text{initial}}$ [m]& $y_{CoM,\text{change}}$ [m]& \textit{Pretension} [m] & \textit{f} & \textit{E}$_{\text{\textit{consumed}}}$ [J] & \textit{J}$_{\text{\textit{performance}}}$ & \textit{J}$_{\text{\textit{stability}}}$ & \textit{J}$_{\text{\textit{torque}}}$\\ 
-			\hline
-			SEA only& 0.917 &0.760  &0.157 &- &-370.26  & 805.66 & 426.16  &0.85  &   55.05\\
-			\hline
-			Mono &0.951 &0.703 &0.247 &  0.060, -0.014, 0  & -402.90 & 567.64& 451.77 & 1.26 &47.61 \\
-			\hline
-			Bi &1.013 &0.724 &0.290 &  0.044, 0.029, 0 & -478.73 & 867.35 & 526.27 & 0.96 & 46.58
-		\end{tabular}
-	\end{center}
-\end{table*}
 
 % Large figure with all the optimization results
 \begin{figure*}[ht]
