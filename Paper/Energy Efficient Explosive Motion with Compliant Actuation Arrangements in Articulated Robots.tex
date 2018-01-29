@@ -87,7 +87,7 @@ This paper is structured as follows. Section \ref{sec:legDesign} describes the 3
 
 \subsection{Asymmetric Compliant Actuation}
 \label{subsec:ACA}
-For the concept of Asymmetric Compliant Actuation (ACA), a combination of two parallel actuation branches with very different power and stiffness properties is used as shown in Fig. \ref{fig:ACA}.
+The Asymmetric Compliant Actuation (\textit{ACA}) concept consists of a combination of two parallel actuation branches with very different power and stiffness properties, as shown in Fig. \ref{fig:ACA}. The Power Branch (\textit{PB}) is a rotary \textit{SEA} which consists of a high power motor \textit{M1} in series with a torsional elastic element \textit{SE}. The Energy Storage Branch (\textit{ESB}) consists of a lower power motor \textit{M2}, with a high reduction linear transmission which transfers its power to the joint through a unidirectional series elastic element \textit{PE}. In biarticulated configurations (bottom of Fig. \ref{fig:ACA}), the \textit{PB} drives the joint directly, while the \textit{ESB} tendon spans a second joint by means of a free pulley, as depicted in Fig. \ref{fig:ACA}. As such, the tendon elongation depends on the configuration of both joints, and the tendon exerts torque on both joints.
 
 % Figure asymmetric compliant actuation branches
 \begin{figure}[b]
@@ -96,9 +96,6 @@ For the concept of Asymmetric Compliant Actuation (ACA), a combination of two pa
 	\caption{The Asymmetric Compliant Actuation (\textit{ACA}) concept, shown in monoarticulated (top) and biarticulated (bottom) configurations.}
 	\label{fig:ACA}
 \end{figure}
-
-The Power Branch (\textit{PB}) is a rotary \textit{SEA} which consists of a high power motor \textit{M1} in series with a torsional elastic element \textit{SE}. The Energy Storage Branch (\textit{ESB}) consists of a lower power motor \textit{M2} with a high reduction linear transmission which transfers its power through a unidirectional series elastic element \textit{PE}.
-In nature, biarticulated muscle structures, in which a single muscle actuates multiple joints simultaneously, can be found on humans and other animals. An example of a biarticulated muscle structure are the hamstrings, which span both the hip and knee joint. \textit{ACA}'s can be utilized to realize biarticulated actuation by letting the \textit{PB} drive a joint directly, and letting the \textit{ESB} tendon span a second joint by means of a pulley, as depicted in Fig. \ref{fig:ACA}.
 
 \subsection{3-DoF Leg Prototype}
 The design of the 3-DoF leg prototype is inspired by the human lower limb. The dimensions and mass distribution of the human limb were investigated, and compared with those of existing humanoid designs such as WALK-MAN \cite{tsagarakis2017walk} to set specifications for a semi-anthropomorphic design. The leg features three actuated degrees of freedom: ankle, knee and hip. Each joint is directly actuated by an \textit{SEA}, which are mounted above the joints for the knee and ankle, and transmit their forces through four bar linkages to decrease the leg’s moment of inertia with respect to the hip joint. The trunk is loaded with mass corresponding to that of a full humanoid robot in two-legged stance. The leg can be rapidly reconfigured into one of three actuation configurations:
@@ -109,7 +106,7 @@ The design of the 3-DoF leg prototype is inspired by the human lower limb. The d
 	\item \textbf{Biarticulated} configuration, in which the tendon for the ankle joint also spans the knee joint.
 \end{enumerate}
 
-Fig. \ref{fig:configurations} shows a schematic of the leg design in all three actuation configurations. Following the method presented in \cite{roozing2016design}, the design parameters each configuration was optimised to select actuation parameters that yield high electrical energy efficiency and reduction in peak torque and electrical power requirements. For more details on the hardware implementation, we refer the reader to \cite{roozing_design_2018}.
+Fig. \ref{fig:configurations} shows a schematic of the leg design in all three actuation configurations. Following the method presented in \cite{roozing2016design}, the design parameters each configuration were optimised to select actuation parameters that yield high electrical energy efficiency and reduction in peak torque and electrical power requirements. For more details on the hardware implementation, we refer the reader to \cite{roozing_design_2018}.
 
 % Figure Actuation configurations
 \begin{figure}[ht]
