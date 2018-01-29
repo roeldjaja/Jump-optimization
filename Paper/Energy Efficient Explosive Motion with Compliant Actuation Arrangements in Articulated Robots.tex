@@ -31,11 +31,15 @@
 %\usepackage{framed}
 \usepackage{cite}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \title{\LARGE \bf
 	Explosive Motion with Compliant Actuation Arrangements in Articulated Robots
 }
 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \author{Roel Djajadiningrat$^{1}$, Wesley Roozing$^{2}$ and Nikolaos G. Tsagarakis$^{2}$% <-this % stops a space
 	\thanks{$^{1}$ Roel Djajadiningrat is a M.Sc student at the Department of Mechanical Engineering, TU Delft and a visiting student at Istituto Italiano di Tecnologia;
 		{\tt\ r.djajadiningrat@student.tudelft.nl}
@@ -48,9 +52,8 @@
 }
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
-
-
 
 \maketitle
 \thispagestyle{empty}
@@ -89,8 +92,8 @@ For the concept of Asymmetric Compliant Actuation (ACA), a combination of two pa
 % Figure asymmetric compliant actuation branches
 \begin{figure}[b]
 	\centering
-	\includegraphics[scale=1.0]{actuationConcept}
-	\caption{ACA branches}
+	\includegraphics[width=0.8\linewidth]{actuationConcept}
+	\caption{The Asymmetric Compliant Actuation (\textit{ACA}) concept, shown in monoarticulated (top) and biarticulated (bottom) configurations.}
 	\label{fig:ACA}
 \end{figure}
 
@@ -114,7 +117,7 @@ The designs of the actuation configurations have been optimised to select actuat
 % Figure Actuation configurations
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=\linewidth]{cad}
+	\includegraphics[width=0.98\linewidth]{cad}
 	\caption{CAD: SEA-only, mono- and biarticulated configurations}
 	\label{fig:configurations}
 \end{figure}
@@ -130,9 +133,9 @@ The leg consists of four links which are connected by the actuated ankle, knee a
 % Figure Leg model
 \begin{figure}[ht]
 	\centering
-	\includegraphics[scale=0.15]{Leg_3DoF_model}
-	\caption{Leg model: The straight configuration on
-		the right corresponds to q = 0}
+	\includegraphics[width=0.7\linewidth]{Leg_3DoF_model}
+	\caption{Leg model with floating base. The straight configuration on
+		the right corresponds to $\mathbf{q} = \mathbf{0}$.}
 	\label{fig:Leg_3DoF_model}
 \end{figure}
 
@@ -218,7 +221,7 @@ we obtain the passive joint accelerations $\mathbf{\ddot q}_p$ and active joint 
 
 \subsection{Actuation Modelling}
 \label{subsec:actuationModel}
-As described in Section \ref{sec:legDesign} different configurations of \textit{ACA} are used to actuate the leg. Motor M2, shown in Fig. \ref{fig:ACA}, can be used to apply pretension on the \textit{ESB} elastic element. Let $r_p$ denote the pulley radius and let $p$ denote a certain pretension of motor M2. With a corresponding joint configuration $q$, the elongation of each \textit{ESB} elastic element can be described as $\Delta_p = p - r_p q$. Note that the element with stiffness $k_p$ and damping $d_p$ only applies elastic force under extension as it is of a rubber type material:
+As described in Section \ref{sec:legDesign}, three different actuation configurations are considered. In the general monoarticulated ESB case shown in Fig. \ref{fig:ACA}, let $r_p$ denote pulley radius (with sign indicating positive direction) and let $p$ denote the position of motor M2. Given a joint configuration $q$, the elongation of the \textit{ESB} elastic element is given by $\Delta_p = p + r_p q$. Note that the element, with stiffness $k_p$ and damping $d_p$, only applies elastic force under extension as it is of a rubber type material:
 \begin{equation}
 F_p =	\left\lbrace
 \begin{array}{ll}
@@ -228,21 +231,30 @@ d_p \, \dot{\Delta}_p & \text{otherwise}
 \right.
 \label{eq:F_p}
 \end{equation}   
-The \textit{ESB} generates a torque on the joint equal to
+As such, the \textit{ESB} generates a torque on the joint equal to $\tau_p = -r_p \, F_p$. From this follows the ankle and knee joint torques for the monoarticulated leg in Fig. \ref{fig:configurations}:
 \begin{equation}
-\tau_p = r_p \, F_p.
-\label{eq:tau_p_mono}
+	\begin{aligned}
+		\tau_1 &= \tau_{SEA,1} - r_{ankle} \, F_{p,1}(p_1,q_1), \\
+		\tau_2 &= \tau_{SEA,2} - r_{knee} \, F_{p,2}(p_2,q_2), \\
+	\end{aligned}
 \end{equation}
-For the biarticulated configuration shown in Fig. \ref{fig:ACA} the driven joint can be expressed as joint $i$ and the spanned joint can be expressed as joint $j$. With pulley radii $r_{p,i}$ and $r_{p,j}$, the elongation of the \textit{ESB} elastic element is then given by:
+where $\tau_{SEA,i}$ denote contributions from the SEAs, $r_\circ$ denote pulley radii, $F_{p,\circ}$ denote linear tendon forces, and $p_i$ denote the respective pretension positions of the \textit{ESB} motors.
+
+For the biarticulated leg configuration shown in Fig. \ref{fig:configurations}, the ankle tendon also spans the knee joint, and the elongation of the \textit{ESB} elastic element is thus given by:
 \begin{equation}
-\Delta_p = p - r_{p,i} \, q_i - r_{p,j} \, q_j,
+\Delta_{p,1} = p_1 + r_{ankle} \, q_1 + r_{knee,bi} \, q_2,
 \label{eq:Delta_p_biart}
 \end{equation}
-with the \textit{ESB} applying a torque to each joint 
+where $r_{knee,bi}$ denotes the free pulley on the knee. This leads to the ankle and knee torques for the biarticulated case:
 \begin{equation}
-\tau_i = r_{p,i} \, F_p, \hspace{5mm} \tau_j = r_{p,j} \, F_p.
-\label{eq:tau_p_bi}
-\end{equation} 
+	\begin{aligned}
+		\tau_1 &= \tau_{SEA,1} - r_{ankle} \, F_{p,1}(p_1,q_1,q_2), \\
+		\tau_2 &= \tau_{SEA,2} - r_{knee} \, F_{p,2}(p_2,q_2) - r_{knee,bi} \, F_{p,1}(p_1,q_1,q_2).
+	\end{aligned}
+\end{equation}
+Observe that the linear tendon force $F_{p,1}$ is dependent on the configuration of both the knee and ankle joints, and that the tendon applies torque on both joints.
+
+In simulation, we include a full motor model that includes rotor inertiae, friction, current and voltage limitations, and low-level \textit{SEA} torque control. For details, we refer the reader to \cite{roozing2016design}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
