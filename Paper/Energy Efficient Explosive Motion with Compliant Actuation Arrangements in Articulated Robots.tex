@@ -341,11 +341,16 @@ The initial position of the leg yields a squatting posture and each simulation i
 		\IF{local minimum reached} \STATE {Exit} \ELSE \STATE Vary control points, \textbf{go to} \ref{algbegin}  \ENDIF
 	\end{algorithmic}
 \end{algorithm}
+\textbf{TODO Looks great! A few questions:}
+\begin{itemize}
+	\item Should the torque limit line (10) not be $\mathrm{max}(\boldsymbol{\tau}) < \tau^{max} \quad \forall \: t$ or something along those lines? Now it appears to be a vector comparison.
+	\item For the fallen over statement, perhaps just put it in words, e.g. \textit{not fallen over}, people may not get it otherwise.
+\end{itemize}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results} \label{sec:results}
-The optimisation has been performed using a maximum duration of 0.4 seconds, and the initial trajectory is shown in Fig. \ref{fig:seq}. Computations were performed in MATLAB R2016B, with \texttt{fmincon} as the optimisation algorithm. The weighing constants $c_1 \dots c_5$ were chosen as $c_1=5 \cdot 10^{2} \,, c_2=1.5 \cdot 10^{-4} \,, c_3=1.5 \cdot 10^{3} \,, c_4 = 1\cdot 10^{2} \,, \text{ and } \, c_5 = 1$.
+The optimisation has been performed using a maximum duration of 0.4 seconds, and the initial trajectory is shown in Fig. \ref{fig:seq}. Computations were performed in MATLAB R2016B, with \texttt{fmincon} as the optimisation algorithm. The weighing constants $c_1 \dots c_5$ were chosen as $c_1=5 \cdot 10^{2} \,, c_2=1.5 \cdot 10^{-4} \,, c_3=1.5 \cdot 10^{3} \,, c_4 = 1\cdot 10^{2}\,$, and $c_5 = 1$.
 
 The results for all three actuation configurations are shown in Fig. \ref{fig:opt_results}, which reports the objective criterion values during the optimisation, joint torques, joint power and the \textit{ESB} tendon energy storage over time. Furthermore, the results are summarised numerically in Table \ref{table:maxheight}. The video that accompanies this paper visualises the optimised jumping motions of all three actuation configurations.
 
