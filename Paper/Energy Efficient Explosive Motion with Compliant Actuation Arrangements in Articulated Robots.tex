@@ -346,6 +346,15 @@ The optimisation has been performed using a maximum duration of 0.4 seconds, and
 
 The results for all three actuation configurations are shown in Fig. \ref{fig:opt_results}, which reports the objective criterion values during the optimisation, joint torques, joint power and the \textit{ESB} tendon energy storage over time. Furthermore, the results are summarised numerically in Table \ref{table:maxheight}. The video that accompanies this paper visualises the optimised jumping motions of all three actuation configurations.
 
+% initial guess
+\begin{figure}[b]
+	\centering
+	%      \framebox{\parbox{3in}
+	{\includegraphics[scale=0.6]{initialguess}
+	}%}	
+	\caption{Initial motion} \label{fig:seq}	
+\end{figure}
+
 \begin{table*}[ht]
 	\caption{Jumping optimization results for different configurations}
 	\label{table:maxheight}
@@ -362,57 +371,6 @@ The results for all three actuation configurations are shown in Fig. \ref{fig:op
 	\end{center}
 \end{table*}
 
-% initial guess
-\begin{figure}[b]
-	\centering
-	%      \framebox{\parbox{3in}
-	{\includegraphics[scale=0.6]{initialguess}
-	}%}	
-	\caption{Initial motion} \label{fig:seq}	
-\end{figure}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Discussion} \label{sec:discussion}
-\textbf{TODO comments on the plots:}
-\begin{itemize}
-	\item Just have the x-axis label on the last plot (for the time plots), it saves space
-	\item Similar for the criteria plots, just one label, on the bottom one. Keep all the y-axis labels (otherwise horizontal shifting occurs), but change the name to $J_{performance}$ and so on. That should save space (it currently pops out above the plot). If that's insufficient you can add them as legend items instead.
-	\item The legend entries currently do not make sense; the symbols were never explained. I'm attaching a few scripts by email (the ones that generated the ICRA18 plots) which have text names for variables that you do not need to explain.
-	\item Equal y-axis scaling for all plots (horizontally) (seems to be already the case for the optimisation plots)
-	\item Somewhat less resampling, plots are very jagged now due to the short displayed time (mentioned in email) 0.005 or 0.0025 (try first) seconds should be fine.
-	\item Try to get the legend in a place where it's not in the way of the data and in a as consistent and as possible place.
-	\item Remove $E_{p,3}$ from the bottom plots
-	\item Enable grids on net joint power plots
-	\item I would generate the plots a bit smaller, legends are unreadable (there should be a (commented out?) size in the old code for 3 column plots. My standard paper size is [500 190], but in the ICRA18 paper I used [450 230] (a bit higher as there was plenty of y-space). I'll send you the relevant scripts as well.
-\end{itemize}
-\textbf{end plot comments}.
-
-\textbf{TODO reviewed up to here..}
-
-For the optimised jumping motion similar strategies are used on all three actuation configurations; ankle extension is primarily used to generate an upwards motion from squat position, with lift-off following after a toe push-off. The pretension optimisation results show maximum pretension of the \textit{ESB} on the bottom of the ankle for monoarticulation and the pretension of the \textit{ESB} on the bottom of the thigh for biarticulation. Although the movements are similar some key differences can be pointed out:
-
-\begin{enumerate}
-	\item Fig. \ref{fig:noESB_q_1_torques} to \ref{fig:bi_q_1_torques} show that the \textit{PB} ankle torque used by the biarticulated configuration is significantly lower than that of the other configurations but its \textit{ESB} torque is significantly higher than that of the monoarticulated configuration resulting in the heighest ankle torque for biarticulation. 
-	
-	\item While Fig. \ref{fig:noESB_q_2_torques} shows slightly higher peak \textit{PB} torques for the knee joint than the \textit{ESB} configurations in Fig. \ref{fig:mono_q_2_torques} and \ref{fig:bi_q_2_torques}, knee extension is nearly absent for the configuration without \textit{ESB}. The jumps with mono and biarticulation do show knee extension at approximately 0.2 seconds into the motion. Fig. \ref{fig:bi_q_2_torques} shows that this extension is preceded by counteracting \textit{PB} and \textit{ESB} torques. For the biarticulated configuration the \textit{PB} knee torque counteracts the \textit{ESB} torque after 0.1 seconds, but stops this counteraction instantly which allows for an explosive increase in torque around 0.2 seconds. This allows for explosive knee movement without exceeding torque limits.
-	
-	\item The limitation by torque restriction for the configuration without \textit{ESB} is implied by Fig. \ref{fig:noESB_crit_high}, which shows an increase in the torque criterion resulting in a higher torque criterion than the legs with \textit{ESB} as shown in Table \ref{table:maxheight}. Restrictions in time and the number of control points may also be an influence on the moderate use of knee joint torque to execute the jump for the configuration without \textit{ESB}.
-	
-	\item Whereas the configuration without \textit{ESB} and the monoarticulated configuration use hip extension extensively during the early stages of the upwards motion of the jump, Fig. \ref{fig:noESB_q_3_torques} to \ref{fig:bi_q_3_torques} show that the biarticulated configuration uses far less hip extension. The biarticulated leg extends its hip at the end of the upwards motion to increase its CoM height whereas the leg without \textit{ESB} flexes its hip to maintain upwards momentum.
-	
-	\item Fig. \ref{fig:noESB_P_q} to \ref{fig:bi_P_q} show that the biarticulated configuration net joint power exceeds that of the other configurations. A comparison with Fig. \ref{fig:mono_ESB} and \ref{fig:bi_ESB} shows that for the \textit{ESB} configurations the largest change in power is largely synchronous with release of energy in the \textit{ESB} tendons.
-	
-\end{enumerate}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Conclusions} \label{sec:conclusions} 
-This paper has presented the trajectory and elastic element pretensions optimisation for the explosive jumping motion of a 3-DoF leg using asymmetric compliant actuators in three different configurations. The results show improvements in terms of torque requirements of the main actuators, as well as interesting collaboration between the elastic elements and the main actuators in order to reach joint torques that allow for explosive motions.
-
-The leg jumps almost 4\% higher with a monoarticulated configuration and over 10\% higher with a biarticulated configuration compared to a configuration without \textit{ESB}.
-
-While these results are promising, experiments with an already existing hardware prototype undergoing mechanical revisions are still to be performed. Also, for this research only fixed pretension positions of the parallel branches have been used. The integration of variable pretension positions may allow for more accurate optimisation. These developments and their results will be presented in future works.
 
 % Large figure with all the optimisation results
 \begin{figure*}[ht]
@@ -546,6 +504,49 @@ While these results are promising, experiments with an already existing hardware
 	\caption{Optimization results. Left column: without ESB (conventional SEA), middle column: monoarticulated configuration, right column: biarticulated configuration.}
 	\label{fig:opt_results}
 \end{figure*}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Discussion} \label{sec:discussion}
+\textbf{TODO comments on the plots:}
+\begin{itemize}
+	\item Just have the x-axis label on the last plot (for the time plots), it saves space
+	\item Similar for the criteria plots, just one label, on the bottom one. Keep all the y-axis labels (otherwise horizontal shifting occurs), but change the name to $J_{performance}$ and so on. That should save space (it currently pops out above the plot). If that's insufficient you can add them as legend items instead.
+	\item The legend entries currently do not make sense; the symbols were never explained. I'm attaching a few scripts by email (the ones that generated the ICRA18 plots) which have text names for variables that you do not need to explain.
+	\item Equal y-axis scaling for all plots (horizontally) (seems to be already the case for the optimisation plots)
+	\item Somewhat less resampling, plots are very jagged now due to the short displayed time (mentioned in email) 0.005 or 0.0025 (try first) seconds should be fine.
+	\item Try to get the legend in a place where it's not in the way of the data and in a as consistent and as possible place.
+	\item Remove $E_{p,3}$ from the bottom plots
+	\item Enable grids on net joint power plots
+	\item I would generate the plots a bit smaller, legends are unreadable (there should be a (commented out?) size in the old code for 3 column plots. My standard paper size is [500 190], but in the ICRA18 paper I used [450 230] (a bit higher as there was plenty of y-space). I'll send you the relevant scripts as well.
+\end{itemize}
+\textbf{end plot comments}.
+
+\textbf{TODO reviewed up to here..}
+
+For the optimised jumping motion similar strategies are used on all three actuation configurations; ankle extension is primarily used to generate an upwards motion from squat position, with lift-off following after a toe push-off. The pretension optimisation results show maximum pretension of the \textit{ESB} on the bottom of the ankle for monoarticulation and the pretension of the \textit{ESB} on the bottom of the thigh for biarticulation. Although the movements are similar some key differences can be pointed out:
+
+\begin{enumerate}
+	\item Fig. \ref{fig:noESB_q_1_torques} to \ref{fig:bi_q_1_torques} show that the \textit{PB} ankle torque used by the biarticulated configuration is significantly lower than that of the other configurations but its \textit{ESB} torque is significantly higher than that of the monoarticulated configuration resulting in the heighest ankle torque for biarticulation. 
+	
+	\item While Fig. \ref{fig:noESB_q_2_torques} shows slightly higher peak \textit{PB} torques for the knee joint than the \textit{ESB} configurations in Fig. \ref{fig:mono_q_2_torques} and \ref{fig:bi_q_2_torques}, knee extension is nearly absent for the configuration without \textit{ESB}. The jumps with mono and biarticulation do show knee extension at approximately 0.2 seconds into the motion. Fig. \ref{fig:bi_q_2_torques} shows that this extension is preceded by counteracting \textit{PB} and \textit{ESB} torques. For the biarticulated configuration the \textit{PB} knee torque counteracts the \textit{ESB} torque after 0.1 seconds, but stops this counteraction instantly which allows for an explosive increase in torque around 0.2 seconds. This allows for explosive knee movement without exceeding torque limits.
+	
+	\item The limitation by torque restriction for the configuration without \textit{ESB} is implied by Fig. \ref{fig:noESB_crit_high}, which shows an increase in the torque criterion resulting in a higher torque criterion than the legs with \textit{ESB} as shown in Table \ref{table:maxheight}. Restrictions in time and the number of control points may also be an influence on the moderate use of knee joint torque to execute the jump for the configuration without \textit{ESB}.
+	
+	\item Whereas the configuration without \textit{ESB} and the monoarticulated configuration use hip extension extensively during the early stages of the upwards motion of the jump, Fig. \ref{fig:noESB_q_3_torques} to \ref{fig:bi_q_3_torques} show that the biarticulated configuration uses far less hip extension. The biarticulated leg extends its hip at the end of the upwards motion to increase its CoM height whereas the leg without \textit{ESB} flexes its hip to maintain upwards momentum.
+	
+	\item Fig. \ref{fig:noESB_P_q} to \ref{fig:bi_P_q} show that the biarticulated configuration net joint power exceeds that of the other configurations. A comparison with Fig. \ref{fig:mono_ESB} and \ref{fig:bi_ESB} shows that for the \textit{ESB} configurations the largest change in power is largely synchronous with release of energy in the \textit{ESB} tendons.
+	
+\end{enumerate}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conclusions} \label{sec:conclusions} 
+This paper has presented the trajectory and elastic element pretensions optimisation for the explosive jumping motion of a 3-DoF leg using asymmetric compliant actuators in three different configurations. The results show improvements in terms of torque requirements of the main actuators, as well as interesting collaboration between the elastic elements and the main actuators in order to reach joint torques that allow for explosive motions.
+
+The leg jumps almost 4\% higher with a monoarticulated configuration and over 10\% higher with a biarticulated configuration compared to a configuration without \textit{ESB}.
+
+While these results are promising, experiments with an already existing hardware prototype undergoing mechanical revisions are still to be performed. Also, for this research only fixed pretension positions of the parallel branches have been used. The integration of variable pretension positions may allow for more accurate optimisation. These developments and their results will be presented in future works.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
