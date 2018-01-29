@@ -13,9 +13,9 @@ function [ h ] = paperModeLegend( paperMode, data_paperMode, data_normal, plotHa
 
     % Place legend
     if (exist('plotHandles', 'var') && length(plotHandles)==length(data))
-        h = legend(plotHandles, data, 'Location', 'best');
+        h = legend(plotHandles, data, 'Location', 'northeast','Orientation','vertical');
     else
-        h = legend(data, 'Location', 'best');
+        h = legend(data, 'Location', 'northeast','Orientation','vertical');
     end
     
     % Set interpreter in paper mode

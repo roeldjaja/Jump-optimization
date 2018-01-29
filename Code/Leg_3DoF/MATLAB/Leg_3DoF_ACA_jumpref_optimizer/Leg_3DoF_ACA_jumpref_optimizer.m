@@ -148,7 +148,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             this.plots.filtIgnoreTime       = 1.0;
             this.plots.yAxisIgnoreTime      = 0.5;
             this.plots.sizeNormal           = [600 400];
-            this.plots.sizePaperMode        = [500 190];%[600 230];
+            this.plots.sizePaperMode        = [400 220];%[500 190];%[600 230];
             this.plots.showTitleInPaperMode = 0;
         end
         
@@ -196,7 +196,7 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             cp_init(:,2) = q_init(1:this.params.cpres:end,5); % q2
             cp_init(:,3) = q_init(1:this.params.cpres:end,6); % q3
             this.data.cp_init = reshape(cp_init,[1,tn]); %Reshape to one long row
-            
+            disp(this.data.cp_init)
             % Downscale time to control point time tcp
             tcp = t(1:this.params.cpres:end);
             
@@ -923,32 +923,52 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
                        mkdir(plotPath); 
                 end
             end
-            % Get some plotting parameters
-%             filtIgnoreTime          = this.plots.filtIgnoreTime;
-%             yAxisIgnoreTime         = this.plots.yAxisIgnoreTime;
-            showTitleInPaperMode    = this.plots.showTitleInPaperMode;
-            C                       = this.plots.C;         % Plot colours
-            C_light                 = this.plots.C_light;   % Light plot colours
             
-            n       = this.params.n;
-            N       = length(this.params.t);
+            % Get some plotting parameters
+            showTitleInPaperMode    = this.plots.showTitleInPaperMode;
+
+            
+            
+            % Get data
+%             n       = this.params.n;
+%             N       = length(this.params.t);
             x       = this.sim.data.xlist; %[N x 30]
-            q_leg   = x(:,18+1:18+6)';       % 6xN
+%             q_leg   = x(:,18+1:18+6)';       % 6xN
             q_leg_d = x(:,18+7:18+12)';    % 6xN 
             
-            xf =length(this.list.f);
+            xf =1:length(this.list.f);
             
-            figure
-            plot(this.params.t, this.data.q_init(:,4)',this.params.t,this.data.q_res(4,:),'--',this.params.t,q_leg(4,:))
-            title('q_1');legend('Initial reference','Solution reference','Actual trajectory');xlabel('Time [s]');ylabel('Angle [rad]');
+%            % Plot evolution control points
+%             C    = this.list.cp;
+%             n    = this.params.n;
+%             cpq1 = C(:,1:3:end);
+%             cpq2 = C(:,2:3:end);
+%             cpq3 = C(:,3:3:end);
+     
+%             s    = size(cpq3); s=1:1:s(2);
             
-            figure
-            plot(this.params.t, this.data.q_init(:,5)',this.params.t,this.data.q_res(5,:),'--',this.params.t,q_leg(5,:))
-            title('q_2');legend('Initial reference','Solution reference','Actual trajectory');xlabel('Time [s]');ylabel('Angle [rad]');
             
-            figure
-            plot(this.params.t, this.data.q_init(:,6)',this.params.t,this.data.q_res(6,:),'--',this.params.t,q_leg(6,:))
-            title('q_3');legend('Initial reference','Solution reference','Actual trajectory');xlabel('Time [s]');ylabel('Angle [rad]');
+            
+            % Compute net joint power
+            tsim = this.params.t(1:length(this.data.CoM_y));    
+            for k = 1:length(tsim)
+                P1(k) = abs(q_leg_d(4,k)*this.sim.data.tau(1,k));
+                P2(k) = abs(q_leg_d(5,k)*this.sim.data.tau(2,k));
+                P3(k) = abs(q_leg_d(6,k)*this.sim.data.tau(3,k));
+            end
+            Ptot = P1+P2+P3;
+                  
+%             figure
+%             plot(this.params.t, this.data.q_init(:,4)',this.params.t,this.data.q_res(4,:),'--',this.params.t,q_leg(4,:))
+%             title('q_1');legend('Initial reference','Solution reference','Actual trajectory');xlabel('Time [s]');ylabel('Angle [rad]');
+%             
+%             figure
+%             plot(this.params.t, this.data.q_init(:,5)',this.params.t,this.data.q_res(5,:),'--',this.params.t,q_leg(5,:))
+%             title('q_2');legend('Initial reference','Solution reference','Actual trajectory');xlabel('Time [s]');ylabel('Angle [rad]');
+%             
+%             figure
+%             plot(this.params.t, this.data.q_init(:,6)',this.params.t,this.data.q_res(6,:),'--',this.params.t,q_leg(6,:))
+%             title('q_3');legend('Initial reference','Solution reference','Actual trajectory');xlabel('Time [s]');ylabel('Angle [rad]');
             
             
 %             % Plot all q1 references
@@ -1019,41 +1039,34 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
             
             % Plot evolution of criteria
             figure 
-            resizeFig(gcf, figSize(1),2*figSize(2));
+            resizeFig(gcf, figSize(1),1.5*figSize(2));
             
             subplot(3,1,1)
-            plot(1:length(this.list.J_high),this.list.J_high,'.');
-            axis([0 xf 300 550])
-            paperModeAxisLabels(paperMode, {'Objective function evaluation','J {performance}'});
+            plot(xf,this.list.J_high,'.');
+            axis([0 xf(end) 300 550])
+            paperModeAxisLabels(paperMode, {'','$J_{performance}$'});
             paperModeTitle(     showTitleInPaperMode, paperMode, ...
                                 'Performance criterion (high jump)',  ...
                                 'Performance criterion (high jump)'   );        
                             
             subplot(3,1,2)
-            plot(1:length(this.list.J_stability),this.list.J_stability,'.');
-            axis([0 xf 0 40])
-            paperModeAxisLabels(paperMode, {'Objective function evaluation','J {stability}'});
+            plot(xf,this.list.J_stability,'.');
+            axis([0 xf(end) 0 40])
+            paperModeAxisLabels(paperMode, {'','$J_{stability}$'});
             paperModeTitle(     showTitleInPaperMode, paperMode, ...
                                 'Stability criterion',  ...
                                 'Stability criterion'   );       
                             
             subplot(3,1,3)
-            plot(1:length(this.list.J_torque),this.list.J_torque,'.');
-            axis([0 xf 0 400])
-            paperModeAxisLabels(paperMode, {'Objective function evaluation','J {torque}'});
+            plot(xf,this.list.J_torque,'.');
+            axis([0 xf(end) 0 400])
+            paperModeAxisLabels(paperMode, {'Objective function evaluation','$J_{torque}$'});
             paperModeTitle(     showTitleInPaperMode, paperMode, ...
                                 'Torque criterion',  ...
                                 'Torque criterion'   );       
             paperSave(savePlots, [plotPath 'crit_high.pdf']);  
                             
-            % Plot evolution control points
-            C = this.list.cp;
-            n = this.params.n;
-            cpq1 = C(:,1:3:end);
-            cpq2 = C(:,2:3:end);
-            cpq3 = C(:,3:3:end);
-     
-            s = size(cpq3); s=1:1:s(2);
+
 %             
 %             figure
 %             resizeFig(gcf, figSize(1),figSize(2));
@@ -1078,51 +1091,47 @@ classdef Leg_3DoF_ACA_jumpref_optimizer < handle
 %             paperSave(savePlots, [plotPath 'cp.pdf']);  
 %             hold off
             
-            % Plot evolution pretensions if optimized
-            if this.params.noESB == 0
-                p1 = this.data.list.p(:,1:3:end);
-                p2 = this.data.list.p(:,2:3:end);
-                p3 = this.data.list.p(:,3:3:end);
-                
-                figure
-                resizeFig(gcf, figSize(1), figSize(2));
-                plot(s,p1,s,p2,s,p3);title('Pretension positions evolution');...
-                axis([1 s(end) min(min(this.data.list.p))-0.01 max(max(this.data.list.p))+0.01]);...
-                paperModeLegend(    paperMode, ...
-                                {'$p_1$','$p_2$','$p_3$'},   ...
-                                {'p_1','p_2','p_3'}    );
-                paperModeAxisLabels(paperMode, {'Objective function evaluation','Pretension position [m]'});
-                paperModeTitle(     showTitleInPaperMode, paperMode, ...
-                                    'Pretension positions',  ...
-                                    'Pretension positions'   ); 
-            end
-            paperSave(savePlots, [plotPath 'p.pdf']);  
-            
-            % Plot latest ground forces
-            F_GRF_all = zeros(4,length(this.params.t));
-            for k = 1:length(this.data.F_GRF)
-               F_GRF_all(:,k) = this.data.F_GRF(:,k);
-            end
-            figure
-            plot(this.params.t,F_GRF_all,'Linewidth',2);title('Ground Forces latest simulation');...
-                xlabel('Time [s]'),ylabel('Ground Force [N]');legend('Ankle x','Ankle y','Toe x','Toe y');
-          
-            % Compute net joint power
-            tsim = this.params.t(1:length(this.data.CoM_y));    
-            for k = 1:length(tsim)
-                P1(k) = q_leg_d(4,k)*this.sim.data.tau(1,k);
-                P2(k) = q_leg_d(5,k)*this.sim.data.tau(2,k);
-                P3(k) = q_leg_d(6,k)*this.sim.data.tau(3,k);
-            end
-           
+%             Plot evolution pretensions if optimized
+%             if this.params.noESB == 0
+%                 p1 = this.data.list.p(:,1:3:end);
+%                 p2 = this.data.list.p(:,2:3:end);
+%                 p3 = this.data.list.p(:,3:3:end);
+%                 
+%                 figure
+%                 resizeFig(gcf, figSize(1), figSize(2));
+%                 plot(s,p1,s,p2,s,p3);title('Pretension positions evolution');...
+%                 axis([1 s(end) min(min(this.data.list.p))-0.01 max(max(this.data.list.p))+0.01]);...
+%                 paperModeLegend(    paperMode, ...
+%                                 {'$p_1$','$p_2$','$p_3$'},   ...
+%                                 {'p_1','p_2','p_3'}    );
+%                 paperModeAxisLabels(paperMode, {'Objective function evaluation','Pretension position [m]'});
+%                 paperModeTitle(     showTitleInPaperMode, paperMode, ...
+%                                     'Pretension positions',  ...
+%                                     'Pretension positions'   ); 
+%             end
+%             paperSave(savePlots, [plotPath 'p.pdf']);  
+%             
+% 
+%             %Get ground forces for latest simulation
+%             F_GRF_all = zeros(4,length(this.params.t));
+%             for k = 1:length(this.data.F_GRF)
+%                F_GRF_all(:,k) = this.data.F_GRF(:,k);
+%             end
+%
+%             %Plot latest ground forces for latest simulation
+%             figure
+%             plot(this.params.t,F_GRF_all,'Linewidth',2);title('Ground Forces latest simulation');...
+%                 xlabel('Time [s]'),ylabel('Ground Force [N]');legend('Ankle x','Ankle y','Toe x','Toe y');
+
+            % Plot net joint power
             figure
             resizeFig(gcf, figSize(1), figSize(2));
-            plot(tsim,P1,tsim,P2,tsim,P3)
-            axis([0 tsim(end) -350 800 ])
+            plot(tsim,P1,tsim,P2,tsim,(Ptot));grid on;
+            axis([0 tsim(end) 0 1000])
             paperModeLegend(    paperMode, ...
-                                {'$\tau_1$','$\tau_2$','$\tau_3$'},   ...
-                                {'\tau_1','\tau_2','\tau_3'}    );
-            paperModeAxisLabels(paperMode, {'t [s]','Net joint power [W]'});
+                                {'$P_1$','$P_2$','$P_{total}$'},   ...
+                                {'P_1','P_2','P_total'}    );
+            paperModeAxisLabels(paperMode, {'','Net joint power [W]'});
             paperModeTitle(     showTitleInPaperMode, paperMode, ...
                                     'Net joint power',  ...
                                     'Net joint power'   );  

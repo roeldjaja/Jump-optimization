@@ -52,7 +52,7 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
             this.plots.filtIgnoreTime       = 1.0;
             this.plots.yAxisIgnoreTime      = 0.5;
             this.plots.sizeNormal           = [600 400];
-            this.plots.sizePaperMode        = [500 190];%[600 230];
+            this.plots.sizePaperMode        = [400 220];%[500 190];%[600 230];
             this.plots.showTitleInPaperMode = 0;
             
             % Initialise empty simulation data
@@ -426,7 +426,7 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
             plotPath    = 'plots/';
             if (savePlots)
                 % Create new time vector
-                sampleTime  = 0.01;
+                sampleTime  = 0.005;
                 t_RS        = [0:sampleTime:max(t)]'; %#ok<NBRAK>
                 
                 % Resample data
@@ -555,54 +555,54 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
             
             % Do plots
             
-            % Leg joints/tracking
-            figure(1); clf; hold on; grid on;
-            resizeFig(gcf, figSize(1), figSize(2));
-            plot(t, q_joints(1,:), 'Color', C.B);
-            plot(t, q_joints(2,:), 'Color', C.R);
-            plot(t, q_joints(3,:), 'Color', C.G);
-            plot(t, q_ref(4,:), '--', 'Color', C.B);
-            plot(t, q_ref(5,:), '--', 'Color', C.R);
-            plot(t, q_ref(6,:), '--', 'Color', C.G);
-            setYAxis; xlim([0 tfinal]);
-            paperModeLegend(    paperMode, ...
-                                {'$q_1$', '$q_2$', '$q_3$', '$q_1^*$', '$q_2^*$', '$q_3^*$'},   ...
-                                {'q_1', 'q_2', 'q_3', 'q_{1,ref}', 'q_{2,ref}', 'q_{3,ref}'}    );
-            paperModeAxisLabels(paperMode, {'$t$ [s]', '[rad]'}, {'t [s]', '[rad]'});
-            paperModeTitle(     showTitleInPaperMode, paperMode, ...
-                                'Leg joints/tracking',  ...
-                                'Leg joints/tracking'   );
-            paperSave(savePlots, [plotPath 'leg_joints.pdf']);
-            
-            % Joint velocities
-            figure(2); clf; hold on; grid on;
-            resizeFig(gcf, figSize(1), figSize(2));
-            plot(t, q_joints_d(1,:), 'Color', C.B);
-            plot(t, q_joints_d(2,:), 'Color', C.R);
-            plot(t, q_joints_d(3,:), 'Color', C.G);
-            setYAxis;xlim([0 tfinal]);%(-1, 2*yAxisIgnoreTime);
-            paperModeLegend(    paperMode, ...
-                                {'$\dot{q}_1$', '$\dot{q}_2$', '$\dot{q}_3$'},    ...
-                                {'q_{1,d}', 'q_{2,d}', 'q_{3,d}'}           );
-            paperModeAxisLabels(paperMode, {'$t$ [s]', '[rad/s]'}, {'t [s]', '[rad/s]'});
-            paperModeTitle(     showTitleInPaperMode, paperMode, ...
-                                'Joint velocities',  ...
-                                'Joint velocities'   );
-            paperSave(savePlots, [plotPath 'leg_joint_velocities.pdf']);
-            
-            % Floating base velocities
-            figure(3); clf; hold on; grid on;
-            resizeFig(gcf, figSize(1), figSize(2));
-            plot(t, x_floatingBase);
-            setYAxis;xlim([0 tfinal]);%(-1, 2*yAxisIgnoreTime);
-            paperModeLegend(    paperMode, ...
-                                {'$x_1$ [m]', '$y_1$ [m]', '$\theta_1$ [rad]', '$\dot{x}_1$ [m/s]', '$\dot{y}_1$ [m/s]', '$\dot{\theta}_1$ [rad/s]'},   ...
-                                {'x_1 [m]', 'y_1 [m]', 'theta_1 [rad]', 'x_{1,d} [m/s]', 'y_{1,d} [m/s]', 'theta_{1,d} [rad/s]'}    );
-            paperModeAxisLabels(paperMode, {'$t$ [s]', '[]'}, {'t [s]', '[]'});
-            paperModeTitle(     showTitleInPaperMode, paperMode, ...
-                                'Floating base configuration and velocity',  ...
-                                'Floating base configuration and velocity'   );
-            paperSave(savePlots, [plotPath 'floating_base.pdf']);
+%             % Leg joints/tracking
+%             figure(1); clf; hold on; grid on;
+%             resizeFig(gcf, figSize(1), figSize(2));
+%             plot(t, q_joints(1,:), 'Color', C.B);
+%             plot(t, q_joints(2,:), 'Color', C.R);
+%             plot(t, q_joints(3,:), 'Color', C.G);
+%             plot(t, q_ref(4,:), '--', 'Color', C.B);
+%             plot(t, q_ref(5,:), '--', 'Color', C.R);
+%             plot(t, q_ref(6,:), '--', 'Color', C.G);
+%             setYAxis; xlim([0 tfinal]);
+%             paperModeLegend(    paperMode, ...
+%                                 {'$q_1$', '$q_2$', '$q_3$', '$q_1^*$', '$q_2^*$', '$q_3^*$'},   ...
+%                                 {'q_1', 'q_2', 'q_3', 'q_{1,ref}', 'q_{2,ref}', 'q_{3,ref}'}    );
+%             paperModeAxisLabels(paperMode, {'$t$ [s]', '[rad]'}, {'t [s]', '[rad]'});
+%             paperModeTitle(     showTitleInPaperMode, paperMode, ...
+%                                 'Leg joints/tracking',  ...
+%                                 'Leg joints/tracking'   );
+%             paperSave(savePlots, [plotPath 'leg_joints.pdf']);
+%             
+%             % Joint velocities
+%             figure(2); clf; hold on; grid on;
+%             resizeFig(gcf, figSize(1), figSize(2));
+%             plot(t, q_joints_d(1,:), 'Color', C.B);
+%             plot(t, q_joints_d(2,:), 'Color', C.R);
+%             plot(t, q_joints_d(3,:), 'Color', C.G);
+%             setYAxis;xlim([0 tfinal]);%(-1, 2*yAxisIgnoreTime);
+%             paperModeLegend(    paperMode, ...
+%                                 {'$\dot{q}_1$', '$\dot{q}_2$', '$\dot{q}_3$'},    ...
+%                                 {'q_{1,d}', 'q_{2,d}', 'q_{3,d}'}           );
+%             paperModeAxisLabels(paperMode, {'$t$ [s]', '[rad/s]'}, {'t [s]', '[rad/s]'});
+%             paperModeTitle(     showTitleInPaperMode, paperMode, ...
+%                                 'Joint velocities',  ...
+%                                 'Joint velocities'   );
+%             paperSave(savePlots, [plotPath 'leg_joint_velocities.pdf']);
+%             
+%             % Floating base velocities
+%             figure(3); clf; hold on; grid on;
+%             resizeFig(gcf, figSize(1), figSize(2));
+%             plot(t, x_floatingBase);
+%             setYAxis;xlim([0 tfinal]);%(-1, 2*yAxisIgnoreTime);
+%             paperModeLegend(    paperMode, ...
+%                                 {'$x_1$ [m]', '$y_1$ [m]', '$\theta_1$ [rad]', '$\dot{x}_1$ [m/s]', '$\dot{y}_1$ [m/s]', '$\dot{\theta}_1$ [rad/s]'},   ...
+%                                 {'x_1 [m]', 'y_1 [m]', 'theta_1 [rad]', 'x_{1,d} [m/s]', 'y_{1,d} [m/s]', 'theta_{1,d} [rad/s]'}    );
+%             paperModeAxisLabels(paperMode, {'$t$ [s]', '[]'}, {'t [s]', '[]'});
+%             paperModeTitle(     showTitleInPaperMode, paperMode, ...
+%                                 'Floating base configuration and velocity',  ...
+%                                 'Floating base configuration and velocity'   );
+%             paperSave(savePlots, [plotPath 'floating_base.pdf']);
 
             % Joint 1 torques
             figure(4); clf; hold on; grid on;
@@ -614,8 +614,8 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
                 plot(t, tau_p_a1(1,:), 'Color', C.R);
                 plot(t, tau(1,:), 'Color', C.BLK);
                 paperModeLegend(    paperMode, ...
-                                    { '$\tau_{PB,A1}$', '$\tau_{p,A1}$', '$\tau_1$'},   ...
-                                    { 'tau_{PB,A1}', 'tau_{p,A1}', 'tau_1'}                );                    
+                                    { '$\tau_{PB,A1}$', '$\tau_{ESB,A1}$', '$\tau_1$'},   ...
+                                    { 'tau_{PB,A1}', 'tau_{ESB,A1}', 'tau_1'}                  );                    
 %                                     {'$\tau_1^*$', '$\tau_{PB,A1}$', '$\tau_{p,A1}$', '$\tau_1$'},   ...
 %                                     {'tau_{1,ref}', 'tau_{PB,A1}', 'tau_{p,A1}', 'tau_1'}                );
 
@@ -632,9 +632,9 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
                                     'Joint 1 torques (noESB)',  ...
                                     'Joint 1 torques (noESB)'   );
             end
-%             setYAxis(-1, yAxisIgnoreTime);
+            ylim([-100 150])
             xlim([0 tfinal]);
-            paperModeAxisLabels(paperMode, {'$t$ [s]', '[N m]'}, {'t [s]', '[N m]'});
+            paperModeAxisLabels(paperMode, {'', '[N m]'}, {'t [s]', '[N m]'});
             paperSave(savePlots, [plotPath 'q_1_torques.pdf']);
             
             % Joint 2 torques
@@ -649,7 +649,7 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
                 plot(t, tau_p_a1(2,:)+tau_p_a2(2,:), 'Color', C.R);
                 plot(t, tau(2,:), 'Color', C.BLK);
                 paperModeLegend(    paperMode, ...
-                                    {'$\tau_{PB,A2}$', '$\tau_{p,A1}$', '$\tau_{p,A2}$', '$\tau_{p,A1}+\tau_{p,A2}$', '$\tau_2$'},     ...
+                                    {'$\tau_{PB,A2}$', '$\tau_{ESB,A1}$', '$\tau_{ESB,A2}$', '$\tau_{ESB,A1+ESB,A2}$', '$\tau_2$'},     ...
                                     {'tau_{PB,A2}', 'tau_{p,A1}', 'tau_{p,A2}', 'tau_{p,a1}+tau_{p,A2}', 'tau_2'}                         );
 %                                     {'$\tau_2^*$', '$\tau_{PB,A2}$', '$\tau_{p,A1}$', '$\tau_{p,A2}$', '$\tau_{p,A1}+\tau_{p,A2}$', '$\tau_2$'},     ...
 %                                     {'tau_{2,ref}', 'tau_{PB,A2}', 'tau_{p,A1}', 'tau_{p,A2}', 'tau_{p,a1}+tau_{p,A2}', 'tau_2'}                         );
@@ -661,7 +661,7 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
                 plot(t, tau_p_a2(2,:), 'Color', C.R);
                 plot(t, tau(2,:), 'Color', C.BLK);
                 paperModeLegend(    paperMode, ...
-                                    { '$\tau_{PB,A2}$', '$\tau_{p,A2}$', '$\tau_2$'},   ...
+                                    { '$\tau_{PB,A2}$', '$\tau_{ESB,A2}$', '$\tau_2$'},   ...
                                     { 'tau_{PB,A2}', 'tau_{p,A2}', 'tau_2'}                );
 
 %                                     {'$\tau_2^*$', '$\tau_{PB,A2}$', '$\tau_{p,A2}$', '$\tau_2$'},   ...
@@ -680,9 +680,9 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
                                     'Joint 2 torques (noESB)',  ...
                                     'Joint 2 torques (noESB)'   );
             end
-%             setYAxis(-1, yAxisIgnoreTime);
+            ylim([-100 150])
             xlim([0 tfinal]);
-            paperModeAxisLabels(paperMode, {'$t$ [s]', '[N m]'}, {'t [s]', '[N m]'});
+            paperModeAxisLabels(paperMode, {'', '[N m]'}, {'t [s]', '[N m]'});
             paperSave(savePlots, [plotPath 'q_2_torques.pdf']);
             
             % Joint 3 torques
@@ -691,156 +691,156 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
 %             plot(t, tau_ref(3,:), '--', 'Color', C.BLK);
             plot(t, tau_pb_3, 'Color', C.B);
             %plot(t, tau(3,:), 'Color', C.BLK);
-%             setYAxis(-1, 2*yAxisIgnoreTime);
+            ylim([-100 150])
             xlim([0 tfinal]);
             paperModeLegend(    paperMode, ...
                             	{ '$\tau_{PB,A3}$'},    ...
                              	{ 'tau_{PB,A3}'}       	);
 %                             	{'$\tau_3^*$', '$\tau_{PB,A3}$'},    ...
 %                              	{'tau_{3,ref}', 'tau_{PB,A3}'}       	);
-            paperModeAxisLabels(paperMode, {'$t$ [s]', '[N m]'}, {'t [s]', '[N m]'});
+            paperModeAxisLabels(paperMode, {'', '[N m]'}, {'t [s]', '[N m]'});
             paperModeTitle(     showTitleInPaperMode, paperMode, ...
                                 'Joint 3 torques',  ...
                                 'Joint 3 torques'   );
             paperSave(savePlots, [plotPath 'q_3_torques.pdf']);
             
-            % ESB extension
-            figure(7); clf; hold on; grid on;
-            resizeFig(gcf, figSize(1), figSize(2));
-            plot(t, x_a1(this.model.a1.stateIdx_dL_p,:), 'Color', C.B);
-            plot(t, x_a2(this.model.a2.stateIdx_dL_p,:), 'Color', C.R);
-            setYAxis;
-            paperModeLegend(	paperMode, ...
-                                {'$\Delta_{p,1}$', '$\Delta_{p,2}$'},   ...
-                                {'dL_{p,1}', 'dL_{p,2}'}                );
-            paperModeAxisLabels(paperMode, {'$t$ [s]', '[m]'}, {'t [s]', '[m]'});
-            paperModeTitle(     showTitleInPaperMode, paperMode, ...
-                                'ESB extension',  ...
-                                'ESB extension'   );
-            paperSave(savePlots, [plotPath 'dL_p.pdf']);
-            
-            % Pretension positions
-            figure(8); clf; hold on; grid on;
-            resizeFig(gcf, figSize(1), figSize(2));
-            plot(t, x_a1(this.model.a1.stateIdx_p,:), 'Color', C.B);
-            plot(t, x_a2(this.model.a2.stateIdx_p,:), 'Color', C.R);
-            plot([0 max(t)], [this.model.a1.params.p_range(1) this.model.a1.params.p_range(1)], '--', 'Color', C.B);
-            plot([0 max(t)], [this.model.a1.params.p_range(2) this.model.a1.params.p_range(2)], '--', 'Color', C.B);
-            plot([0 max(t)], [this.model.a2.params.p_range(1) this.model.a2.params.p_range(1)], '--', 'Color', C.R);
-            plot([0 max(t)], [this.model.a2.params.p_range(2) this.model.a2.params.p_range(2)], '--', 'Color', C.R);
-            setYAxis;xlim([0 tfinal]);
-            paperModeLegend(	paperMode, ...
-                                {'$p_1$', '$p_2$'},     ...
-                                {'p_1', 'p_2'}      	);
-            paperModeAxisLabels(paperMode, {'$t$ [s]', '[m]'}, {'t [s]', '[m]'});
-            paperModeTitle(     showTitleInPaperMode, paperMode, ...
-                                'Pretension positions',  ...
-                                'Pretension positions'   );
-            paperSave(savePlots, [plotPath 'p.pdf']);
-            
-            % Electrical power
-            figure(9); clf; hold on; grid on;
-            resizeFig(gcf, figSize(1), figSize(2));
-            plot(t, P_A1, 'Color', C_light.B);
-            plot(t, P_A2, 'Color', C_light.R);
-            plot(t, P_A3, 'Color', C_light.G);
-            plot(t, P, 'Color', C_light.GREY);
-            h1 = plot(t, P_A1_filt, 'Color', C.B, 'LineWidth', 2);
-            h2 = plot(t, P_A2_filt, 'Color', C.R, 'LineWidth', 2);
-            h3 = plot(t, P_A3_filt, 'Color', C.G, 'LineWidth', 2);
-            h4 = plot(t, P_filt, 'Color', C.BLK, 'LineWidth', 2);
-            setYAxis;xlim([0 tfinal]);%(-1, yAxisIgnoreTime);
-            paperModeLegend(	paperMode, ...
-                                {   ['$P_{A1}$ filt. (' num2str(P_A1_filt(end), '%3.1f') ' W end)'],	...
-                                    ['$P_{A2}$ filt. (' num2str(P_A2_filt(end), '%3.1f') ' W end)'],    ...
-                                    ['$P_{A3}$ filt. (' num2str(P_A3_filt(end), '%3.1f') ' W end)'],    ...
-                                    ['$P$ filt. (' num2str(P_filt(end), '%3.1f') ' W end)']             }, ...
-                                {   'P_{A1}', 'P_{A2}', 'P_{A3}', 'P', ...
-                                    ['P_{A1} filt. (' num2str(P_A1_filt(end), '%3.1f') ' W end)'],  ...
-                                    ['P_{A2} filt. (' num2str(P_A2_filt(end), '%3.1f') ' W end)'],  ...
-                                    ['P_{A3} filt. (' num2str(P_A3_filt(end), '%3.1f') ' W end)'],  ...
-                                    ['P filt. (' num2str(P_filt(end), '%3.1f') ' W end)']           }, ...
-                                    [h1,h2,h3,h4] );
-            paperModeAxisLabels(paperMode, {'$t$ [s]', '[W]'}, {'t [s]', '[W]'});
-            paperModeTitle(     showTitleInPaperMode, paperMode, ...
-                                'Electrical power (positive only)',  ...
-                                'Electrical power (positive only)'   );
-            paperSave(savePlots, [plotPath 'P.pdf']);
-            
-            % Electrical power M1 vs M2 per actuator unit
-            figure(10); clf;
-            resizeFig(gcf, figSize(1), figSize(2));
-            subplot(2,2,1); hold on; grid on;
-            plot(t, P_A11, 'Color', C.B);
-            plot(t, P_A12, 'Color', C.R);
-            paperModeLegend(	paperMode, ...
-                                {'$P_{m1,A1}$', '$P_{m2,A1}$'},   ...
-                                {'P_{m1,A1}', 'P_{m2,A1}'}      	);
-            paperModeAxisLabels(paperMode, {'$t$ [s]', '[W]'}, {'t [s]', '[W]'});
-            setYAxis;xlim([0 tfinal]);%(-1, yAxisIgnoreTime);
-            paperModeTitle(     showTitleInPaperMode, paperMode, ...
-                                'PB vs ESB power: ACA1',  ...
-                                'PB vs ESB power: ACA1'   );
-            subplot(2,2,2); hold on; grid on;
-            plot(t, P_A21, 'Color', C.B);
-            plot(t, P_A22, 'Color', C.R);
-            paperModeLegend(	paperMode, ...
-                                {'$P_{m1,A2}$', '$P_{m2,A2}$'},   ...
-                                {'P_{m1,A2}', 'P_{m2,A2}'}      	);
-            paperModeAxisLabels(paperMode, {'$t$ [s]', '[W]'}, {'t [s]', '[W]'});
-            setYAxis;xlim([0 tfinal]);%(-1, yAxisIgnoreTime);
-            paperModeTitle(     showTitleInPaperMode, paperMode, ...
-                                'PB vs ESB power: ACA2',  ...
-                                'PB vs ESB power: ACA2'   );
-            subplot(2,2,3); hold on; grid on;
-            plot(t, P_A31, 'Color', C.B);
-            plot(t, P_A32, 'Color', C.R);
-            paperModeLegend(	paperMode, ...
-                                {'$P_{m1,A3}$', '$P_{m2,A3}$'},   ...
-                                {'P_{m1,A3}', 'P_{m2,A3}'}      	);
-            paperModeAxisLabels(paperMode, {'$t$ [s]', '[W]'}, {'t [s]', '[W]'});
-            setYAxis;xlim([0 tfinal]);%(-1, yAxisIgnoreTime);
-            paperModeTitle(     showTitleInPaperMode, paperMode, ...
-                                'PB vs ESB power: ACA3',  ...
-                                'PB vs ESB power: ACA3'   );
-            paperSave(savePlots, [plotPath 'P_M1_vs_M2.pdf']);
-            
-            % Motor currents
-            figure(11); clf; hold on; grid on;
-            resizeFig(gcf, figSize(1), figSize(2));
-            plot(t, u_a1(1,:), 'Color', C.B);
-            plot(t, u_a1(2,:), '--', 'Color', C.B);
-            plot(t, u_a2(1,:), 'Color', C.R);
-            plot(t, u_a2(2,:), '--', 'Color', C.R);
-            plot(t, u_a3(1,:), 'Color', C.G);
-            plot(t, u_a3(2,:), '--', 'Color', C.G);
-            paperModeLegend(	paperMode, ...
-                                {'$i_{m1,A1}$', '$i_{m2,A1}$', '$i_{m1,A2}$', '$i_{m2,A2}$', '$i_{m1,A3}$', '$i_{m2,A3}$'},     ...
-                                {'i_{m1,A1}', 'i_{m2,A1}', 'i_{m1,A2}', 'i_{m2,A2}', 'i_{m1,A3}', 'i_{m2,A3}'}                  );
-            paperModeAxisLabels(paperMode, {'$t$ [s]', '[A]'}, {'t [s]', '[A]'});
-            setYAxis;xlim([0 tfinal]);%(-1, yAxisIgnoreTime);
-            paperModeTitle(     showTitleInPaperMode, paperMode, ...
-                                'Motor currents',  ...
-                                'Motor currents'   );
-            paperSave(savePlots, [plotPath 'currents.pdf']);
-            
-            % M2 rotor velocities
-            rs2rpm = 60/(2*pi);
-            figure(12); clf; hold on; grid on;
-            resizeFig(gcf, figSize(1), figSize(2));
-            plot(t, rs2rpm * x_a1(this.model.a1.stateIdx_p_d,:) * this.model.a1.params.r_m2, 'Color', C.B);
-            plot(t, rs2rpm * x_a2(this.model.a2.stateIdx_p_d,:) * this.model.a2.params.r_m2, 'Color', C.R);
-            plot(t, rs2rpm * x_a3(this.model.a3.stateIdx_p_d,:) * this.model.a3.params.r_m2, 'Color', C.G);
-            paperModeLegend(	paperMode, ...
-                                {'$\dot{p}_1$', '$\dot{p}_2$', '$\dot{p}_3$'},    ...
-                                {'p_{d,1}', 'p_{d,2}', 'p_{d,3}'}           );
-            paperModeAxisLabels(paperMode, {'$t$ [s]', '[rpm]'}, {'t [s]', '[rpm]'});
-            setYAxis;xlim([0 tfinal]);%;
-            paperModeTitle(     showTitleInPaperMode, paperMode, ...
-                                'M2 rotor velocities',  ...
-                                'M2 rotor velocities'   );
-            paperSave(savePlots, [plotPath 'M2_speed.pdf']);
-            
+%             % ESB extension
+%             figure(7); clf; hold on; grid on;
+%             resizeFig(gcf, figSize(1), figSize(2));
+%             plot(t, x_a1(this.model.a1.stateIdx_dL_p,:), 'Color', C.B);
+%             plot(t, x_a2(this.model.a2.stateIdx_dL_p,:), 'Color', C.R);
+%             setYAxis;
+%             paperModeLegend(	paperMode, ...
+%                                 {'$\Delta_{p,1}$', '$\Delta_{p,2}$'},   ...
+%                                 {'dL_{p,1}', 'dL_{p,2}'}                );
+%             paperModeAxisLabels(paperMode, {'$t$ [s]', '[m]'}, {'t [s]', '[m]'});
+%             paperModeTitle(     showTitleInPaperMode, paperMode, ...
+%                                 'ESB extension',  ...
+%                                 'ESB extension'   );
+%             paperSave(savePlots, [plotPath 'dL_p.pdf']);
+%             
+%             % Pretension positions
+%             figure(8); clf; hold on; grid on;
+%             resizeFig(gcf, figSize(1), figSize(2));
+%             plot(t, x_a1(this.model.a1.stateIdx_p,:), 'Color', C.B);
+%             plot(t, x_a2(this.model.a2.stateIdx_p,:), 'Color', C.R);
+%             plot([0 max(t)], [this.model.a1.params.p_range(1) this.model.a1.params.p_range(1)], '--', 'Color', C.B);
+%             plot([0 max(t)], [this.model.a1.params.p_range(2) this.model.a1.params.p_range(2)], '--', 'Color', C.B);
+%             plot([0 max(t)], [this.model.a2.params.p_range(1) this.model.a2.params.p_range(1)], '--', 'Color', C.R);
+%             plot([0 max(t)], [this.model.a2.params.p_range(2) this.model.a2.params.p_range(2)], '--', 'Color', C.R);
+%             setYAxis;xlim([0 tfinal]);
+%             paperModeLegend(	paperMode, ...
+%                                 {'$p_1$', '$p_2$'},     ...
+%                                 {'p_1', 'p_2'}      	);
+%             paperModeAxisLabels(paperMode, {'$t$ [s]', '[m]'}, {'t [s]', '[m]'});
+%             paperModeTitle(     showTitleInPaperMode, paperMode, ...
+%                                 'Pretension positions',  ...
+%                                 'Pretension positions'   );
+%             paperSave(savePlots, [plotPath 'p.pdf']);
+%             
+%             % Electrical power
+%             figure(9); clf; hold on; grid on;
+%             resizeFig(gcf, figSize(1), figSize(2));
+%             plot(t, P_A1, 'Color', C_light.B);
+%             plot(t, P_A2, 'Color', C_light.R);
+%             plot(t, P_A3, 'Color', C_light.G);
+%             plot(t, P, 'Color', C_light.GREY);
+%             h1 = plot(t, P_A1_filt, 'Color', C.B, 'LineWidth', 2);
+%             h2 = plot(t, P_A2_filt, 'Color', C.R, 'LineWidth', 2);
+%             h3 = plot(t, P_A3_filt, 'Color', C.G, 'LineWidth', 2);
+%             h4 = plot(t, P_filt, 'Color', C.BLK, 'LineWidth', 2);
+%             setYAxis;xlim([0 tfinal]);%(-1, yAxisIgnoreTime);
+%             paperModeLegend(	paperMode, ...
+%                                 {   ['$P_{A1}$ filt. (' num2str(P_A1_filt(end), '%3.1f') ' W end)'],	...
+%                                     ['$P_{A2}$ filt. (' num2str(P_A2_filt(end), '%3.1f') ' W end)'],    ...
+%                                     ['$P_{A3}$ filt. (' num2str(P_A3_filt(end), '%3.1f') ' W end)'],    ...
+%                                     ['$P$ filt. (' num2str(P_filt(end), '%3.1f') ' W end)']             }, ...
+%                                 {   'P_{A1}', 'P_{A2}', 'P_{A3}', 'P', ...
+%                                     ['P_{A1} filt. (' num2str(P_A1_filt(end), '%3.1f') ' W end)'],  ...
+%                                     ['P_{A2} filt. (' num2str(P_A2_filt(end), '%3.1f') ' W end)'],  ...
+%                                     ['P_{A3} filt. (' num2str(P_A3_filt(end), '%3.1f') ' W end)'],  ...
+%                                     ['P filt. (' num2str(P_filt(end), '%3.1f') ' W end)']           }, ...
+%                                     [h1,h2,h3,h4] );
+%             paperModeAxisLabels(paperMode, {'$t$ [s]', '[W]'}, {'t [s]', '[W]'});
+%             paperModeTitle(     showTitleInPaperMode, paperMode, ...
+%                                 'Electrical power (positive only)',  ...
+%                                 'Electrical power (positive only)'   );
+%             paperSave(savePlots, [plotPath 'P.pdf']);
+%             
+%             % Electrical power M1 vs M2 per actuator unit
+%             figure(10); clf;
+%             resizeFig(gcf, figSize(1), figSize(2));
+%             subplot(2,2,1); hold on; grid on;
+%             plot(t, P_A11, 'Color', C.B);
+%             plot(t, P_A12, 'Color', C.R);
+%             paperModeLegend(	paperMode, ...
+%                                 {'$P_{m1,A1}$', '$P_{m2,A1}$'},   ...
+%                                 {'P_{m1,A1}', 'P_{m2,A1}'}      	);
+%             paperModeAxisLabels(paperMode, {'$t$ [s]', '[W]'}, {'t [s]', '[W]'});
+%             setYAxis;xlim([0 tfinal]);%(-1, yAxisIgnoreTime);
+%             paperModeTitle(     showTitleInPaperMode, paperMode, ...
+%                                 'PB vs ESB power: ACA1',  ...
+%                                 'PB vs ESB power: ACA1'   );
+%             subplot(2,2,2); hold on; grid on;
+%             plot(t, P_A21, 'Color', C.B);
+%             plot(t, P_A22, 'Color', C.R);
+%             paperModeLegend(	paperMode, ...
+%                                 {'$P_{m1,A2}$', '$P_{m2,A2}$'},   ...
+%                                 {'P_{m1,A2}', 'P_{m2,A2}'}      	);
+%             paperModeAxisLabels(paperMode, {'$t$ [s]', '[W]'}, {'t [s]', '[W]'});
+%             setYAxis;xlim([0 tfinal]);%(-1, yAxisIgnoreTime);
+%             paperModeTitle(     showTitleInPaperMode, paperMode, ...
+%                                 'PB vs ESB power: ACA2',  ...
+%                                 'PB vs ESB power: ACA2'   );
+%             subplot(2,2,3); hold on; grid on;
+%             plot(t, P_A31, 'Color', C.B);
+%             plot(t, P_A32, 'Color', C.R);
+%             paperModeLegend(	paperMode, ...
+%                                 {'$P_{m1,A3}$', '$P_{m2,A3}$'},   ...
+%                                 {'P_{m1,A3}', 'P_{m2,A3}'}      	);
+%             paperModeAxisLabels(paperMode, {'$t$ [s]', '[W]'}, {'t [s]', '[W]'});
+%             setYAxis;xlim([0 tfinal]);%(-1, yAxisIgnoreTime);
+%             paperModeTitle(     showTitleInPaperMode, paperMode, ...
+%                                 'PB vs ESB power: ACA3',  ...
+%                                 'PB vs ESB power: ACA3'   );
+%             paperSave(savePlots, [plotPath 'P_M1_vs_M2.pdf']);
+%             
+%             % Motor currents
+%             figure(11); clf; hold on; grid on;
+%             resizeFig(gcf, figSize(1), figSize(2));
+%             plot(t, u_a1(1,:), 'Color', C.B);
+%             plot(t, u_a1(2,:), '--', 'Color', C.B);
+%             plot(t, u_a2(1,:), 'Color', C.R);
+%             plot(t, u_a2(2,:), '--', 'Color', C.R);
+%             plot(t, u_a3(1,:), 'Color', C.G);
+%             plot(t, u_a3(2,:), '--', 'Color', C.G);
+%             paperModeLegend(	paperMode, ...
+%                                 {'$i_{m1,A1}$', '$i_{m2,A1}$', '$i_{m1,A2}$', '$i_{m2,A2}$', '$i_{m1,A3}$', '$i_{m2,A3}$'},     ...
+%                                 {'i_{m1,A1}', 'i_{m2,A1}', 'i_{m1,A2}', 'i_{m2,A2}', 'i_{m1,A3}', 'i_{m2,A3}'}                  );
+%             paperModeAxisLabels(paperMode, {'$t$ [s]', '[A]'}, {'t [s]', '[A]'});
+%             setYAxis;xlim([0 tfinal]);%(-1, yAxisIgnoreTime);
+%             paperModeTitle(     showTitleInPaperMode, paperMode, ...
+%                                 'Motor currents',  ...
+%                                 'Motor currents'   );
+%             paperSave(savePlots, [plotPath 'currents.pdf']);
+%             
+%             % M2 rotor velocities
+%             rs2rpm = 60/(2*pi);
+%             figure(12); clf; hold on; grid on;
+%             resizeFig(gcf, figSize(1), figSize(2));
+%             plot(t, rs2rpm * x_a1(this.model.a1.stateIdx_p_d,:) * this.model.a1.params.r_m2, 'Color', C.B);
+%             plot(t, rs2rpm * x_a2(this.model.a2.stateIdx_p_d,:) * this.model.a2.params.r_m2, 'Color', C.R);
+%             plot(t, rs2rpm * x_a3(this.model.a3.stateIdx_p_d,:) * this.model.a3.params.r_m2, 'Color', C.G);
+%             paperModeLegend(	paperMode, ...
+%                                 {'$\dot{p}_1$', '$\dot{p}_2$', '$\dot{p}_3$'},    ...
+%                                 {'p_{d,1}', 'p_{d,2}', 'p_{d,3}'}           );
+%             paperModeAxisLabels(paperMode, {'$t$ [s]', '[rpm]'}, {'t [s]', '[rpm]'});
+%             setYAxis;xlim([0 tfinal]);%;
+%             paperModeTitle(     showTitleInPaperMode, paperMode, ...
+%                                 'M2 rotor velocities',  ...
+%                                 'M2 rotor velocities'   );
+%             paperSave(savePlots, [plotPath 'M2_speed.pdf']);
+%             
             % Energy stored inside ESBs
             figure(13); clf; hold on; grid on;
             resizeFig(gcf, figSize(1), figSize(2));
@@ -848,52 +848,52 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
             plot(t, E_p_2, 'Color', C.R);
             plot(t, E_p_3, 'Color', C.G);
             paperModeLegend(	paperMode, ...
-                                {'$E_{p,1}$', '$E_{p,2}$', '$E_{p,3}$'},    ...
+                                {'$E_{ESB,1}$', '$E_{ESB,2}$', '$E_{ESB,3}$'},    ...
                                 {'E_{p,1}', 'E_{p,2}', 'E_{p,3}'}           );
             paperModeAxisLabels(paperMode, {'$t$ [s]', 'Energy [J]'}, {'t [s]', 'Energy [J]'});
-            setYAxis;xlim([0 tfinal]);%
+            ylim([0 60]);xlim([0 tfinal]);%
             paperModeTitle(     showTitleInPaperMode, paperMode, ...
                                 'ESB stored energy',  ...
                                 'ESB stored energy'   );
             paperSave(savePlots, [plotPath 'ESB_storage.pdf']);
             
-            % Motor voltages
-            figure(14); clf; hold on; grid on;
-            resizeFig(gcf, figSize(1), figSize(2));
-            plot(t, v11, 'Color', C.B);
-            plot(t, v12, '--', 'Color', C.B);
-            plot(t, v21, 'Color', C.R);
-            plot(t, v22, '--', 'Color', C.R);
-            plot(t, v31, 'Color', C.G);
-            plot(t, v32, '--', 'Color', C.G);
-            paperModeLegend(	paperMode, ...
-                                {'$v_{m1,A1}$', '$v_{m2,A1}$', '$v_{m1,A2}$', '$v_{m2,A2}$', '$v_{m1,A3}$', '$v_{m2,A3}$'},     ...
-                                {'v_{m1,A1}', 'v_{m2,A1}', 'v_{m1,A2}', 'v_{m2,A2}', 'v_{m1,A3}', 'v_{m2,A3}'}                  );
-            paperModeAxisLabels(paperMode, {'$t$ [s]', 'Voltage [V]'}, {'t [s]', 'Voltage [V]'});
-            setYAxis;xlim([0 tfinal]);%(-1, yAxisIgnoreTime);
-            paperModeTitle(     showTitleInPaperMode, paperMode, ...
-                                'Motor voltages',  ...
-                                'Motor voltages'   );
-            paperSave(savePlots, [plotPath 'voltages.pdf']);
-            
-            % Cumulative electrical energy consumption
-            figure(15); clf; hold on; grid on;
-            resizeFig(gcf, figSize(1), figSize(2));
-            plot(t, E_A1, 'Color', C.B);
-            plot(t, E_A2, 'Color', C.R);
-            plot(t, E_A3, 'Color', C.G);
-            plot(t, E, 'Color', C.BLK);
-            setYAxis;xlim([0 tfinal]);%;
-            paperModeLegend(	paperMode, ...
-                                {'$E_{A1}$', '$E_{A2}$', '$E_{A3}$', '$E$'},    ...
-                                {'E_{A1}', 'E_{A2}', 'E_{A3}', 'E'}             );
-            paperModeAxisLabels(paperMode, {'$t$ [s]', '[J]'}, {'t [s]', '[J]'});
-            paperModeTitle(     showTitleInPaperMode, paperMode, ...
-                                'Cumulative electrical energy consumption',  ...
-                                'Cumulative electrical energy consumption'   );
-            paperSave(savePlots, [plotPath 'E.pdf']);
-            
-            disp('Finished.');
+%             % Motor voltages
+%             figure(14); clf; hold on; grid on;
+%             resizeFig(gcf, figSize(1), figSize(2));
+%             plot(t, v11, 'Color', C.B);
+%             plot(t, v12, '--', 'Color', C.B);
+%             plot(t, v21, 'Color', C.R);
+%             plot(t, v22, '--', 'Color', C.R);
+%             plot(t, v31, 'Color', C.G);
+%             plot(t, v32, '--', 'Color', C.G);
+%             paperModeLegend(	paperMode, ...
+%                                 {'$v_{m1,A1}$', '$v_{m2,A1}$', '$v_{m1,A2}$', '$v_{m2,A2}$', '$v_{m1,A3}$', '$v_{m2,A3}$'},     ...
+%                                 {'v_{m1,A1}', 'v_{m2,A1}', 'v_{m1,A2}', 'v_{m2,A2}', 'v_{m1,A3}', 'v_{m2,A3}'}                  );
+%             paperModeAxisLabels(paperMode, {'$t$ [s]', 'Voltage [V]'}, {'t [s]', 'Voltage [V]'});
+%             setYAxis;xlim([0 tfinal]);%(-1, yAxisIgnoreTime);
+%             paperModeTitle(     showTitleInPaperMode, paperMode, ...
+%                                 'Motor voltages',  ...
+%                                 'Motor voltages'   );
+%             paperSave(savePlots, [plotPath 'voltages.pdf']);
+%             
+%             % Cumulative electrical energy consumption
+%             figure(15); clf; hold on; grid on;
+%             resizeFig(gcf, figSize(1), figSize(2));
+%             plot(t, E_A1, 'Color', C.B);
+%             plot(t, E_A2, 'Color', C.R);
+%             plot(t, E_A3, 'Color', C.G);
+%             plot(t, E, 'Color', C.BLK);
+%             setYAxis;xlim([0 tfinal]);%;
+%             paperModeLegend(	paperMode, ...
+%                                 {'$E_{A1}$', '$E_{A2}$', '$E_{A3}$', '$E$'},    ...
+%                                 {'E_{A1}', 'E_{A2}', 'E_{A3}', 'E'}             );
+%             paperModeAxisLabels(paperMode, {'$t$ [s]', '[J]'}, {'t [s]', '[J]'});
+%             paperModeTitle(     showTitleInPaperMode, paperMode, ...
+%                                 'Cumulative electrical energy consumption',  ...
+%                                 'Cumulative electrical energy consumption'   );
+%             paperSave(savePlots, [plotPath 'E.pdf']);
+%             
+%             disp('Finished.');
         end
         
         

@@ -30,12 +30,18 @@
 \usepackage{float}
 %\usepackage{framed}
 \usepackage{cite}
+\usepackage{algorithm}
+\usepackage{algorithmic}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \title{\LARGE \bf
 	Explosive Motion with Compliant Actuation Arrangements in Articulated Robots
 }
 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \author{Roel Djajadiningrat$^{1}$, Wesley Roozing$^{2}$ and Nikolaos G. Tsagarakis$^{2}$% <-this % stops a space
 	\thanks{$^{1}$ Roel Djajadiningrat is a M.Sc student at the Department of Mechanical Engineering, TU Delft and a visiting student at Istituto Italiano di Tecnologia;
 		{\tt\ r.djajadiningrat@student.tudelft.nl}
@@ -48,6 +54,7 @@
 }
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 
 
@@ -89,8 +96,8 @@ For the concept of Asymmetric Compliant Actuation (ACA), a combination of two pa
 % Figure asymmetric compliant actuation branches
 \begin{figure}[b]
 	\centering
-	\includegraphics[scale=1.0]{actuationConcept}
-	\caption{ACA branches}
+	\includegraphics[width=0.8\linewidth]{actuationConcept}
+	\caption{The Asymmetric Compliant Actuation (\textit{ACA}) concept, shown in monoarticulated (top) and biarticulated (bottom) configurations.}
 	\label{fig:ACA}
 \end{figure}
 
@@ -114,7 +121,7 @@ The designs of the actuation configurations have been optimised to select actuat
 % Figure Actuation configurations
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=\linewidth]{cad}
+	\includegraphics[width=0.98\linewidth]{cad}
 	\caption{CAD: SEA-only, mono- and biarticulated configurations}
 	\label{fig:configurations}
 \end{figure}
@@ -130,9 +137,9 @@ The leg consists of four links which are connected by the actuated ankle, knee a
 % Figure Leg model
 \begin{figure}[ht]
 	\centering
-	\includegraphics[scale=0.15]{Leg_3DoF_model}
-	\caption{Leg model: The straight configuration on
-		the right corresponds to q = 0}
+	\includegraphics[width=0.7\linewidth]{Leg_3DoF_model}
+	\caption{Leg model with floating base. The straight configuration on
+		the right corresponds to $\mathbf{q} = \mathbf{0}$.}
 	\label{fig:Leg_3DoF_model}
 \end{figure}
 
@@ -163,7 +170,7 @@ For formulation of the optimisation problem described in Sec. \ref{sec:dynamicOp
 with
 \begin{equation}
 \mathbf{q}_p = [x_1,y_1,\theta_1]^T, \quad  
-\mathbf{q}_a = [q_1,q_1,q_3]^T.
+\mathbf{q}_a = [q_1,q_2,q_3]^T.
 \end{equation}
 \noindent
 Similarly, $\boldsymbol{\tau} = \left[\mathbf{0},\boldsymbol{\tau}_a\right]^T$.
@@ -218,7 +225,7 @@ we obtain the passive joint accelerations $\mathbf{\ddot q}_p$ and active joint 
 
 \subsection{Actuation Modelling}
 \label{subsec:actuationModel}
-As described in Section \ref{sec:legDesign} different configurations of \textit{ACA} are used to actuate the leg. Motor M2, shown in Fig. \ref{fig:ACA}, can be used to apply pretension on the \textit{ESB} elastic element. Let $r_p$ denote the pulley radius and let $p$ denote a certain pretension of motor M2. With a corresponding joint configuration $q$, the elongation of each \textit{ESB} elastic element can be described as $\Delta_p = p - r_p q$. Note that the element with stiffness $k_p$ and damping $d_p$ only applies elastic force under extension as it is of a rubber type material:
+As described in Section \ref{sec:legDesign}, three different actuation configurations are considered. In the general monoarticulated ESB case shown in Fig. \ref{fig:ACA}, let $r_p$ denote pulley radius (with sign indicating positive direction) and let $p$ denote the position of motor M2. Given a joint configuration $q$, the elongation of the \textit{ESB} elastic element is given by $\Delta_p = p + r_p q$. Note that the element, with stiffness $k_p$ and damping $d_p$, only applies elastic force under extension as it is of a rubber type material:
 \begin{equation}
 F_p =	\left\lbrace
 \begin{array}{ll}
@@ -228,21 +235,30 @@ d_p \, \dot{\Delta}_p & \text{otherwise}
 \right.
 \label{eq:F_p}
 \end{equation}   
-The \textit{ESB} generates a torque on the joint equal to
+As such, the \textit{ESB} generates a torque on the joint equal to $\tau_p = -r_p \, F_p$. From this follows the ankle and knee joint torques for the monoarticulated leg in Fig. \ref{fig:configurations}:
 \begin{equation}
-\tau_p = r_p \, F_p.
-\label{eq:tau_p_mono}
+	\begin{aligned}
+		\tau_1 &= \tau_{SEA,1} - r_{ankle} \, F_{p,1}(p_1,q_1), \\
+		\tau_2 &= \tau_{SEA,2} - r_{knee} \, F_{p,2}(p_2,q_2), \\
+	\end{aligned}
 \end{equation}
-For the biarticulated configuration shown in Fig. \ref{fig:ACA} the driven joint can be expressed as joint $i$ and the spanned joint can be expressed as joint $j$. With pulley radii $r_{p,i}$ and $r_{p,j}$, the elongation of the \textit{ESB} elastic element is then given by:
+where $\tau_{SEA,i}$ denote contributions from the SEAs, $r_\circ$ denote pulley radii, $F_{p,\circ}$ denote linear tendon forces, and $p_i$ denote the respective pretension positions of the \textit{ESB} motors.
+
+For the biarticulated leg configuration shown in Fig. \ref{fig:configurations}, the ankle tendon also spans the knee joint, and the elongation of the \textit{ESB} elastic element is thus given by:
 \begin{equation}
-\Delta_p = p - r_{p,i} \, q_i - r_{p,j} \, q_j,
+\Delta_{p,1} = p_1 + r_{ankle} \, q_1 + r_{knee,bi} \, q_2,
 \label{eq:Delta_p_biart}
 \end{equation}
-with the \textit{ESB} applying a torque to each joint 
+where $r_{knee,bi}$ denotes the free pulley on the knee. This leads to the ankle and knee torques for the biarticulated case:
 \begin{equation}
-\tau_i = r_{p,i} \, F_p, \hspace{5mm} \tau_j = r_{p,j} \, F_p.
-\label{eq:tau_p_bi}
-\end{equation} 
+	\begin{aligned}
+		\tau_1 &= \tau_{SEA,1} - r_{ankle} \, F_{p,1}(p_1,q_1,q_2), \\
+		\tau_2 &= \tau_{SEA,2} - r_{knee} \, F_{p,2}(p_2,q_2) - r_{knee,bi} \, F_{p,1}(p_1,q_1,q_2).
+	\end{aligned}
+\end{equation}
+Observe that the linear tendon force $F_{p,1}$ is dependent on the configuration of both the knee and ankle joints, and that the tendon applies torque on both joints.
+
+In simulation, we include a full motor model that includes rotor inertiae, friction, current and voltage limitations, and low-level \textit{SEA} torque control. For details, we refer the reader to \cite{roozing2016design}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -315,25 +331,27 @@ where $N$ denotes the number of time segments, $t_0$ denotes the starting time, 
 
 \subsection{Algorithm}
 \label{subsec:algorithm}
-\textbf{TODO: Ended review (for now) here..}
-The objective criteria described above require information concerning the kinematic and dynamic state of the leg. Both forward and inverse dynamic calculations are to be performed while the leg states are set by adjusting the earlier described $B$-spline joint trajectories. This dependence is managed by the optimisation algorithm. The algorithm in words yields:
+Having set up the forward and inverse dynamics and optimisation criteria, we proceed to describe the optimisation algorithm. The algorithm, shown as Algorithm \ref{algo}, takes a simple hand-tuned jumping trajectory as initial guess. Its control points serve as the algorithm input. The initial pretensions are set to $1 \cdot 10^{-4}$ m if present. 
+The initial position of the leg yields a squatting posture and each simulation is concluded when the CoM reaches its highest point for successful jumps or when the leg has fallen over for unsuccessful jumps. 
 
-\begin{itemize}
-	\item Provide initial guess trajectory and pretension positions
-	\item Create control points\\
-	\item[$\diamond$] Create trajectory with $B$-splines
-	\item[$\diamond$] Check joint angles, continue if limits are not exceeded \\else, vary control points and repeat $\diamond$ steps
-	\item[$\diamond$] Run simulation of motion through forward dynamics
-	\item[$\diamond$] Calculate active torques through inverse dynamics,\\ continue if limits are not exceeded \\else, vary control points and repeat $\diamond$ steps
-	\item[$\diamond$] Evaluate objective function\\
-	\item[$\diamond$] Exit if local minimum is reached, \\ else, vary control points and pretension positions and repeat $\diamond$ steps
-\end{itemize}
+\begin{algorithm}[H]
+	\caption{Algorithm for joint trajectory optimization} \label{algo}
+	\begin{algorithmic}[1]
+		 \STATE  Generate joint reference trajectories with $B$-splines \label{algbegin}
+		\IF{joint limits are not exceeded} \STATE {Continue} \ELSE \STATE Vary control points, \textbf{go to} \ref{algbegin}  \ENDIF
+		\WHILE{ $\dot y_{CoM} > 0$ \AND $ |\theta_1| < {\frac{\pi}{2}}$}  \STATE{Run simulation of motion through forward dynamics} \ENDWHILE
+		\IF{$ |\boldsymbol{\tau}_a| < \boldsymbol{\tau}_{\text{limit}}$} \STATE {Continue} \ELSE \STATE Vary control points, \textbf{go to} \ref{algbegin}  \ENDIF
+		\STATE Evaluate objective function
+		\IF{local minimum reached} \STATE {Exit} \ELSE \STATE Vary control points, \textbf{go to} \ref{algbegin}  \ENDIF
+	\end{algorithmic}
+\end{algorithm}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results} \label{sec:results}
-The optimisation has been performed with MATLAB's \texttt{fmincon} for the upward movement of the leg performing a jumping motion with a maximum duration of 0.4 seconds. The initial position of the leg yields a squatting posture and the optimisation is concluded when the CoM reaches its highest point for successful jumps or when the leg has fallen over for unsuccessful jumps. The initial guess is a manually constructed motion as shown in Fig. \ref{fig:seq} for actuation without energy storage branches. The optimisation results for the objective presented in Section \ref{sec:dynamicOptimisation} are shown in Table \ref{table:maxheight}. For the three actuation configurations, Fig. \ref{fig:opt_results} displays the objective criterion values during the optimisation, the joint torques, their net power and the \textit{ESB} tendon energy storage. The values of the used scaling constants described in Section \ref{subsec:objectiveCriteria} yield: $c_1=5 \cdot 10^{2} \,, c_2=1.5 \cdot 10^{-4} \,, c_3=1.5 \cdot 10^{3} \,, c_4 = 1\cdot 10^{2} \,, \text{and} \, c_5 = 1$. 
-The video corresponding to this paper shows a visualization of the optimised jumping motion on all three actuation configurations.
+The optimisation has been performed using a maximum duration of 0.4 seconds, and the initial trajectory is shown in Fig. \ref{fig:seq}. Computations were performed in MATLAB R2016B, with \texttt{fmincon} as the optimisation algorithm. The weighing constants $c_1 \dots c_5$ were chosen as $c_1=5 \cdot 10^{2} \,, c_2=1.5 \cdot 10^{-4} \,, c_3=1.5 \cdot 10^{3} \,, c_4 = 1\cdot 10^{2} \, \text{ and } \, c_5 = 1$.
+
+The results for all three actuation configurations are shown in Fig. \ref{fig:opt_results}, which reports the objective criterion values during the optimisation, joint torques, joint power and the \textit{ESB} tendon energy storage over time. Furthermore, the results are summarised numerically in Table \ref{table:maxheight}. The video that accompanies this paper visualises the optimised jumping motions of all three actuation configurations.
 
 \begin{table*}[ht]
 	\caption{Jumping optimization results for different configurations}
@@ -363,6 +381,7 @@ The video corresponding to this paper shows a visualization of the optimised jum
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discussion} \label{sec:discussion}
+
 For the optimised jumping motion similar strategies are used on all three actuation configurations; ankle extension is primarily used to generate an upwards motion from squat position, with lift-off following after a toe push-off. The pretension optimisation results show maximum pretension of the \textit{ESB} on the bottom of the ankle for monoarticulation and the pretension of the \textit{ESB} on the bottom of the thigh for biarticulation. Although the movements are similar some key differences can be pointed out:
 
 \begin{enumerate}
