@@ -30,6 +30,8 @@
 \usepackage{float}
 %\usepackage{framed}
 \usepackage{cite}
+\usepackage{algorithm}
+\usepackage{algorithmic}
 
 % Some table tweaks to increase spacing
 %\setlength{\tabcolsep}{8pt}		% Default is 6pt
@@ -325,28 +327,25 @@ where $N$ denotes the number of time segments, $t_0$ denotes the starting time, 
 
 \subsection{Algorithm}
 \label{subsec:algorithm}
-Having set up the forward and inverse dynamics and optimisation criteria, we proceed to describe the optimisation algorithm. The algorithm takes a simple hand-tuned jumping trajectory as initial guess.
+Having set up the forward and inverse dynamics and optimisation criteria, we proceed to describe the optimisation algorithm. The algorithm, shown as Algorithm \ref{algo}, takes a simple hand-tuned jumping trajectory as initial guess. Its control points serve as the algorithm input. The initial pretensions are set to $1 \cdot 10^{-4}$ m if present. 
+The initial position of the leg yields a squatting posture and each simulation is concluded when the CoM reaches its highest point for successful jumps or when the leg has fallen over for unsuccessful jumps. 
 
-\textbf{TODO the following is content from the next Section which should be here as text and/or part of the algorithm:}
-\textit{The initial position of the leg yields a squatting posture and the optimisation is concluded when the CoM reaches its highest point for successful jumps or when the leg has fallen over for unsuccessful jumps.}
-
-\begin{itemize}
-	\item \textbf{these are algorithm inputs, maybe you can format it like that, see the package descriptions. Or perhaps remove as it is also stated above.} Provide initial guess trajectory and pretension positions
-	\item Compute control points from initial trajectory\\
-	\item[$\diamond$] Generate joint reference trajectories with $B$-splines
-	\item[$\diamond$] \textbf{this is an if statement} Check joint angles, continue if limits are not exceeded \\else, vary control points and repeat $\diamond$ steps
-	\item[$\diamond$] Run simulation of motion through forward dynamics \textbf{add stop condition(s)}
-	\item[$\diamond$] \textbf{this is an if statement} Calculate active torques through inverse dynamics,\\ continue if limits are not exceeded \\else, vary control points and repeat $\diamond$ steps \textbf{use goto}
-	\item[$\diamond$] Evaluate objective function\\
-	\item[$\diamond$] Exit if local minimum is reached, \\ else, vary control points and pretension positions and repeat $\diamond$ steps \textbf{use goto}
-\end{itemize}
-
-\textbf{TODO I like having the algorithm description. But rather than itemisation, use one of the common solutions to format it: https://en.wikibooks.org/wiki/LaTeX/Algorithms. It's up to you which one to use, but the wiki page mentions this: \textit{The algorithmic package is suggested for IEEE journals as it is a part of their default style sheet.[1]}}
+\begin{algorithm}[H]
+	\caption{Algorithm for joint trajectory optimization} \label{algo}
+	\begin{algorithmic}[1]
+		 \STATE  Generate joint reference trajectories with $B$-splines \label{algbegin}
+		\IF{joint limits are not exceeded} \STATE {Continue} \ELSE \STATE Vary control points, \textbf{go to} \ref{algbegin}  \ENDIF
+		\WHILE{ $\dot y_{CoM} > 0$ \AND $ |\theta_1| < {\frac{\pi}{2}}$}  \STATE{Run simulation of motion through forward dynamics} \ENDWHILE
+		\IF{$ |\boldsymbol{\tau}_a| < \boldsymbol{\tau}_{\text{limit}}$} \STATE {Continue} \ELSE \STATE Vary control points, \textbf{go to} \ref{algbegin}  \ENDIF
+		\STATE Evaluate objective function
+		\IF{local minimum reached} \STATE {Exit} \ELSE \STATE Vary control points, \textbf{go to} \ref{algbegin}  \ENDIF
+	\end{algorithmic}
+\end{algorithm}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results} \label{sec:results}
-The optimisation has been performed using a maximum duration of 0.4 seconds, and the initial trajectory is shown in Fig. \ref{fig:seq}. Computations were performed in MATLAB \textbf{TODO version}, with \texttt{fmincon} as the optimisation algorithm. The weighing constants $c_1 \dots c_5$ were chosen as $c_1=5 \cdot 10^{2} \,, c_2=1.5 \cdot 10^{-4} \,, c_3=1.5 \cdot 10^{3} \,, c_4 = 1\cdot 10^{2} \,, \text{and} \, c_5 = 1$.
+The optimisation has been performed using a maximum duration of 0.4 seconds, and the initial trajectory is shown in Fig. \ref{fig:seq}. Computations were performed in MATLAB R2016B, with \texttt{fmincon} as the optimisation algorithm. The weighing constants $c_1 \dots c_5$ were chosen as $c_1=5 \cdot 10^{2} \,, c_2=1.5 \cdot 10^{-4} \,, c_3=1.5 \cdot 10^{3} \,, c_4 = 1\cdot 10^{2} \,, \text{ and } \, c_5 = 1$.
 
 The results for all three actuation configurations are shown in Fig. \ref{fig:opt_results}, which reports the objective criterion values during the optimisation, joint torques, joint power and the \textit{ESB} tendon energy storage over time. Furthermore, the results are summarised numerically in Table \ref{table:maxheight}. The video that accompanies this paper visualises the optimised jumping motions of all three actuation configurations.
 
@@ -506,7 +505,7 @@ The results for all three actuation configurations are shown in Fig. \ref{fig:op
 		\label{fig:bi_ESB}
 	\end{subfigure}
 	
-	\caption{Optimization results. Left column: without ESB (conventional SEA), middle column: monoarticulated configuration, right column: biarticulated configuration.}
+	\caption{Optimization results. Left column: without ESB (conventional SEA), middle column: monoarticulated configuration, right column: biarticulated configuration. $A1$ and $A2$ denote the actuators for the ankle joint ($q_1$) and the knee joint ($q_2$), respectively.}
 	\label{fig:opt_results}
 \end{figure*}
 
