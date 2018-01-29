@@ -101,18 +101,15 @@ The Power Branch (\textit{PB}) is a rotary \textit{SEA} which consists of a high
 In nature, biarticulated muscle structures, in which a single muscle actuates multiple joints simultaneously, can be found on humans and other animals. An example of a biarticulated muscle structure are the hamstrings, which span both the hip and knee joint. \textit{ACA}'s can be utilized to realize biarticulated actuation by letting the \textit{PB} drive a joint directly, and letting the \textit{ESB} tendon span a second joint by means of a pulley, as depicted in Fig. \ref{fig:ACA}.
 
 \subsection{3-DoF Leg Prototype}
-The design of the 3-DoF leg prototype is inspired by the human lower limb. The dimensions and mass distribution of the human limb were investigated, and compared with those of existing humanoid designs such as WALK-MAN \cite{tsagarakis2017walk} to set specifications for a semi-anthropomorphic design. 
-Three actuation configurations of the leg are considered for the jumping optimisation:
+The design of the 3-DoF leg prototype is inspired by the human lower limb. The dimensions and mass distribution of the human limb were investigated, and compared with those of existing humanoid designs such as WALK-MAN \cite{tsagarakis2017walk} to set specifications for a semi-anthropomorphic design. The leg features three actuated degrees of freedom: ankle, knee and hip. Each joint is directly actuated by an \textit{SEA}, which are mounted above the joints for the knee and ankle, and transmit their forces through four bar linkages to decrease the leg’s moment of inertia with respect to the hip joint. The trunk is loaded with mass corresponding to that of a full humanoid robot in two-legged stance. The leg can be rapidly reconfigured into one of three actuation configurations:
 
 \begin{enumerate}
-	\item The \textit{ACA}'s are not considered and jumping optimisations are performed for the leg with fixed compliance SEA's only.
-	\item The \textit{ACA}'s are introduced to perform jumping optimisations on a monoarticulated version of the leg. 
-	\item A biarticulated version of the leg is considered for optimisation.
+	\item \textbf{SEA-only} based actuation, in which the parallel Elastic Storage Branch is not implemented, serving as a baseline state-of-the-art design for comparison.
+	\item \textbf{Monoarticulated} configuration, in which the knee and ankle joints are each augmented with an \textit{ESB}.
+	\item \textbf{Biarticulated} configuration, in which the tendon for the ankle joint also spans the knee joint.
 \end{enumerate}
 
-Fig. \ref{fig:configurations} shows the leg design in CAD in all three actuation configurations. The leg features three actuated degrees of freedom: ankle, knee and hip. \textit{SEA}'s drive the joints, which are mounted above the joints for the knee and ankle and transmit their forces through four bar linkages to decrease the leg’s moment of inertia with respect to the hip joint. The trunk is weighted with mass corresponding to that of a full humanoid robot.
-
-The designs of the actuation configurations have been optimised to select actuation parameters that yield high electrical energy efficiency and reduction in peak torque and electrical power requirements \cite{roozing2016design}.
+Fig. \ref{fig:configurations} shows a schematic of the leg design in all three actuation configurations. Following the method presented in \cite{roozing2016design}, the design parameters each configuration was optimised to select actuation parameters that yield high electrical energy efficiency and reduction in peak torque and electrical power requirements. For more details on the hardware implementation, we refer the reader to \cite{roozing_design_2018}.
 
 % Figure Actuation configurations
 \begin{figure}[ht]
