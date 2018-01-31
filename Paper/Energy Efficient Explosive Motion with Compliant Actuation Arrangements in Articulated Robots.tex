@@ -336,7 +336,7 @@ The initial position of the leg yields a squatting posture and each simulation i
 		 \STATE  Generate joint reference trajectories with $B$-splines \label{algbegin}
 		\IF{joint limits are not exceeded} \STATE {Continue} \ELSE \STATE Vary control points, \textbf{go to} \ref{algbegin}  \ENDIF
 		\WHILE{ $\dot y_{CoM} > 0$ \AND \textit{not fallen over}}  \STATE{Run simulation of motion through forward dynamics} \ENDWHILE
-		\IF{$\mathrm{max}(\boldsymbol{|\tau|}) < \tau^{max} \quad \forall \: t$} \STATE {Continue} \ELSE \STATE Vary control points, \textbf{go to} \ref{algbegin}  \ENDIF
+		\IF{$\mathrm{max}(|\boldsymbol{\tau}(t)|) < \tau^{max} \quad \forall \: t$} \STATE {Continue} \ELSE \STATE Vary control points, \textbf{go to} \ref{algbegin}  \ENDIF
 		\STATE Evaluate objective function
 		\IF{local minimum reached} \STATE {Exit} \ELSE \STATE Vary control points, \textbf{go to} \ref{algbegin}  \ENDIF
 	\end{algorithmic}
