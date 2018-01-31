@@ -335,17 +335,12 @@ The initial position of the leg yields a squatting posture and each simulation i
 	\begin{algorithmic}[1]
 		 \STATE  Generate joint reference trajectories with $B$-splines \label{algbegin}
 		\IF{joint limits are not exceeded} \STATE {Continue} \ELSE \STATE Vary control points, \textbf{go to} \ref{algbegin}  \ENDIF
-		\WHILE{ $\dot y_{CoM} > 0$ \AND $ |\theta_1| < {\frac{\pi}{2}}$}  \STATE{Run simulation of motion through forward dynamics} \ENDWHILE
-		\IF{$ |\boldsymbol{\tau}_a| < \boldsymbol{\tau}_{\text{limit}}$} \STATE {Continue} \ELSE \STATE Vary control points, \textbf{go to} \ref{algbegin}  \ENDIF
+		\WHILE{ $\dot y_{CoM} > 0$ \AND \textit{not fallen over}}  \STATE{Run simulation of motion through forward dynamics} \ENDWHILE
+		\IF{$\mathrm{max}(\boldsymbol{|\tau|}) < \tau^{max} \quad \forall \: t$} \STATE {Continue} \ELSE \STATE Vary control points, \textbf{go to} \ref{algbegin}  \ENDIF
 		\STATE Evaluate objective function
 		\IF{local minimum reached} \STATE {Exit} \ELSE \STATE Vary control points, \textbf{go to} \ref{algbegin}  \ENDIF
 	\end{algorithmic}
 \end{algorithm}
-\textbf{TODO Looks great! A few questions:}
-\begin{itemize}
-	\item Should the torque limit line (10) not be $\mathrm{max}(\boldsymbol{\tau}) < \tau^{max} \quad \forall \: t$ or something along those lines? Now it appears to be a vector comparison.
-	\item For the fallen over statement, perhaps just put it in words, e.g. \textit{not fallen over}, people may not get it otherwise.
-\end{itemize}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
