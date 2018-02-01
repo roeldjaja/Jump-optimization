@@ -514,15 +514,9 @@ The results for all three actuation configurations are shown in Fig. \ref{fig:op
 \section{Discussion} \label{sec:discussion}
 \textbf{TODO comments on the plots:}
 \begin{itemize}
-	\item Just have the x-axis label on the last plot (for the time plots), it saves space
-	\item Similar for the criteria plots, just one label, on the bottom one. Keep all the y-axis labels (otherwise horizontal shifting occurs), but change the name to $J_{performance}$ and so on. That should save space (it currently pops out above the plot). If that's insufficient you can add them as legend items instead.
 	\item Can we place the joint trajectory plots for each configuration as well? It seems there is space for one additional row.
 	\item The legend entries currently do not make sense; the symbols were never explained. I'm attaching a few scripts by email (the ones that generated the ICRA18 plots) which have text names for variables that you do not need to explain.
-	\item Equal y-axis scaling for all plots (horizontally) (seems to be already the case for the optimisation plots)
 	\item Somewhat less resampling, plots are very jagged now due to the short displayed time (mentioned in email) 0.005 or 0.0025 (try first) seconds should be fine.
-	\item Try to get the legend in a place where it's not in the way of the data and in a as consistent and as possible place.
-	\item Remove $E_{p,3}$ from the bottom plots
-	\item Enable grids on net joint power plots
 	\item I would generate the plots a bit smaller, legends are unreadable (there should be a (commented out?) size in the old code for 3 column plots. My standard paper size is [500 190], but in the ICRA18 paper I used [450 230] (a bit higher as there was plenty of y-space). I'll send you the relevant scripts as well.
 \end{itemize}
 \textbf{TODO end plot comments}.
