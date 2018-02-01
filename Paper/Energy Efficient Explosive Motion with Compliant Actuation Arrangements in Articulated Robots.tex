@@ -529,13 +529,13 @@ The results for all three actuation configurations are shown in Fig. \ref{fig:op
 
 \textbf{TODO some observations (Wesley):}
 \begin{itemize}
-	\item Strategy of noESB and mono is simular (looking at torque plots), biarticulations allows the bi configuration to adopt a different strategy and reach more height
+	\item Strategy of noESB and mono is simular (looking at torque plots), biarticulation allows the bi configuration to adopt a different strategy and reach more height
 	\item Can we see evidence of power transfer from knee to ankle? It appears so; the biarticulated tendon is providing positive torque on the knee (i.e. flexing the knee) for the first 0.17\,s, while the knee is extending. This means positive power is transferred to the ankle (as that linear tendon force translates to a positive torque on the ankle, which extends the ankle, see Fig. \ref{fig:Leg_3DoF_model}). You can also see the stored energy in that tendon stays roughly constant, meaning this energy is not stored but transferred to the ankle. This is great because it is one of the primary arguments of such a configuration.
 \end{itemize}
 \textbf{TODO end observations.}
 
 \textbf{Some new doodling:}
-One immediate observation from the results is that ankle extension is one of the primary contributors to vertical momentum, across all three configurations. This is evidenced by the significantly larger joint power compared to the knee.
+One immediate observation from the results is that ankle extension is one of the primary contributors to vertical momentum, across all three configurations. This is evidenced by the significantly larger joint power compared to the knee (Fig. \ref{fig:noESB_P_q}--\ref{fig:bi_P_q}). We suspect the reason for this is the relatively large amount of ankle torque available (as identical SEAs are used for ankle and knee), combined with the 0.4\,s maximum duration which may not allow for fully flexed knee at $t=0$. Although the movements for all three configurations are similar, some key differences can be observed:
 
 \textbf{Earlier text:}
 For the optimised jumping motion similar strategies are used on all three actuation configurations; ankle extension is primarily used to generate an upwards motion from squat position, with lift-off following after a toe push-off. The pretension optimisation results show maximum pretension of the \textit{ESB} on the bottom of the ankle for monoarticulation and the pretension of the \textit{ESB} on the bottom of the thigh for biarticulation. Although the movements are similar some key differences can be pointed out:
