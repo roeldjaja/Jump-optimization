@@ -141,18 +141,19 @@ The leg consists of four links which are connected by the actuated ankle, knee a
 
 Their centre of mass (CoM) is assumed to be located on the line connecting the proximal and distal joints at a distance of $r_1,r_2,r_3,r_4$ from the proximal joint for all links except for the foot; the model includes a floating base to allow for realistic modelling of the ground reaction forces (GRF). Together, the configurations of the bodies describe the system:
 \begin{equation}
-x = [x_1,y_1,\theta_1,x_2,y_2,\theta_2, x_3,y_3,\theta_3,x_4,y_4,\theta_4]^T. 
+	\mathbf{x} = [x_1,y_1,\theta_1,x_2,y_2,\theta_2, x_3,y_3,\theta_3,x_4,y_4,\theta_4]^T. 
 \end{equation}
 The Euler-Lagrange formulism with generalised coordinates $\mathbf{q} \in \mathfrak{Q} \subset \mathfrak{R}^{6}$ is used to derive the dynamic equations for the system:
 \begin{equation}
-\mathbf{q}=[x_1,y_1,\theta_1,q_1,q_2,q_3]^T \label{eq:q}
+	\mathbf{q} = [x_1,y_1,\theta_1,q_1,q_2,q_3]^T
+	\label{eq:q}
 \end{equation}
 leading to:
 \begin{equation}
-M(\mathbf{q})\mathbf{\ddot q} = \mathbf{\boldsymbol{\tau} + G(q)} - C\mathbf{(q,\dot q)\dot q -} D \mathbf{\dot q} + J_{GRF}^T \mathbf{F}_{GRF}
+	M(\mathbf{q}) \, \mathbf{\ddot q} = \mathbf{\boldsymbol{\tau}} + \mathbf{g}(q) - C(\mathbf{q, \dot q}) \, \mathbf{\dot q} - D \, \mathbf{\dot q} + J_{GRF}^T \, \mathbf{f}_{GRF}
 \label{eq:fwddyn}
 \end{equation}
-Here, the damping matrix is denoted by $D = \text{diag} (0,0,0,d_1,d_2,d_3)$, the generalised actuation forces are denoted by $\boldsymbol{\tau} = [0,0,0,\tau_1,\tau_2,\tau_3]$, the generalised gravitational forces are denoted by $\mathbf{G(q)}$, the Coriolis matrix is denoted by $C\mathbf{(q, \dot q)}$, and the generalised inertia matrix is denoted by $M(\mathbf{q})$. The Jacobian for the heel and toe is denoted by $J_{GRF}^T$ and the ground forces in generalised coordinates are subsequently expressed as $J_{GRF}^T \mathbf{F}_{GRF}$. Spring-dampers define $\mathbf{F}_{GRF}$ in the vertical direction and Coulomb and viscous friction define the horizontal component, proportionally to the vertical forces.
+Here, the damping matrix is denoted by $D = \mathrm{diag} (0,0,0,d_1,d_2,d_3)$, the generalised actuation forces are denoted by $\boldsymbol{\tau} = [0,0,0,\tau_1,\tau_2,\tau_3]^T$, the generalised gravitational forces are denoted by $\mathbf{g(q)}$, and the Coriolis and generalised inertia matrices are denoted by $C\mathbf{(q, \dot q)}$ and $M(\mathbf{q})$, respectively. The Jacobian for the heel and toe is denoted by $J_{GRF}^T$ and the ground forces in generalised coordinates are subsequently expressed as $J_{GRF}^T \, \mathbf{f}_{GRF}$. Spring-dampers define $\mathbf{f}_{GRF}$ in the vertical direction and Coulomb and viscous friction define the horizontal component, proportionally to the vertical forces.
 
 \subsection{Leg Model: Inverse Dynamics}
 For formulation of the optimisation problem described in Sec. \ref{sec:dynamicOptimisation}, we first derive the inverse dynamics of the system in order to compute the applied active torques \cite{nakanishi2007inverse}. The configuration vector $\mathbf{q}$ can be split in its passive and active joint components, $\mathbf{q}_p$ and $\mathbf{q}_a$, respectively:
@@ -165,71 +166,72 @@ For formulation of the optimisation problem described in Sec. \ref{sec:dynamicOp
 \end{equation}
 with
 \begin{equation}
-\mathbf{q}_p = [x_1,y_1,\theta_1]^T, \quad  
-\mathbf{q}_a = [q_1,q_2,q_3]^T.
+	\mathbf{q}_p = [x_1,y_1,\theta_1]^T, \quad  
+	\mathbf{q}_a = [q_1,q_2,q_3]^T.
 \end{equation}
 \noindent
-Similarly, $\boldsymbol{\tau} = \left[\mathbf{0},\boldsymbol{\tau}_a\right]^T$.
+Similarly, $\boldsymbol{\tau} = \left[\mathbf{0},\boldsymbol{\tau}_a\right]^T$. \textbf{$\leftarrow$ TODO This notation is a bit iffy because it might suggest to some readers that it is matrix, but let's let it slide because it saves space.}
 Substituting these into \eqref{eq:fwddyn} yields:
 \begin{equation}
-\begin{aligned}
-&\left[\begin{array}{cc}  
-M_{pp} & M_{aa}\\
-M_{ap} & M_{aa}
-\end{array} \right]
-\left[\begin{array}{c}  
-\mathbf{\ddot q}_p\\
-\mathbf{\ddot q}_a
-\end{array} \right] +
-\left[\begin{array}{c}  
-\mathbf{B}_p \mathbf{(q,\dot q)}\\
-\mathbf{B}_a \mathbf{(q,\dot q)}
-\end{array} \right] 
-=\\
-&\left[\begin{array}{c}  
-\mathbf{0}\\
-\boldsymbol{\tau}_a
-\end{array} \right] 
-+
-J_{GRF}^T \mathbf{F}_{GRF} \, \mathbf{(q, \dot q)},
-\end{aligned} \label{eq:ik}
+	\begin{aligned}
+		&\left[\begin{array}{cc}  
+		M_{pp} & M_{aa}\\
+		M_{ap} & M_{aa}
+		\end{array} \right]
+		\left[\begin{array}{c}  
+		\mathbf{\ddot q}_p\\
+		\mathbf{\ddot q}_a
+		\end{array} \right] +
+		\left[\begin{array}{c}  
+		\mathbf{b}_p \mathbf{(q,\dot q)}\\
+		\mathbf{b}_a \mathbf{(q,\dot q)}
+		\end{array} \right] 
+		=\\
+		&\left[\begin{array}{c}  
+		\mathbf{0}\\
+		\boldsymbol{\tau}_a
+		\end{array} \right] 
+		+
+		J_{GRF}^T \mathbf{f}_{GRF} \, \mathbf{(q, \dot q)},
+	\end{aligned}
+	\label{eq:ik}
 \end{equation}		
-where $\mathbf{B}$ denotes the gravitational, Coriolis and damping forces. 
+where $\mathbf{b}_p$ and $\mathbf{b}_a$ denote the gravitational, Coriolis and damping terms. 
 Rearranging \eqref{eq:ik}:
 \begin{equation}
-\begin{aligned}
-&\left[\begin{array}{cc}  
-M_{pp} & 0\\
-M_{ap} &-I
-\end{array} \right]
-\left[\begin{array}{c}  
-\mathbf{\ddot q}_p\\
-\boldsymbol{\tau}_a
-\end{array} \right] =\\ 
--&
-\left[\begin{array}{c}  
-M_{pa}\\
-M_{aa}
-\end{array} \right] 
-\mathbf{\ddot q}_a-
-\mathbf{B(q, \dot q)}+
-J_{GRF}^T \mathbf{F}_{GRF}\mathbf{(q, \dot q)},
-\end{aligned}
+	\begin{aligned}
+		&\left[\begin{array}{cc}  
+		M_{pp} & 0\\
+		M_{ap} &-I
+		\end{array} \right]
+		\left[\begin{array}{c}  
+		\mathbf{\ddot q}_p\\
+		\boldsymbol{\tau}_a
+		\end{array} \right] =\\ 
+		-&
+		\left[\begin{array}{c}  
+		M_{pa}\\
+		M_{aa}
+		\end{array} \right] 
+		\mathbf{\ddot q}_a-
+		\mathbf{b(q, \dot q)}+
+		J_{GRF}^T \mathbf{f}_{GRF}\mathbf{(q, \dot q)},
+	\end{aligned}
 \end{equation}	
-we obtain the passive joint accelerations $\mathbf{\ddot q}_p$ and active joint torques $\boldsymbol{\tau}_a$ by inversion of the left-hand side mass matrix.
+where $I$ denotes the identity matrix, we obtain the passive joint accelerations $\mathbf{\ddot q}_p$ and active joint torques $\boldsymbol{\tau}_a$ by inversion of the left-hand side mass matrix.
 
 
 \subsection{Actuation Modelling}
 \label{subsec:actuationModel}
 As described in Section \ref{sec:legDesign}, three different actuation configurations are considered. In the general monoarticulated ESB case shown in Fig. \ref{fig:ACA}, let $r_p$ denote pulley radius (with sign indicating positive direction) and let $p$ denote the position of motor M2. Given a joint configuration $q$, the elongation of the \textit{ESB} elastic element is given by $\Delta_p = p + r_p q$. Note that the element, with stiffness $k_p$ and damping $d_p$, only applies elastic force under extension as it is of a rubber type material:
 \begin{equation}
-F_p =	\left\lbrace
-\begin{array}{ll}
-k_p \, \Delta_p + d_p \, \dot{\Delta}_p	\hspace{0.4cm} & \Delta_p > 0\\
-d_p \, \dot{\Delta}_p & \text{otherwise}
-\end{array}
-\right.
-\label{eq:F_p}
+	F_p =	\left\lbrace
+	\begin{array}{ll}
+	k_p \, \Delta_p + d_p \, \dot{\Delta}_p	\hspace{0.4cm} & \Delta_p > 0\\
+	d_p \, \dot{\Delta}_p & \text{otherwise}
+	\end{array}
+	\right.
+	\label{eq:F_p}
 \end{equation}   
 As such, the \textit{ESB} generates a torque on the joint equal to $\tau_p = -r_p \, F_p$. From this follows the ankle and knee joint torques for the monoarticulated leg in Fig. \ref{fig:configurations}:
 \begin{equation}
@@ -242,8 +244,8 @@ where $\tau_{SEA,i}$ denote contributions from the SEAs, $r_\circ$ denote pulley
 
 For the biarticulated leg configuration shown in Fig. \ref{fig:configurations}, the ankle tendon also spans the knee joint, and the elongation of the \textit{ESB} elastic element is thus given by:
 \begin{equation}
-\Delta_{p,1} = p_1 + r_{ankle} \, q_1 + r_{knee,bi} \, q_2,
-\label{eq:Delta_p_biart}
+	\Delta_{p,1} = p_1 + r_{ankle} \, q_1 + r_{knee,bi} \, q_2,
+	\label{eq:Delta_p_biart}
 \end{equation}
 where $r_{knee,bi}$ denotes the free pulley on the knee. This leads to the ankle and knee torques for the biarticulated case:
 \begin{equation}
