@@ -280,6 +280,7 @@ The objective function is comprised of three criteria which 1) reward the perfor
 \begin{equation}
 	\min_{\mathbf{p}} J = -J_{performance} + J_{torque} + J_{stability}
 \end{equation}
+\textbf{TODO Since $\mathbf{p}$ already denotes the pretension positions, I suggest to denote the control points as another letter instead (also in Sec. \ref{subsec:trajectoryParametrization}). $\mathbf{c}$ would be nice ("c"ontrol), but it is taken by the weights. You can rename the weights to $\gamma_i$, and use $\mathbf{c}$ for the vector of control points for example. Otherwise, perhaps $\mathbf{z}$ for the control points?}
 In the following, $c_1 \dots c_5$ denote suitable scaling constants.
 
 \subsubsection{Performance}
