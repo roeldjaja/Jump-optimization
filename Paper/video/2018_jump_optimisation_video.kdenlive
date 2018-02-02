@@ -198,6 +198,10 @@ and kind consideration for future publication.&lt;/content>
   <property name="length">00:00:00:13</property>
   <property name="eof">pause</property>
   <property name="resource">sources/bi_legAnimation.avi</property>
+  <property name="audio_index">-1</property>
+  <property name="video_index">0</property>
+  <property name="mute_on_pause">1</property>
+  <property name="mlt_service">avformat-novalidate</property>
   <property name="meta.media.nb_streams">1</property>
   <property name="meta.media.0.stream.type">video</property>
   <property name="meta.media.0.stream.frame_rate">60</property>
@@ -216,10 +220,6 @@ and kind consideration for future publication.&lt;/content>
   <property name="meta.media.sample_aspect_num">1</property>
   <property name="meta.media.sample_aspect_den">1</property>
   <property name="aspect_ratio">1</property>
-  <property name="audio_index">-1</property>
-  <property name="video_index">0</property>
-  <property name="mute_on_pause">1</property>
-  <property name="mlt_service">avformat-novalidate</property>
   <property name="kdenlive:folderid">-1</property>
   <property name="meta.media.frame_rate_num">60</property>
   <property name="meta.media.frame_rate_den">1</property>
@@ -237,6 +237,10 @@ and kind consideration for future publication.&lt;/content>
   <property name="length">00:00:00:13</property>
   <property name="eof">pause</property>
   <property name="resource">sources/mono_legAnimation.avi</property>
+  <property name="audio_index">-1</property>
+  <property name="video_index">0</property>
+  <property name="mute_on_pause">1</property>
+  <property name="mlt_service">avformat-novalidate</property>
   <property name="meta.media.nb_streams">1</property>
   <property name="meta.media.0.stream.type">video</property>
   <property name="meta.media.0.stream.frame_rate">60</property>
@@ -255,10 +259,6 @@ and kind consideration for future publication.&lt;/content>
   <property name="meta.media.sample_aspect_num">1</property>
   <property name="meta.media.sample_aspect_den">1</property>
   <property name="aspect_ratio">1</property>
-  <property name="audio_index">-1</property>
-  <property name="video_index">0</property>
-  <property name="mute_on_pause">1</property>
-  <property name="mlt_service">avformat-novalidate</property>
   <property name="kdenlive:folderid">-1</property>
   <property name="meta.media.frame_rate_num">60</property>
   <property name="meta.media.frame_rate_den">1</property>
@@ -276,6 +276,10 @@ and kind consideration for future publication.&lt;/content>
   <property name="length">00:00:00:13</property>
   <property name="eof">pause</property>
   <property name="resource">sources/noESB_legAnimation.avi</property>
+  <property name="audio_index">-1</property>
+  <property name="video_index">0</property>
+  <property name="mute_on_pause">1</property>
+  <property name="mlt_service">avformat-novalidate</property>
   <property name="meta.media.nb_streams">1</property>
   <property name="meta.media.0.stream.type">video</property>
   <property name="meta.media.0.stream.frame_rate">60</property>
@@ -294,10 +298,6 @@ and kind consideration for future publication.&lt;/content>
   <property name="meta.media.sample_aspect_num">1</property>
   <property name="meta.media.sample_aspect_den">1</property>
   <property name="aspect_ratio">1</property>
-  <property name="audio_index">-1</property>
-  <property name="video_index">0</property>
-  <property name="mute_on_pause">1</property>
-  <property name="mlt_service">avformat-novalidate</property>
   <property name="kdenlive:folderid">-1</property>
   <property name="meta.media.frame_rate_num">60</property>
   <property name="meta.media.frame_rate_den">1</property>
@@ -311,7 +311,7 @@ and kind consideration for future publication.&lt;/content>
   <property name="kdenlive:file_hash">916eed6983ff7f0232f51dbfdfda3d39</property>
   <property name="global_feed">1</property>
  </producer>
- <producer id="18" out="149" in="0">
+ <producer id="18" title="Anonymous Submission" out="149" in="0">
   <property name="length">150</property>
   <property name="eof">pause</property>
   <property name="resource"/>
@@ -321,7 +321,13 @@ and kind consideration for future publication.&lt;/content>
   <property name="mlt_service">kdenlivetitle</property>
   <property name="kdenlive:clipname">Results</property>
   <property name="kdenlive:folderid">-1</property>
-  <property name="xmldata">&lt;kdenlivetitle width="1920" duration="150" out="150" height="1080" LC_NUMERIC="en_US.UTF-8">
+  <property name="xmldata">&lt;kdenlivetitle width="1920" duration="150" out="150" height="1080" LC_NUMERIC="en_AU.UTF-8">
+ &lt;item z-index="3" type="QGraphicsPixmapItem">
+  &lt;position x="129" y="146">
+   &lt;transform zoom="30">0.3,0,0,0,0.3,0,0,0,1&lt;/transform>
+  &lt;/position>
+  &lt;content url="/data/nextCloud/IIT/Roel_optimised_jumping/Jump-optimization/Paper/video/img/results_slide.png"/>
+ &lt;/item>
  &lt;startviewport rect="0,0,1920,1080"/>
  &lt;endviewport rect="0,0,1920,1080"/>
  &lt;background color="26,26,26,255"/>
@@ -343,7 +349,7 @@ and kind consideration for future publication.&lt;/content>
   <property name="kdenlive:docproperties.generateimageproxy">0</property>
   <property name="kdenlive:docproperties.generateproxy">0</property>
   <property name="kdenlive:docproperties.kdenliveversion">17.08.2</property>
-  <property name="kdenlive:docproperties.position">466</property>
+  <property name="kdenlive:docproperties.position">706</property>
   <property name="kdenlive:docproperties.previewchunks"/>
   <property name="kdenlive:docproperties.previewextension"/>
   <property name="kdenlive:docproperties.previewparameters"/>
