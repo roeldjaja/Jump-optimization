@@ -52,7 +52,7 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
             this.plots.filtIgnoreTime       = 1.0;
             this.plots.yAxisIgnoreTime      = 0.5;
             this.plots.sizeNormal           = [600 400];
-            this.plots.sizePaperMode        = [400 220];%[500 190];%[600 230];
+            this.plots.sizePaperMode        = [400 150];%[400 220];%[500 190];%[600 230];
             this.plots.showTitleInPaperMode = 0;
             
             % Initialise empty simulation data
@@ -606,7 +606,7 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
 
             % Joint 1 torques
             figure(4); clf; hold on; grid on;
-            resizeFig(gcf, figSize(1), figSize(2));
+            resizeFig(gcf, figSize(1), 0.8*figSize(2));
 %             plot(t, tau_ref(1,:), '--', 'Color', C.BLK);
             plot(t, tau_pb_1, 'Color', C.B);
             if (    strcmpi(this.model.a1.type, 'bi') || ...
@@ -639,7 +639,7 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
             
             % Joint 2 torques
             figure(5); clf; hold on; grid on;
-            resizeFig(gcf, figSize(1), figSize(2));
+            resizeFig(gcf, figSize(1), 0.8*figSize(2));
 %             plot(t, tau_ref(2,:), '--', 'Color', C.BLK);
             plot(t, tau_pb_2, 'Color', C.B);
             if (strcmpi(this.model.a1.type, 'bi'))
@@ -680,18 +680,18 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
                                     'Joint 2 torques (noESB)',  ...
                                     'Joint 2 torques (noESB)'   );
             end
-            ylim([-100 150])
+            ylim([-100 100])
             xlim([0 tfinal]);
             paperModeAxisLabels(paperMode, {'', '[N m]'}, {'t [s]', '[N m]'});
             paperSave(savePlots, [plotPath 'q_2_torques.pdf']);
             
             % Joint 3 torques
             figure(6); clf; hold on; grid on;
-            resizeFig(gcf, figSize(1), figSize(2));
+            resizeFig(gcf, figSize(1), 0.6*figSize(2));
 %             plot(t, tau_ref(3,:), '--', 'Color', C.BLK);
             plot(t, tau_pb_3, 'Color', C.B);
             %plot(t, tau(3,:), 'Color', C.BLK);
-            ylim([-100 150])
+            ylim([-50 100])
             xlim([0 tfinal]);
             paperModeLegend(    paperMode, ...
                             	{ '$\tau_{PB,A3}$'},    ...
@@ -843,7 +843,7 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
 %             
             % Energy stored inside ESBs
             figure(13); clf; hold on; grid on;
-            resizeFig(gcf, figSize(1), figSize(2));
+            resizeFig(gcf, figSize(1), 0.8*figSize(2));
             plot(t, E_p_1, 'Color', C.B);
             plot(t, E_p_2, 'Color', C.R);
             paperModeLegend(	paperMode, ...
