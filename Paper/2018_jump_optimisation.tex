@@ -261,15 +261,15 @@ Observe that the linear tendon force $F_{p,1}$ is dependent on the configuration
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Dynamic Optimisation} 
 \label{sec:dynamicOptimisation}
-Finding an optimal motion requires finding the active joint trajectories over time. Expressing these trajectories over time directly poses an extremely high dimensional problem. Hence, we reformulate it from a large scale2 optimal control problem into a low dimensional parameter optimisation problem \cite{kaphle2008optimality}. We proceed as follows. Sec. \ref{subsec:trajectoryParametrization} describes parametrisation of the joint trajectories, and Sec. \ref{subsec:objectiveCriteria} describes the objective criteria. Lastly, the optimisation algorithm is described in Section \ref{subsec:algorithm}.
+Finding an optimal motion requires finding the active joint trajectories over time. Expressing these trajectories over time directly poses an extremely high dimensional problem. Hence, we reformulate it from a large scale optimal control problem into a low dimensional parameter optimisation problem \cite{kaphle2008optimality}. We proceed as follows. Sec. \ref{subsec:trajectoryParametrization} describes parametrisation of the joint trajectories, and Sec. \ref{subsec:objectiveCriteria} describes the objective criteria. Lastly, the optimisation algorithm is described in Section \ref{subsec:algorithm}.
 
 \subsection{Trajectory Parametrization} 
 \label{subsec:trajectoryParametrization}
-A common approach to reduce the dimensionality of trajectory optimisation problems is through basis splines, or $B$-splines, combined with a time-scale factor \cite{ude2000planning,babivc2009biarticulated,wang1999weight,albro2001optimal}. For each joint, a $B$-spline curve can be described with basis functions $B$ and control points $p$. For the set of control points $\mathbf{c}=\left[c_1,\dots,c_i,\dots,c_n\right]$, which are evenly spaced over time, and the basis functions $B_i$, the active joint trajectories for the joint $q_a$ assume the form
+A common approach to reduce the dimensionality of trajectory optimisation problems is through basis splines, or $B$-splines, combined with a time-scale factor \cite{ude2000planning,babivc2009biarticulated,wang1999weight,albro2001optimal}. For each joint, the trajectory is described by basis functions $B$ and control points $\mathbf{c}$. For the set of $n$ control points $\mathbf{c}=\left[c_1,\dots,c_n\right]$ evenly spaced over time and basis functions $B_i$, the trajectory for each joint $q_\circ$ assumes the form
 \begin{equation}
-	q_a(t,\mathbf{c}) = \sum_{i=1}^{n} B_i (t) \, c_i.
+	q_\circ(t,\mathbf{c}) = \sum_{i=1}^{n} B_i (t) \, c_in
 \end{equation}
-Using the control points as optimisation variables, the corresponding $B$-splines describe the optimal joint trajectories, velocities, and accelerations over time.
+resulting in $3 \, n$ optimisation variables. The corresponding $B$-splines describe the optimal joint trajectories, velocities, and accelerations over time.
 
 \subsection{Objective Criteria} 
 \label{subsec:objectiveCriteria}
@@ -574,27 +574,27 @@ The results for all three actuation configurations are shown in Fig. \ref{fig:op
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discussion} \label{sec:discussion}
-\textbf{TODO comments on the plots:}
-\begin{itemize}
-	\item Can we place the joint trajectory plots for each configuration as well? It seems there is space for one additional row.
-	\item The legend entries currently do not make sense; the symbols were never explained. I'm attaching a few scripts by email (the ones that generated the ICRA18 plots) which have text names for variables that you do not need to explain.
-	\item Somewhat less resampling, plots are very jagged now due to the short displayed time (mentioned in email) 0.005 or 0.0025 (try first) seconds should be fine.
-	\item I would generate the plots a bit smaller, legends are unreadable (there should be a (commented out?) size in the old code for 3 column plots. My standard paper size is [500 190], but in the ICRA18 paper I used [450 230] (a bit higher as there was plenty of y-space). I'll send you the relevant scripts as well.
-\end{itemize}
-\textbf{TODO end plot comments}.
+%\textbf{TODO comments on the plots:}
+%\begin{itemize}
+%	\item Can we place the joint trajectory plots for each configuration as well? It seems there is space for one additional row.
+%	\item The legend entries currently do not make sense; the symbols were never explained. I'm attaching a few scripts by email (the ones that generated the ICRA18 plots) which have text names for variables that you do not need to explain.
+%	\item Somewhat less resampling, plots are very jagged now due to the short displayed time (mentioned in email) 0.005 or 0.0025 (try first) seconds should be fine.
+%	\item I would generate the plots a bit smaller, legends are unreadable (there should be a (commented out?) size in the old code for 3 column plots. My standard paper size is [500 190], but in the ICRA18 paper I used [450 230] (a bit higher as there was plenty of y-space). I'll send you the relevant scripts as well.
+%\end{itemize}
+%\textbf{TODO end plot comments}.
 
-\textbf{TODO some observations (Wesley):}
-\begin{itemize}
-	\item Strategy of noESB and mono is simular (looking at torque plots), biarticulation allows the bi configuration to adopt a different strategy and reach more height
-	\item Can we see evidence of power transfer from knee to ankle? It appears so; the biarticulated tendon is providing positive torque on the knee (i.e. flexing the knee) for the first 0.17\,s, while the knee is extending. This means positive power is transferred to the ankle (as that linear tendon force translates to a positive torque on the ankle, which extends the ankle, see Fig. \ref{fig:Leg_3DoF_model}). You can also see the stored energy in that tendon stays roughly constant, meaning this energy is not stored but transferred to the ankle. This is great because it is one of the primary arguments of such a configuration.
-\end{itemize}
-\textbf{TODO end observations.}
+%\textbf{TODO some observations (Wesley):}
+%\begin{itemize}
+%	\item Strategy of noESB and mono is simular (looking at torque plots), biarticulation allows the bi configuration to adopt a different strategy and reach more height
+%	\item Can we see evidence of power transfer from knee to ankle? It appears so; the biarticulated tendon is providing positive torque on the knee (i.e. flexing the knee) for the first 0.17\,s, while the knee is extending. This means positive power is transferred to the ankle (as that linear tendon force translates to a positive torque on the ankle, which extends the ankle, see Fig. \ref{fig:Leg_3DoF_model}). You can also see the stored energy in that tendon stays roughly constant, meaning this energy is not stored but transferred to the ankle. This is great because it is one of the primary arguments of such a configuration.
+%\end{itemize}
+%\textbf{TODO end observations.}
 
-\textbf{Some new doodling:}
+%\textbf{Some new doodling:}
 One immediate observation from the results is that ankle extension is one of the primary contributors to vertical momentum, across all three configurations. This is evidenced by the significantly larger joint power compared to the knee (Fig. \ref{fig:noESB_P_q}--\ref{fig:bi_P_q}). We suspect the reason for this is the relatively large amount of ankle torque available (as identical SEAs are used for ankle and knee), combined with the 0.4\,s maximum duration which may not allow for fully flexed knee at $t=0$. Although the movements for all three configurations are similar, some key differences can be observed:
 
-\textbf{Earlier text:}
-For the optimised jumping motion similar strategies are used on all three actuation configurations; ankle extension is primarily used to generate an upwards motion from squat position, with lift-off following after a toe push-off. The pretension optimisation results show maximum pretension of the \textit{ESB} on the bottom of the ankle for monoarticulation and the pretension of the \textit{ESB} on the bottom of the thigh for biarticulation. Although the movements are similar some key differences can be pointed out:
+%\textbf{Earlier text:}
+%For the optimised jumping motion similar strategies are used on all three actuation configurations; ankle extension is primarily used to generate an upwards motion from squat position, with lift-off following after a toe push-off. The pretension optimisation results show maximum pretension of the \textit{ESB} on the bottom of the ankle for monoarticulation and the pretension of the \textit{ESB} on the bottom of the thigh for biarticulation. Although the movements are similar some key differences can be pointed out:
 
 \begin{enumerate}
 	\item Fig. \ref{fig:noESB_q_1_torques} to \ref{fig:bi_q_1_torques} show that the \textit{PB} ankle torque used by the biarticulated configuration is significantly lower than that of the other configurations but its \textit{ESB} torque is significantly higher than that of the monoarticulated configuration resulting in the heighest ankle torque for biarticulation. 
