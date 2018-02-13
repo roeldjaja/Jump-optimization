@@ -131,11 +131,11 @@ Fig. \ref{fig:configurations} shows a schematic of the leg design in all three a
 \label{sec:modelling}
 
 \subsection{Leg Model: Forward Dynamics} 
-The leg consists of four links which are connected by the actuated ankle, knee and hip joints, denoted $q_1,q_2,q_3$, with net actuation torques $\tau_1,\tau_2,\tau_3$ as shown in Fig. \ref{fig:Leg_3DoF_model}. The links have masses $m_1,m_2,m_3,m_4$ and rotational inertiae $J_1,J_2,J_3,J_4$. Their centre of mass (CoM) is assumed to be located on the line connecting the proximal and distal joints at a distance of $r_1,r_2,r_3,r_4$ from the proximal joint for all links except for the foot; the model includes a floating base to allow for realistic modelling of the ground reaction forces (GRF). %Together, the configurations of the bodies describe the system:
+The leg model, shown in Fig. \ref{fig:Leg_3DoF_model}, consists of four links which are connected by the actuated ankle, knee and hip joints, denoted $q_1,q_2,q_3$, with net actuation torques $\tau_1,\tau_2,\tau_3$. The links have masses $m_1,m_2,m_3,m_4$ and rotational inertiae $J_1,J_2,J_3,J_4$. Their centre of mass (CoM) is assumed to be located on the line connecting the proximal and distal joints at a distance of $r_1,r_2,r_3,r_4$ from the proximal joint for all links except for the foot due to the floating base. %Together, the configurations of the bodies describe the system:
 %\begin{equation}
 %	\mathbf{x} = [x_1,y_1,\theta_1,x_2,y_2,\theta_2, x_3,y_3,\theta_3,x_4,y_4,%\theta_4]^T. 
 %\end{equation}
-The Euler-Lagrange formulism with generalised coordinates $\mathbf{q} \in \mathfrak{Q} \subset \mathfrak{R}^{6}$ is used to derive the dynamic equations:
+The Euler-Lagrange formulism with generalised coordinates $\mathbf{q} \in \mathfrak{Q} \subset \mathfrak{R}^{6}$ is used to derive the dynamic equations, with
 \begin{equation}
 	\mathbf{q} = [x_1,y_1,\theta_1,q_1,q_2,q_3]^T,
 	\label{eq:q}
@@ -155,7 +155,7 @@ leading to:
 	\label{fig:Leg_3DoF_model}
 \end{figure}
 
-Here, the damping matrix is denoted by $D = \mathrm{diag} (0,0,0,d_1,d_2,d_3)$, the generalised actuation forces are denoted by $\boldsymbol{\tau} = [0,0,0,\tau_1,\tau_2,\tau_3]^T$, the generalised gravitational forces are denoted by $\mathbf{g(q)}$, and the Coriolis and generalised inertia matrices are denoted by $C\mathbf{(q, \dot q)}$ and $M(\mathbf{q})$, respectively. The Jacobian for the heel and toe is denoted by $J_{GRF}^T$ and the ground forces in generalised coordinates are subsequently expressed as $J_{GRF}^T \, \mathbf{f}_{GRF}$. Spring-dampers define $\mathbf{f}_{GRF}$ in the vertical direction and Coulomb and viscous friction define the horizontal component, proportionally to the vertical forces.
+Here, the damping matrix is denoted by $D = \mathrm{diag} (0,0,0,d_1,d_2,d_3)$, the generalised actuation forces are denoted by $\boldsymbol{\tau} = [0,0,0,\tau_1,\tau_2,\tau_3]^T$, the generalised gravitational forces are denoted by $\mathbf{g(q)}$, and the Coriolis and generalised inertia matrices are denoted by $C\mathbf{(q, \dot q)}$ and $M(\mathbf{q})$, respectively. The Jacobian for the heel and toe is denoted by $J_{GRF}^T$, and the ground reaction forces (GRF) in generalised coordinates are subsequently expressed as $J_{GRF}^T \, \mathbf{f}_{GRF}$. Spring-dampers define $\mathbf{f}_{GRF}$ in the vertical direction and Coulomb and viscous friction define the horizontal component, proportionally to the vertical forces.
 
 \subsection{Leg Model: Inverse Dynamics}
 For formulation of the optimisation problem described in Sec. \ref{sec:dynamicOptimisation}, we first derive the inverse dynamics of the system in order to compute the applied active torques \cite{nakanishi2007inverse}. The configuration vector $\mathbf{q}$ can be split in its passive and active joint components, $\mathbf{q}_p$ and $\mathbf{q}_a$, respectively:
@@ -255,7 +255,8 @@ where $r_{knee,bi}$ denotes the free pulley on the knee. This leads to the ankle
 		\tau_2 &= \tau_{SEA,2} - r_{knee} \, F_{p,2}(p_2,q_2) - r_{knee,bi} \, F_{p,1}(p_1,q_1,q_2).
 	\end{aligned}
 \end{equation}
-Observe that the linear tendon force $F_{p,1}$ is dependent on the configuration of both the knee and ankle joints, and that the tendon applies torque on both joints. In simulation we include a full motor model that includes rotor inertiae, friction, current and voltage limitations, and low-level \textit{SEA} torque control. For details, we refer the reader to \cite{roozing2016design}.
+Observe that the linear tendon force $F_{p,1}$ is dependent on the configuration of both the knee and ankle joints, and that the tendon applies torque on both joints.
+Note that in simulation we model both actuation branches using full motor models with rotor inertiae, friction, current and voltage limitations, high-level joint impedance control, and low-level \textit{SEA} torque control. For details, we refer the reader to \cite{roozing2016design}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -366,7 +367,7 @@ Results for all three actuation configurations are shown in Fig. \ref{fig:opt_re
 \begin{figure}[ht]
 	\centering
 	%      \framebox{\parbox{3in}
-	{\includegraphics[width=0.5\linewidth]{initialguess}
+	{\includegraphics[width=0.55\linewidth]{initialguess_edited}
 	}%}	
 	\caption{Initial motion used as starting value for the optimisation.}
 	\label{fig:seq}	
