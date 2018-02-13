@@ -266,9 +266,9 @@ Finding an optimal motion requires finding the active joint trajectories over ti
 
 \subsection{Trajectory Parametrization} 
 \label{subsec:trajectoryParametrization}
-A common approach to reduce the dimensionality of trajectory optimisation problems is through basis splines, or $B$-splines, combined with a time-scale factor \cite{ude2000planning,babivc2009biarticulated,wang1999weight,albro2001optimal}. For each joint, a $B$-spline curve can be described with basis functions $B$ and control points $p$. For the set of control points $\mathbf{P}=\left[p_1,\dots,p_i,\dots,p_n\right]$, which are evenly spaced over time, and the basis functions $B_i$, the active joint trajectories for the joint $q_a$ assume the form
+A common approach to reduce the dimensionality of trajectory optimisation problems is through basis splines, or $B$-splines, combined with a time-scale factor \cite{ude2000planning,babivc2009biarticulated,wang1999weight,albro2001optimal}. For each joint, a $B$-spline curve can be described with basis functions $B$ and control points $p$. For the set of control points $\mathbf{c}=\left[c_1,\dots,c_i,\dots,c_n\right]$, which are evenly spaced over time, and the basis functions $B_i$, the active joint trajectories for the joint $q_a$ assume the form
 \begin{equation}
-	q_a(t,\mathbf{P}) = \sum_{i=1}^{n} B_i (t) \, p_i.
+	q_a(t,\mathbf{c}) = \sum_{i=1}^{n} B_i (t) \, c_i.
 \end{equation}
 Using the control points as optimisation variables, the corresponding $B$-splines describe the optimal joint trajectories, velocities, and accelerations over time. 
 
@@ -280,15 +280,14 @@ As elaborated in Section \ref{subsec:actuationModel}, the parallel elastic eleme
 \label{subsec:objectiveCriteria}
 The objective function is comprised of three criteria which 1) reward the performance of the leg, 2) penalize excessive torque needed to complete a movement and 3) maintain the postural stability of the leg. A minimization of the objective functions with these criteria is represented by:
 \begin{equation}
-	\min_{\mathbf{p}} J = -J_{performance} + J_{torque} + J_{stability}
+	\min_{\mathbf{c}, \mathbf{p}} J = -J_{performance} + J_{torque} + J_{stability}
 \end{equation}
-\textbf{TODO Since $\mathbf{p}$ already denotes the pretension positions, I suggest to denote the control points as another letter instead (also in Sec. \ref{subsec:trajectoryParametrization}). $\mathbf{c}$ would be nice ("c"ontrol), but it is taken by the weights. You can rename the weights to $\gamma_i$, and use $\mathbf{c}$ for the vector of control points for example. Otherwise, perhaps $\mathbf{z}$ for the control points?}
-In the following, $c_1 \dots c_5$ denote suitable scaling constants.
+In the following, $\gamma_1 \dots \gamma_5$ denote suitable scaling constants.
 
 \subsubsection{Performance}
 For the performance of the leg we consider the maximum jumping height, where the height is defined as the $y$-coordinate of the CoM of the leg with respect to ground, as follows:
 \begin{equation}
-	J_{performance} = c_1 \: y_{CoM,max}^2
+	J_{performance} = \gamma_1 \: y_{CoM,max}^2
 \end{equation}
 
 %For the performance of the leg we distinguish two different objectives: 
@@ -308,7 +307,7 @@ For the performance of the leg we consider the maximum jumping height, where the
 To ensure the system effectively utilises the elastic energy storage and minimise electrical energy expenditure, the active SEA torque is minimised. To do so, we compute the squared $l_2$-norm of the torque contribution of the SEAs, by removing the \textit{ESB} contributions from the net active joint torques:
 %the realised values of $\boldsymbol{\tau}_a$ computed in Section \ref{sec:modelling} while eliminating the influence of the \textit{ESB}s:  
 \begin{equation}
-	J_{torque}= c_2 \: \| \boldsymbol{\tau}_a - \boldsymbol{\tau}_{ESB} \|_2^2
+	J_{torque}= \gamma_2 \: \| \boldsymbol{\tau}_a - \boldsymbol{\tau}_{ESB} \|_2^2
 \end{equation}
 Furthermore, through the optimisation algorithm which is elaborated on in Sec. \ref{subsec:algorithm}, the SEA torques are required to stay within the limits defined by the current limits of the physical system.
 
@@ -318,12 +317,12 @@ To ensure stable jumps, a stability criterion is introduced. This criterion mini
 	\item Mean and final horizontal deviation of the CoM to ensure vertical jumping motion;
 	\item Rotational momentum $L$ of the robot at the maximum CoM height, which ensures the robot would land back on its foot.
 \end{itemize}
- %The leg posture is considered stable when the $x$-coordinate of the CoM of the leg is equal to its initial $x$-coordinate at the end of the jump, i.e. when the CoM reaches its maximum height. Also, the motion is assumed to be stable when the mean value of the absolute x-coordinates of the CoM equals zero. Higher stability is also assumed for a low rotational momentum $L$ at maximum height of CoM.
+%The leg posture is considered stable when the $x$-coordinate of the CoM of the leg is equal to its initial $x$-coordinate at the end of the jump, i.e. when the CoM reaches its maximum height. Also, the motion is assumed to be stable when the mean value of the absolute x-coordinates of the CoM equals zero. Higher stability is also assumed for a low rotational momentum $L$ at maximum height of CoM.
 These goals are achieved with the minimization of:
 \begin{equation}
 	\begin{aligned}
-		J_{stability} & =  c_3\cdot \Big( x_{CoM}(t_h)-x_{CoM}(t_0) \Big)^2  \\ & +c_4\cdot  {\sum^{N}_{i=1}\frac{| x_{CoM}(t)_i |}{N}}^2   
-				  			+ c_5  \cdot   L(t_h)^2 
+		J_{stability} & =  \gamma_3\cdot \Big( x_{CoM}(t_h)-x_{CoM}(t_0) \Big)^2  \\ & +\gamma_4\cdot  {\sum^{N}_{i=1}\frac{| x_{CoM}(t)_i |}{N}}^2   
++ \gamma_5  \cdot   L(t_h)^2 
 	\end{aligned}
 \end{equation}
 where $N$ denotes the number of time segments, $t_0$ denotes the starting time, and $t_h$ denotes the point in time where the CoM reaches its maximum height. Let $t_f$ denote the final time, where either the maximum CoM height $y_{CoM}$ has been reached or the jump is unsuccessful and the leg has fallen over. For successful jumps $t_h=t_f$.
@@ -336,7 +335,7 @@ The initial position of the leg yields a squatting posture and each simulation i
 \begin{algorithm}[H]
 	\caption{Algorithm for joint trajectory optimization} \label{algo}
 	\begin{algorithmic}[1]
-		 \STATE  Generate joint reference trajectories with $B$-splines \label{algbegin}
+		\STATE  Generate joint reference trajectories with $B$-splines \label{algbegin}
 		\IF{joint limits are not exceeded} \STATE {Continue} \ELSE \STATE Vary control points, \textbf{go to} \ref{algbegin}  \ENDIF
 		\WHILE{ $\dot y_{CoM} > 0$ \AND \textit{not fallen over}}  \STATE{Run simulation of motion through forward dynamics} \ENDWHILE
 		\IF{$\mathrm{max}(|\boldsymbol{\tau}(t)|) < \tau^{max} \quad \forall \: t$} \STATE {Continue} \ELSE \STATE Vary control points, \textbf{go to} \ref{algbegin}  \ENDIF
@@ -348,7 +347,7 @@ The initial position of the leg yields a squatting posture and each simulation i
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results} \label{sec:results}
-The optimisation has been performed using a maximum duration of 0.4 seconds, and the initial trajectory is shown in Fig. \ref{fig:seq}. Computations were performed in MATLAB R2016B, with \texttt{fmincon} as the optimisation algorithm. The weighing constants $c_1 \dots c_5$ were chosen as $c_1=5 \cdot 10^{2} \,, c_2=1.5 \cdot 10^{-4} \,, c_3=1.5 \cdot 10^{3} \,, c_4 = 1\cdot 10^{2}\,$, and $c_5 = 1$.
+The optimisation has been performed using a maximum duration of 0.4 seconds, and the initial trajectory is shown in Fig. \ref{fig:seq}. Computations were performed in MATLAB R2016B, with \texttt{fmincon} as the optimisation algorithm. The weighing constants $\gamma_1 \dots \gamma_5$ were chosen as $\gamma_1=5 \cdot 10^{2} \,, \gamma_2=1.5 \cdot 10^{-4} \,, \gamma_3=1.5 \cdot 10^{3} \,, \gamma_4 = 1\cdot 10^{2}\,$, and $\gamma_5 = 1$.
 
 The results for all three actuation configurations are shown in Fig. \ref{fig:opt_results}, which reports the objective criterion values during the optimisation, joint torques, joint power and the \textit{ESB} tendon energy storage over time. Furthermore, the results are summarised numerically in Table \ref{table:maxheight}. The video that accompanies this paper visualises the optimised jumping motions of all three actuation configurations.
 
