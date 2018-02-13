@@ -360,7 +360,7 @@ Having set up the forward and inverse dynamics and optimisation criteria, we pro
 \section{Results} \label{sec:results}
 The optimisation was performed using a maximum duration of 0.4 seconds, with initial trajectory shown in Fig. \ref{fig:seq}. Computations were performed in MATLAB R2016b, with \texttt{fmincon} as the optimiser function. The weighing constants $\gamma_1 \dots \gamma_5$ were chosen as $\gamma_1=5 \cdot 10^{2} \,, \gamma_2=1.5 \cdot 10^{-4} \,, \gamma_3=1.5 \cdot 10^{3} \,, \gamma_4 = 1\cdot 10^{2}\,$, and $\gamma_5 = 1$.
 
-Results for all three actuation configurations are shown in Fig. \ref{fig:opt_results}, which reports the objective criterion evolution and resulting joint trajectories, torques, power and \textit{ESB} tendon energy storage over time. The results are summarised numerically in Table \ref{table:maxheight}. The video that accompanies this paper visualises the optimised jumping motions of all three actuation configurations.
+Results for all three actuation configurations are shown in Fig. \ref{fig:opt_results}, which reports the objective criterion evolution and resulting joint trajectories, torques, power and \textit{ESB} tendon energy storage over time. The results are summarised numerically in Table \ref{table:maxheight}, showing maximum and change in CoM height, pretension positions, cost function $f$ and criteria values, and consumed energy $E_{\text{consumed}}$. The video that accompanies this paper visualises the optimised jumping motions of all three actuation configurations.
 
 % initial guess
 \begin{figure}[ht]
@@ -381,9 +381,9 @@ Results for all three actuation configurations are shown in Fig. \ref{fig:opt_re
 			\hline
 			SEA only	& 0.917 & 0.760 & 0.157 & No \textit{ESB}s	& -370.26 & 805.66 & 426.16 & 0.85 & 55.05\\
 			\hline
-			Mono.		& 0.951 & 0.703 & 0.247 & 0.060, -0.014	& -402.90 & 567.64 & 451.77 & 1.26 & 47.61 \\
+			Mono.		& 0.951 (+4\%) & 0.703 & 0.247 & 0.060, -0.014	& -402.90 & 567.64 & 451.77 & 1.26 & 47.61 \\
 			\hline
-			Bi.			& 1.013 & 0.724 & 0.290 & 0.044, 0.029		& -478.73 & 867.35 & 526.27 & 0.96 & 46.58
+			Bi.			& 1.013 (+10\%) & 0.724 & 0.290 & 0.044, 0.029		& -478.73 & 867.35 & 526.27 & 0.96 & 46.58
 		\end{tabular}
 	\end{center}
 \end{table*}
@@ -414,65 +414,23 @@ Results for all three actuation configurations are shown in Fig. \ref{fig:opt_re
 	
 	\vspace{1mm}
 	
-	% Ankle trajectories
+	% Trajectories
 	\begin{subfigure}[t]{0.32\linewidth}
-		\includegraphics[width=\linewidth]{noESB/q1_traj}
-		\caption{Monoarticulated: Ankle $(q_1)$ trajectory evolution.}
-		\label{fig:noESB_q1_traj}
+		\includegraphics[width=\linewidth]{noESB/final_traj}
+		\caption{Monoarticulated: Joint trajectories.}
+		\label{fig:noESB_traj}
 	\end{subfigure}
 	%
 	\begin{subfigure}[t]{0.32\linewidth}
-		\includegraphics[width=\linewidth]{mono/q1_traj}
-		\caption{Monoarticulated: Ankle $(q_1)$ trajectory evolution}
-		\label{fig:mono_q1_traj}
+		\includegraphics[width=\linewidth]{mono/final_traj}
+		\caption{Monoarticulated: Joint trajectories.}
+		\label{fig:mono_traj}
 	\end{subfigure}
 	%
 	\begin{subfigure}[t]{0.32\linewidth}
-		\includegraphics[width=\linewidth]{bi/q1_traj}
-		\caption{Biarticulated: Ankle $(q_1)$ trajectory evolution.}
-		\label{fig:bi_q1_traj}
-	\end{subfigure}
-	
-	\vspace{1mm}
-	
-	% Knee trajectories
-	\begin{subfigure}[t]{0.32\linewidth}
-		\includegraphics[width=\linewidth]{noESB/q2_traj}
-		\caption{Monoarticulated: Knee $(q_2)$ trajectory evolution.}
-		\label{fig:noESB_q2_traj}
-	\end{subfigure}
-	%
-	\begin{subfigure}[t]{0.32\linewidth}
-		\includegraphics[width=\linewidth]{mono/q2_traj}
-		\caption{Monoarticulated: Knee $(q_2)$ trajectory evolution}
-		\label{fig:mono_q2_traj}
-	\end{subfigure}
-	%
-	\begin{subfigure}[t]{0.32\linewidth}
-		\includegraphics[width=\linewidth]{bi/q2_traj}
-		\caption{Biarticulated: Knee $(q_2)$ trajectory evolution.}
-		\label{fig:bi_q2_traj}
-	\end{subfigure}
-	
-	\vspace{1mm}
-	
-	% Hip trajectories
-	\begin{subfigure}[t]{0.32\linewidth}
-		\includegraphics[width=\linewidth]{noESB/q3_traj}
-		\caption{Monoarticulated: Hip $(q_3)$ trajectory evolution.}
-		\label{fig:noESB_q3_traj}
-	\end{subfigure}
-	%
-	\begin{subfigure}[t]{0.32\linewidth}
-		\includegraphics[width=\linewidth]{mono/q3_traj}
-		\caption{Monoarticulated: Hip $(q_3)$ trajectory evolution}
-		\label{fig:mono_q3_traj}
-	\end{subfigure}
-	%
-	\begin{subfigure}[t]{0.32\linewidth}
-		\includegraphics[width=\linewidth]{bi/q3_traj}
-		\caption{Biarticulated: Hip $(q_3)$ trajectory evolution.}
-		\label{fig:bi_q3_traj}
+		\includegraphics[width=\linewidth]{bi/final_traj}
+		\caption{Biarticulated: Joint trajectories.}
+		\label{fig:bi_traj}
 	\end{subfigure}
 	
 	\vspace{1mm}
@@ -590,47 +548,30 @@ Results for all three actuation configurations are shown in Fig. \ref{fig:opt_re
 \section{Discussion} \label{sec:discussion}
 %\textbf{TODO comments on the plots:}
 %\begin{itemize}
-%	\item Can we place the joint trajectory plots for each configuration as well? It seems there is space for one additional row.
 %	\item The legend entries currently do not make sense; the symbols were never explained. I'm attaching a few scripts by email (the ones that generated the ICRA18 plots) which have text names for variables that you do not need to explain.
-%	\item Somewhat less resampling, plots are very jagged now due to the short displayed time (mentioned in email) 0.005 or 0.0025 (try first) seconds should be fine.
-%	\item I would generate the plots a bit smaller, legends are unreadable (there should be a (commented out?) size in the old code for 3 column plots. My standard paper size is [500 190], but in the ICRA18 paper I used [450 230] (a bit higher as there was plenty of y-space). I'll send you the relevant scripts as well.
 %\end{itemize}
 %\textbf{TODO end plot comments}.
 
-%\textbf{TODO some observations (Wesley):}
-%\begin{itemize}
-%	\item Strategy of noESB and mono is simular (looking at torque plots), biarticulation allows the bi configuration to adopt a different strategy and reach more height
-%	\item Can we see evidence of power transfer from knee to ankle? It appears so; the biarticulated tendon is providing positive torque on the knee (i.e. flexing the knee) for the first 0.17\,s, while the knee is extending. This means positive power is transferred to the ankle (as that linear tendon force translates to a positive torque on the ankle, which extends the ankle, see Fig. \ref{fig:Leg_3DoF_model}). You can also see the stored energy in that tendon stays roughly constant, meaning this energy is not stored but transferred to the ankle. This is great because it is one of the primary arguments of such a configuration.
-%\end{itemize}
-%\textbf{TODO end observations.}
-
-%\textbf{Some new doodling:}
-One immediate observation from the results is that ankle extension is one of the primary contributors to vertical momentum, across all three configurations. This is evidenced by the significantly larger joint power compared to the knee (Fig. \ref{fig:noESB_P_q}--\ref{fig:bi_P_q}). We suspect the reason for this is the relatively large amount of ankle torque available (as identical SEAs are used for ankle and knee), combined with the 0.4\,s maximum duration which may not allow for fully flexed knee at $t=0$. Although the movements for all three configurations are similar, some key differences can be observed:
-
-%\textbf{Earlier text:}
-%For the optimised jumping motion similar strategies are used on all three actuation configurations; ankle extension is primarily used to generate an upwards motion from squat position, with lift-off following after a toe push-off. The pretension optimisation results show maximum pretension of the \textit{ESB} on the bottom of the ankle for monoarticulation and the pretension of the \textit{ESB} on the bottom of the thigh for biarticulation. Although the movements are similar some key differences can be pointed out:
+One immediate observation from the results is that ankle extension is one of the primary contributors to vertical momentum, across all three configurations. This is evidenced by the significantly larger joint power compared to the knee (Fig. \ref{fig:noESB_P_q}--\ref{fig:bi_P_q}). We suspect the reason for this is the relatively large amount of ankle torque available (as identical SEAs are used for ankle and knee), combined with the 0.4\,s maximum duration which may not allow for a fully flexed knee at $t=0$. Although the movements for all three configurations are similar, some key differences can be observed:
 
 \begin{enumerate}
-	\item Fig. \ref{fig:noESB_q_1_torques} to \ref{fig:bi_q_1_torques} show that the \textit{PB} ankle torque used by the biarticulated configuration is significantly lower than that of the other configurations but its \textit{ESB} torque is significantly higher than that of the monoarticulated configuration resulting in the heighest ankle torque for biarticulation. 
+	\item \textbf{Joint trajectories}: While the mono- and biarticulated configurations use knee extension at approximately 0.2 seconds into the motion to obtain additional vertical momentum of the CoM, knee extension is nearly absent for the configuration without \textit{ESB}. This is likely due to the torque costs for doing so. Furthermore, the no-\textit{ESB} and monoarticulated configurations use hip extension extensively during the early stages of the jump, whereas the biarticulated extends its hip at the end of the upwards motion to increase its CoM height.
+
+	\item \textbf{Ankle torque}: Fig. \ref{fig:noESB_q_1_torques}--\ref{fig:bi_q_1_torques} show that the \textit{PB} ankle torque used by the biarticulated configuration is significantly lower than that of the other configurations, but due to the biarticulated tendon it achieves the highest net ankle torque during extension.
 	
-	\item While Fig. \ref{fig:noESB_q_2_torques} shows slightly higher peak \textit{PB} torques for the knee joint than the \textit{ESB} configurations in Fig. \ref{fig:mono_q_2_torques} and \ref{fig:bi_q_2_torques}, knee extension is nearly absent for the configuration without \textit{ESB}. The jumps with mono and biarticulation do show knee extension at approximately 0.2 seconds into the motion. Fig. \ref{fig:bi_q_2_torques} shows that this extension is preceded by counteracting \textit{PB} and \textit{ESB} torques. For the biarticulated configuration the \textit{PB} knee torque counteracts the \textit{ESB} torque after 0.1 seconds, but stops this counteraction instantly which allows for an explosive increase in torque around 0.2 seconds. This allows for explosive knee movement without exceeding torque limits.
+	\item \textbf{Joint power}: Fig. \ref{fig:noESB_P_q}--\ref{fig:bi_P_q} show that the biarticulated configuration net joint power exceeds that of the other configurations, particularly for the ankle joint. A comparison with Fig. \ref{fig:mono_ESB} and \ref{fig:bi_ESB} shows that the largest change in power is largely synchronous with release of energy in the \textit{ESB} tendons, demonstrating effective use of the energy storage capacity.
 	
-	\item The limitation by torque restriction for the configuration without \textit{ESB} is implied by Fig. \ref{fig:noESB_crit_high}, which shows an increase in the torque criterion resulting in a higher torque criterion than the legs with \textit{ESB} as shown in Table \ref{table:maxheight}. Restrictions in time and the number of control points may also be an influence on the moderate use of knee joint torque to execute the jump for the configuration without \textit{ESB}.
+	\item \textbf{Power transfer in biarticulation}: The biarticulated tendon is providing positive torque on the knee (i.e. flexing the knee) for the first 0.17\,s (Fig. \ref{fig:bi_q_2_torques}), while the knee is extending. As the stored energy in the biarticulated tendon stays roughly constant, this positive power is not stored but transferred to the ankle, aiding in ankle extension. This demonstrates the effectiveness of the biarticulated tendon.
 	
-	\item Whereas the configuration without \textit{ESB} and the monoarticulated configuration use hip extension extensively during the early stages of the upwards motion of the jump, Fig. \ref{fig:noESB_q_3_torques} to \ref{fig:bi_q_3_torques} show that the biarticulated configuration uses far less hip extension. The biarticulated leg extends its hip at the end of the upwards motion to increase its CoM height whereas the leg without \textit{ESB} flexes its hip to maintain upwards momentum.
-	
-	\item Fig. \ref{fig:noESB_P_q} to \ref{fig:bi_P_q} show that the biarticulated configuration net joint power exceeds that of the other configurations. A comparison with Fig. \ref{fig:mono_ESB} and \ref{fig:bi_ESB} shows that for the \textit{ESB} configurations the largest change in power is largely synchronous with release of energy in the \textit{ESB} tendons.
-	
+	\item \textbf{Energy consumption}: While the monoarticulated case is able to reach a significant increase of 4\% in jumping height compared to the no \textit{ESB} case, it does so much more efficiently, reducing energy consumption by 30\%. However, in the biarticulated case, while $J_{\text{torque}}$ is further reduced, the consumed energy is increased. This suggests a more elaborate torque penalisation criterion can improve the results further.
 \end{enumerate}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusions} \label{sec:conclusions} 
-This paper has presented the trajectory and elastic element pretensions optimisation for the explosive jumping motion of a 3-DoF leg using asymmetric compliant actuators in three different configurations. The results show improvements in terms of torque requirements of the main actuators, as well as interesting collaboration between the elastic elements and the main actuators in order to reach joint torques that allow for explosive motions.
+This paper has presented the optimisation of explosive jumping motions of a 3-DoF leg prototype using both series and parallel compliant articulated actuation. Monoarticulated and biarticulated configurations which are augmented with articulated and adjustable parallel compliance were compared to a state-of-the-art Series-Elastic based actuation structure. The optimisation results show jumps almost 4\% higher in monoarticulated configuration and over 10\% higher in biarticulated configuration, and reduced torque requirements of the main actuators. Furthermore, the biarticulated case demonstrates the potential of multiarticulated compliance, in terms of higher peak joint power and joint-to-joint power transfer.
 
-The leg jumps almost 4\% higher with a monoarticulated configuration and over 10\% higher with a biarticulated configuration compared to a configuration without \textit{ESB}.
-
-While these results are promising, experiments with an already existing hardware prototype undergoing mechanical revisions are still to be performed. Also, for this research only fixed pretension positions of the parallel branches have been used. The integration of variable pretension positions may allow for more accurate optimisation. These developments and their results will be presented in future works.
+While these results are promising, experiments with the recently developed hardware prototype are still underway. Furthermore, in this work only fixed pretension positions of the parallel branches were used. Time-varying pretension positions may improve performance further. These developments and their results will be considered in future works.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
