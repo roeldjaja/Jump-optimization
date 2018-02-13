@@ -273,16 +273,16 @@ resulting in $3 \, n$ optimisation variables. The corresponding $B$-splines desc
 
 \subsection{Objective Criteria} 
 \label{subsec:objectiveCriteria}
-The objective function is comprised of three criteria which 1) reward the performance of the leg, 2) penalize excessive torque needed to complete a movement and 3) maintain the postural stability of the leg. A minimization of the objective functions with these criteria is represented by:
+The objective function is comprised of three criteria which 1) reward jumping height, 2) penalize used torque, and 3) maintain postural stability of the leg. A minimization of the objective functions with these criteria is represented by:
 \begin{equation}
 	\min_{\mathbf{c}, \mathbf{p}} J = -J_{performance} + J_{torque} + J_{stability}
 \end{equation}
-As elaborated in Sec. \ref{subsec:actuationModel}, pretension of the parallel elastic elements can be adjusted, changing the torque--angle relationship and thus allowing use of energy storage to obtain different jumping behaviours. Hence, we add the pretension positions $\mathbf{p}$ as an optimisation variable for the mono- and biarticulated configurations.
+As elaborated in Sec. \ref{subsec:actuationModel}, pretension of the parallel elastic elements can be adjusted, changing the torque--angle relationship and thus allowing use of energy storage to obtain different jumping behaviours. Hence, we add the pretension positions $\mathbf{p}$ as a optimisation variables for the mono- and biarticulated configurations.
 
 In the following, $\gamma_1 \dots \gamma_5$ denote scaling constants.
 
 \subsubsection{Performance}
-For the performance of the leg we consider the maximum jumping height, where the height is defined as the $y$-coordinate of the CoM of the leg with respect to ground, as follows:
+For jumping performance of the leg we consider the maximum $y$-coordinate of the CoM of the leg with respect to ground, as follows:
 \begin{equation}
 	J_{performance} = \gamma_1 \: y_{CoM,max}^2
 \end{equation}
@@ -301,43 +301,57 @@ For the performance of the leg we consider the maximum jumping height, where the
 
 \subsubsection{Torque}
 %The active torques pose a problem as the upper and lower bound constraints on the applied torques can become non-linear. Therefore it is chosen to express the torque limits by means of a penalty function in the objective criteria and to only terminate the simulation when the utmost torque limits are violated.
-To ensure the system effectively utilises the elastic energy storage and minimise electrical energy expenditure, the active SEA torque is minimised. To do so, we compute the squared $l_2$-norm of the torque contribution of the SEAs, by removing the \textit{ESB} contributions from the net active joint torques:
+To ensure effective utilisation of elastic energy storage and minimised electrical energy expenditure, the active SEA torque is minimised. We compute the squared $l_2$-norm of the torque contribution of the SEAs, removing the \textit{ESB} contributions from the net active joint torques:
 %the realised values of $\boldsymbol{\tau}_a$ computed in Section \ref{sec:modelling} while eliminating the influence of the \textit{ESB}s:  
 \begin{equation}
 	J_{torque}= \gamma_2 \: \| \boldsymbol{\tau}_a - \boldsymbol{\tau}_{ESB} \|_2^2
 \end{equation}
-Furthermore, through the optimisation algorithm which is elaborated on in Sec. \ref{subsec:algorithm}, the SEA torques are required to stay within the limits defined by the current limits of the physical system.
+Furthermore, the optimisation algorithm elaborated in Sec. \ref{subsec:algorithm} requires the SEA torques to stay within limits defined by the current limits of the physical system.
 
 \subsubsection{Stability}
-To ensure stable jumps, a stability criterion is introduced. This criterion minimises several terms:
-\begin{itemize}
-	\item Mean and final horizontal deviation of the CoM to ensure vertical jumping motion;
-	\item Rotational momentum $L$ of the robot at the maximum CoM height, which ensures the robot would land back on its foot.
-\end{itemize}
+To ensure stable jumps, a stability criterion is introduced. This criterion minimises several terms: 1) Mean and final horizontal deviation of the CoM to ensure vertical jumping motion, and 2) Rotational momentum $L$ of the robot at the maximum CoM height.
+%\begin{itemize}
+%	\item Mean and final horizontal deviation of the CoM to ensure vertical jumping motion;
+%	\item Rotational momentum $L$ of the robot at the maximum CoM height.
+%\end{itemize}
 %The leg posture is considered stable when the $x$-coordinate of the CoM of the leg is equal to its initial $x$-coordinate at the end of the jump, i.e. when the CoM reaches its maximum height. Also, the motion is assumed to be stable when the mean value of the absolute x-coordinates of the CoM equals zero. Higher stability is also assumed for a low rotational momentum $L$ at maximum height of CoM.
-These goals are achieved with the minimization of:
+These are achieved with the minimization of:
 \begin{equation}
 	\begin{aligned}
-		J_{stability} & =  \gamma_3\cdot \Big( x_{CoM}(t_h)-x_{CoM}(t_0) \Big)^2  \\ & +\gamma_4\cdot  {\sum^{N}_{i=1}\frac{| x_{CoM}(t)_i |}{N}}^2   
-+ \gamma_5  \cdot   L(t_h)^2 
+		J_{stability} & =  \gamma_3 \, \left[ x_{CoM}(t_h) - x_{CoM}(t_0) \right]^2 \\
+		& + \gamma_4 \, \sum^{N}_{i=1}\frac{| x_{CoM}(t)_i |}{N}^2   
++ \gamma_5 \, L(t_h)^2,
 	\end{aligned}
 \end{equation}
-where $N$ denotes the number of time segments, $t_0$ denotes the starting time, and $t_h$ denotes the point in time where the CoM reaches its maximum height. Let $t_f$ denote the final time, where either the maximum CoM height $y_{CoM}$ has been reached or the jump is unsuccessful and the leg has fallen over. For successful jumps $t_h=t_f$.
+where $N$ denotes the number of time segments, $t_0$ denotes starting time, and $t_h$ denotes the time where the CoM reaches its maximum height. Let $t_f$ denote the final time, where either the maximum CoM height $y_{CoM,max}$ is reached or the leg has fallen over. For successful jumps $t_h=t_f$.
 
 \subsection{Algorithm}
 \label{subsec:algorithm}
-Having set up the forward and inverse dynamics and optimisation criteria, we proceed to describe the optimisation algorithm. The algorithm, shown as Algorithm \ref{algo}, takes a simple hand-tuned jumping trajectory as initial guess. Its control points serve as the algorithm input. The initial pretensions are set to $1 \cdot 10^{-4}$ m if present. 
-The initial position of the leg yields a squatting posture and each simulation is concluded when the CoM reaches its highest point for successful jumps or when the leg has fallen over for unsuccessful jumps. 
+Having set up the forward and inverse dynamics and optimisation criteria, we proceed to describe the optimisation algorithm. The algorithm, shown in Algorithm \ref{algo}, takes a simple hand-tuned jumping trajectory as initial guess. Its control points serve as the algorithm input. Initial pretensions are set to $1 \cdot 10^{-4}$ m if present. Each simulation is concluded when the CoM reaches its highest point for successful jumps or when the leg has fallen over for unsuccessful jumps. 
 
-\begin{algorithm}[H]
+\begin{algorithm}[ht]
 	\caption{Algorithm for joint trajectory optimization} \label{algo}
 	\begin{algorithmic}[1]
-		\STATE  Generate joint reference trajectories with $B$-splines \label{algbegin}
-		\IF{joint limits are not exceeded} \STATE {Continue} \ELSE \STATE Vary control points, \textbf{go to} \ref{algbegin}  \ENDIF
-		\WHILE{ $\dot y_{CoM} > 0$ \AND \textit{not fallen over}}  \STATE{Run simulation of motion through forward dynamics} \ENDWHILE
-		\IF{$\mathrm{max}(|\boldsymbol{\tau}(t)|) < \tau^{max} \quad \forall \: t$} \STATE {Continue} \ELSE \STATE Vary control points, \textbf{go to} \ref{algbegin}  \ENDIF
+		\STATE Generate joint reference trajectories with $B$-splines \label{algbegin}
+		\IF{joint limits are not exceeded}
+			\STATE {Continue} 
+		\ELSE
+			\STATE Vary optimisation variables, \textbf{go to} \ref{algbegin}
+		\ENDIF
+		\WHILE{$\dot y_{CoM} > 0$ \AND \textit{not fallen over}}
+			\STATE{Run simulation of motion through forward dynamics}
+		\ENDWHILE
+		\IF{\textit{not fallen over} \AND $\mathrm{max}(|\boldsymbol{\tau}(t)|) < \tau^{max} \quad \forall \: t$}
+			\STATE{Continue}
+		\ELSE
+			\STATE Vary optimisation variables, \textbf{go to} \ref{algbegin}
+		\ENDIF
 		\STATE Evaluate objective function
-		\IF{local minimum reached} \STATE {Exit} \ELSE \STATE Vary control points, \textbf{go to} \ref{algbegin}  \ENDIF
+		\IF{local minimum reached}
+			\STATE{Exit}
+		\ELSE
+			\STATE Vary optimisation variables, \textbf{go to} \ref{algbegin}
+		\ENDIF
 	\end{algorithmic}
 \end{algorithm}
 
