@@ -358,15 +358,15 @@ Having set up the forward and inverse dynamics and optimisation criteria, we pro
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results} \label{sec:results}
-The optimisation has been performed using a maximum duration of 0.4 seconds, and the initial trajectory is shown in Fig. \ref{fig:seq}. Computations were performed in MATLAB R2016B, with \texttt{fmincon} as the optimisation algorithm. The weighing constants $\gamma_1 \dots \gamma_5$ were chosen as $\gamma_1=5 \cdot 10^{2} \,, \gamma_2=1.5 \cdot 10^{-4} \,, \gamma_3=1.5 \cdot 10^{3} \,, \gamma_4 = 1\cdot 10^{2}\,$, and $\gamma_5 = 1$.
+The optimisation was performed using a maximum duration of 0.4 seconds, with initial trajectory shown in Fig. \ref{fig:seq}. Computations were performed in MATLAB R2016b, with \texttt{fmincon} as the optimiser function. The weighing constants $\gamma_1 \dots \gamma_5$ were chosen as $\gamma_1=5 \cdot 10^{2} \,, \gamma_2=1.5 \cdot 10^{-4} \,, \gamma_3=1.5 \cdot 10^{3} \,, \gamma_4 = 1\cdot 10^{2}\,$, and $\gamma_5 = 1$.
 
-The results for all three actuation configurations are shown in Fig. \ref{fig:opt_results}, which reports the objective criterion values during the optimisation, joint torques, joint power and the \textit{ESB} tendon energy storage over time. Furthermore, the results are summarised numerically in Table \ref{table:maxheight}. The video that accompanies this paper visualises the optimised jumping motions of all three actuation configurations.
+Results for all three actuation configurations are shown in Fig. \ref{fig:opt_results}, which reports the objective criterion evolution and resulting joint trajectories, torques, power and \textit{ESB} tendon energy storage over time. The results are summarised numerically in Table \ref{table:maxheight}. The video that accompanies this paper visualises the optimised jumping motions of all three actuation configurations.
 
 % initial guess
 \begin{figure}[ht]
 	\centering
 	%      \framebox{\parbox{3in}
-	{\includegraphics[width=0.6\linewidth]{initialguess}
+	{\includegraphics[width=0.5\linewidth]{initialguess}
 	}%}	
 	\caption{Initial motion used as starting value for the optimisation.}
 	\label{fig:seq}	
