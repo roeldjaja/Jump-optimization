@@ -133,24 +133,24 @@ The leg consists of four links which are connected by the actuated ankle, knee a
 % Figure Leg model
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=0.7\linewidth]{Leg_3DoF_model}
+	\includegraphics[width=0.6\linewidth]{Leg_3DoF_model}
 	\caption{Leg model with floating base. The straight configuration on
 		the right corresponds to $\mathbf{q} = \mathbf{0}$.}
 	\label{fig:Leg_3DoF_model}
 \end{figure}
 
-Their centre of mass (CoM) is assumed to be located on the line connecting the proximal and distal joints at a distance of $r_1,r_2,r_3,r_4$ from the proximal joint for all links except for the foot; the model includes a floating base to allow for realistic modelling of the ground reaction forces (GRF). Together, the configurations of the bodies describe the system:
+Their centre of mass (CoM) is assumed to be located on the line connecting the proximal and distal joints at a distance of $r_1,r_2,r_3,r_4$ from the proximal joint for all links except for the foot; the model includes a floating base to allow for realistic modelling of the ground reaction forces (GRF). %Together, the configurations of the bodies describe the system:
+%\begin{equation}
+%	\mathbf{x} = [x_1,y_1,\theta_1,x_2,y_2,\theta_2, x_3,y_3,\theta_3,x_4,y_4,%\theta_4]^T. 
+%\end{equation}
+The Euler-Lagrange formulism with generalised coordinates $\mathbf{q} \in \mathfrak{Q} \subset \mathfrak{R}^{6}$ is used to derive the dynamic equations:
 \begin{equation}
-	\mathbf{x} = [x_1,y_1,\theta_1,x_2,y_2,\theta_2, x_3,y_3,\theta_3,x_4,y_4,\theta_4]^T. 
-\end{equation}
-The Euler-Lagrange formulism with generalised coordinates $\mathbf{q} \in \mathfrak{Q} \subset \mathfrak{R}^{6}$ is used to derive the dynamic equations for the system:
-\begin{equation}
-	\mathbf{q} = [x_1,y_1,\theta_1,q_1,q_2,q_3]^T
+	\mathbf{q} = [x_1,y_1,\theta_1,q_1,q_2,q_3]^T,
 	\label{eq:q}
 \end{equation}
 leading to:
 \begin{equation}
-	M(\mathbf{q}) \, \mathbf{\ddot q} = \mathbf{\boldsymbol{\tau}} + \mathbf{g}(q) - C(\mathbf{q, \dot q}) \, \mathbf{\dot q} - D \, \mathbf{\dot q} + J_{GRF}^T \, \mathbf{f}_{GRF}
+	M(\mathbf{q}) \, \mathbf{\ddot q} = \mathbf{\boldsymbol{\tau}} + \mathbf{g}(q) - C(\mathbf{q, \dot q}) \, \mathbf{\dot q} - D \, \mathbf{\dot q} + J_{GRF}^T \, \mathbf{f}_{GRF}.
 \label{eq:fwddyn}
 \end{equation}
 Here, the damping matrix is denoted by $D = \mathrm{diag} (0,0,0,d_1,d_2,d_3)$, the generalised actuation forces are denoted by $\boldsymbol{\tau} = [0,0,0,\tau_1,\tau_2,\tau_3]^T$, the generalised gravitational forces are denoted by $\mathbf{g(q)}$, and the Coriolis and generalised inertia matrices are denoted by $C\mathbf{(q, \dot q)}$ and $M(\mathbf{q})$, respectively. The Jacobian for the heel and toe is denoted by $J_{GRF}^T$ and the ground forces in generalised coordinates are subsequently expressed as $J_{GRF}^T \, \mathbf{f}_{GRF}$. Spring-dampers define $\mathbf{f}_{GRF}$ in the vertical direction and Coulomb and viscous friction define the horizontal component, proportionally to the vertical forces.
@@ -170,8 +170,7 @@ with
 	\mathbf{q}_a = [q_1,q_2,q_3]^T.
 \end{equation}
 \noindent
-Similarly, $\boldsymbol{\tau} = \left[\mathbf{0},\boldsymbol{\tau}_a\right]^T$. \textbf{$\leftarrow$ TODO This notation is a bit iffy because it might suggest to some readers that it is matrix, but let's let it slide because it saves space.}
-Substituting these into \eqref{eq:fwddyn} yields:
+Similarly, $\boldsymbol{\tau} = \left[\mathbf{0},\boldsymbol{\tau}_a\right]^T$. Substituting these into \eqref{eq:fwddyn} yields:
 \begin{equation}
 	\begin{aligned}
 		&\left[\begin{array}{cc}  
@@ -270,11 +269,7 @@ A common approach to reduce the dimensionality of trajectory optimisation proble
 \begin{equation}
 	q_a(t,\mathbf{c}) = \sum_{i=1}^{n} B_i (t) \, c_i.
 \end{equation}
-Using the control points as optimisation variables, the corresponding $B$-splines describe the optimal joint trajectories, velocities, and accelerations over time. 
-
-\subsection{Pretension Positions} 
-\label{subsec:pretensionPositions}
-As elaborated in Section \ref{subsec:actuationModel}, the parallel elastic element in the \textit{ACA} scheme can be pretensioned by motor M2, shown in Fig. \ref{fig:ACA}. Different pretensions change the torque-angle relationship and thus allow the energy storage to be used to obtain different jumping behaviours. Therefore, the pretension position of each tendon, defined as the position of the elastic element attachment relative to its undeformed attachment position, is regarded as an optimisation variable for the mono- and biarticulated configurations.
+Using the control points as optimisation variables, the corresponding $B$-splines describe the optimal joint trajectories, velocities, and accelerations over time.
 
 \subsection{Objective Criteria} 
 \label{subsec:objectiveCriteria}
@@ -282,7 +277,9 @@ The objective function is comprised of three criteria which 1) reward the perfor
 \begin{equation}
 	\min_{\mathbf{c}, \mathbf{p}} J = -J_{performance} + J_{torque} + J_{stability}
 \end{equation}
-In the following, $\gamma_1 \dots \gamma_5$ denote suitable scaling constants.
+As elaborated in Sec. \ref{subsec:actuationModel}, pretension of the parallel elastic elements can be adjusted, changing the torque--angle relationship and thus allowing use of energy storage to obtain different jumping behaviours. Hence, we add the pretension positions $\mathbf{p}$ as an optimisation variable for the mono- and biarticulated configurations.
+
+In the following, $\gamma_1 \dots \gamma_5$ denote scaling constants.
 
 \subsubsection{Performance}
 For the performance of the leg we consider the maximum jumping height, where the height is defined as the $y$-coordinate of the CoM of the leg with respect to ground, as follows:
@@ -476,7 +473,7 @@ The results for all three actuation configurations are shown in Fig. \ref{fig:op
 	\begin{subfigure}[t]{0.32\linewidth}
 		\includegraphics[width=\linewidth]{mono/q_1_torques}
 		\caption{Monoarticulated: Ankle ($q_1$) torques.}
-		\label{fig:mono__q_1_torques}
+		\label{fig:mono_q_1_torques}
 	\end{subfigure}
 	%
 	\begin{subfigure}[t]{0.32\linewidth}
