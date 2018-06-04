@@ -1,0 +1,61 @@
+Reviewer 2 of BioRob 2018 submission 98
+
+Comments to the author
+======================
+
+The paper presents the optimized jumping motion using
+series elastic actuators. The paper compared the jumping
+performance with various mechanical configurations such as
+SEA-only, mono-articular, and bi-articular configuration.
+
+The paper introduces design, modeling, and optimization but
+the reviewer thinks the paper needs more brief information
+for readers. However, the result is reliable and the
+presentation is fine. The author seems to try showing
+various results as many as possible, but some results are
+redundant.
+
+In detail, there are minor errors and reviewers comments in
+the text and figures. In Abstract, the author mentioned `to
+optimize the joint trajectories’. The author should appoint
+the optimization object such as time, speed, performance
+index, etc. In the introduction, `,’ is missed in the first
+sentence, and a reference required for `A prime example’.
+References in the introduction are generally fine but need
+more explanations for [4]-[12]. And it is better to avoid
+using `almost’ in the scientific text.
+
+In Section II, what is `very different’? And, need
+explanations for PE(Parallel?) and SE(Serial?). At the end
+of Section II, need a simple explanation for [12].
+
+In Section III, there is a typo ‘inertiae’. In Section
+III.B, Equation (5) is wrong (Maa -> Mpa). And like Section
+II, the paper needs a simple explanation for [11] (At the
+end).
+
+In Section IV, the explanation of optimization algorithm
+has to be moved Section IV.C (Furthermore ~~). The reviewer
+doesn’t understand the sentence ‘Each simulation is
+concluded when the CoM reaches its highest point’. How do
+the authors know that the point is optimal?
+
+In Section V, there is no explanation of the result here.
+And the reviewer cannot understand the Figure 5. Caption
+(d) seems a typo. What is the variable of the x-axis of
+each graph? time? The authors need to simplify the graph
+for better presentation.
+
+Section VI has to be separated to Section V and Section
+VII. Results have to go Section V and discussions has to go
+Section VII.
+
+The reviewer thinks this paper is fine to present at the
+conference but need to improve the quality of paper as
+written above. Video is fine also.
+
+
+Comments on the Video
+=====================
+
+Video seems fine.

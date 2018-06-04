@@ -1,0 +1,47 @@
+Reviewer 1 of BioRob 2018 submission 98
+
+Comments to the author
+======================
+
+In this paper, compliant actuation arrangements were
+compared in accordance with their success on the jumping
+motion.
+
+An optimization study is performed on the joint
+trajectories to get the highest jump result of each
+configuration.
+
+Major Comments:
+- The fundamental need for the explosive motions and the
+jumping capability is not justified in the introduction. I
+believe
+that this part particular part must be expanded.
+
+- Jumping level (height) highly depends on the specific
+trajectory. It is possible to exploit resonance frequency,
+for instance, to maximize the jumping motion; see Ugurlu et
+al. "Bipedal Hopping Pattern Generation for Passively
+Compliant Humanoids: Exploiting the Resonance", IEEE
+Transactions on Industrial Electronics
+
+- Paper is based on the comparison of the 3 different
+structured robot legs, however, (other than the Fig. 2 and
+the brief operation principal's explanation no quantitative
+data (such as total mass, inertia, initial CoM position
+etc.) were given throughout the paper. Dynamic parameters
+of the each leg must be provided. 
+
+Minor Comments:
+- In page 1 paragraph 2, SEA abbreviation is used for the
+first time and without an expansion.
+- Fig. 5 is not readable in a printed copy
+- Most of the sub figures' of Fig. 5 are not mentioned in
+the paper if these figures do not have any additional
+contribution to the paper, these sub-figures can be either
+removed from the paper or rearranged.
+- At page 6 paragraph 4, "Fig. 51" must be corrected.	
+
+Comments on the Video
+=====================
+
+Compared motions must be labeled for a clear understanding.

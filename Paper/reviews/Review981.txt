@@ -1,0 +1,65 @@
+Reviewer 3 of BioRob 2018 submission 98
+
+Comments to the author
+======================
+
+GENERAL
+The topic of the paper is of recent interest of the
+biorobotics community. Biarticular actutation in elastic
+robot designs has a high potential. The authors should
+consider to integrate results and discussion as a new
+results section, while giving a critical perspective in the
+conclusion (or discussion & conclusion) section. Overall,
+the results are very promising, but the lack of an
+experiment with a real robot is clear limitation.
+
+ABSTRACT
+Is generally informative, but very vague regarding the
+bi-articular design. Does not mention that his is only a
+simulation study.
+
+INTRODUCTION
+The introduction gives a good overview of the literature.
+Addtional references regarding hopping and actuation might
+be added (e.g., from groups of Vanderborght or Seyfarth).
+The reviewer recommends not to present the results in the
+introduction.
+
+LEG DESIGN
+The leg design is well described. Yet, some details might
+be explained referring to Fig. 2.
+
+MODELLING
+The inertia, gravitation, and coriolis matrices should be
+given. When optimizing for power and energy consumption, it
+is recommendable to consider the electrical dynamics of the
+actuator (see works by Verstraten).
+
+DYNAMIC OPTIMISATION
+Explaining the section substructure is not require, please
+remove to give details elsewhere. The signs of the
+components of the objective function should be explained.
+
+RESULTS
+While the observed trends are promising, it is hard to get
+trajectories from Fig. 4 or to understand Fig. 5 and,
+finally, the results are only vaguely described. More
+details would be helpful.
+
+DISCUSSION
+The results contained in the discussion section are very
+interesting, e.g., torque requirements according to Fig
+5g-5i. It appears that the separation between results and
+discussion might not be appropriate. A critical perspective
+is missing.
+
+CONCLUSIONS
+The paper is concluded well, a critical perspective is yet
+missing. Future works are meaningful.
+
+Comments on the Video
+=====================
+
+Is informative, but too fast. Might benefit from more
+animation, especially the compared
+actuator/spring-mechanisms are hard to comprehend.

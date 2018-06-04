@@ -1,0 +1,13 @@
+This work covers the optimization of the explosive jumping
+motion of a 3-DOF leg by modifying joint trajectories and
+actuator/elastic element properties. The reviewers raise
+important points that should be addressed. The major issue
+is seen as a lack of experimental result (even in the form
+of early/initial results) that could provide enough data to
+prove the optimization results.
+
+----------------------------------------
+Comments on Video:
+
+Please slow down the video and provide some detail about
+the compared mechanisms.
