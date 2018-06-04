@@ -1,0 +1,79 @@
+Reviewer 2 of BioRob 2018 submission 98
+
+Comments to the author
+======================
+
+The paper presents the optimized jumping motion using
+series elastic actuators. The paper compared the jumping
+performance with various mechanical configurations such as
+SEA-only, mono-articular, and bi-articular configuration.
+
+The paper introduces design, modeling, and optimization but
+the reviewer thinks the paper needs more brief information
+for readers. However, the result is reliable and the
+presentation is fine. The author seems to try showing
+various results as many as possible, but some results are
+redundant.
+
+In detail, there are minor errors and reviewers comments in
+the text and figures. In Abstract, the author mentioned `to
+optimize the joint trajectories’. The author should appoint
+the optimization object such as time, speed, performance
+index, etc. In the introduction, `,’ is missed in the first
+sentence,
+=> While it is important to know what exactly is optimised on I think stating all the cost terms in the introduction is ridiculous. We can try to be more precise in our use of language, replacing the word 'performance' with more accurate words such as jumping height or power (but we should be careful not to over specify as this is not the only optimisation objective!).
+ and a reference required for `A prime example’.
+=> A reference to state that jumping is an example of explosive motions in humans is absurd.
+References in the introduction are generally fine but need
+more explanations for [4]-[12].
+=> Would be nice indeed but we already have 3/4th page of introduction in a 6 page paper, we can't do more without compromising content. Save that for the journal paper.
+And it is better to avoid using `almost’ in the scientific text.
+=> Agreed we can remove this word, simply rounding the number is fine.
+
+In Section II, what is `very different’?
+=> We already refer to [12] where the reader can find the actual values and other details. What we can try to say in a short manner is that the ESB elastic element can store a huge amount of energy compared to the series-elastic element in the PB SEA.
+And, need explanations for PE(Parallel?) and SE(Serial?).
+=> We can add some words to indicate these are simply names "denoted as SE" etc.
+At the end of Section II, need a simple explanation for [12].
+=> ?
+
+In Section III, there is a typo ‘inertiae’.
+=> inertiae is plural of inertia, albeit less common.
+In Section III.B, Equation (5) is wrong (Maa -> Mpa).
+=> Yes please fix this
+And like Section II, the paper needs a simple explanation for [11] (At the end).
+=> ?
+
+In Section IV, the explanation of optimization algorithm
+has to be moved Section IV.C (Furthermore ~~).
+=> Took me a bit to understand what he meant here.. Under (14) there is a sentence which refers to a later Section. We can consider it later.
+The reviewer
+doesn’t understand the sentence ‘Each simulation is
+concluded when the CoM reaches its highest point’. How do
+the authors know that the point is optimal?
+=> We can explain this (CoM velocity is negative), but only if we find space.
+
+In Section V, there is no explanation of the result here.
+=> ?
+And the reviewer cannot understand the Figure 5. Caption
+(d) seems a typo.
+=> Correct, 5a should be "No ESB". Please fix.
+What is the variable of the x-axis of
+each graph? time? The authors need to simplify the graph
+for better presentation.
+=> Let's add the fact that the horizontal axis is time to the figure caption.
+
+Section VI has to be separated to Section V and Section
+VII. Results have to go Section V and discussions has to go
+Section VII.
+=> I don't agree, it will make Sec. VII very hard to read, detailed analysis of results do not belong in a conclusions section. We can however consider to merge Sec. VI into V, to space space.
+
+The reviewer thinks this paper is fine to present at the
+conference but need to improve the quality of paper as
+written above. Video is fine also.
+
+
+Comments on the Video
+=====================
+
+Video seems fine.

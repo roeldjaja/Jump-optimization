@@ -1,0 +1,76 @@
+Reviewer 3 of BioRob 2018 submission 98
+
+Comments to the author
+======================
+
+GENERAL
+The topic of the paper is of recent interest of the
+biorobotics community. Biarticular actutation in elastic
+robot designs has a high potential. The authors should
+consider to integrate results and discussion as a new
+results section, while giving a critical perspective in the
+conclusion (or discussion & conclusion) section. Overall,
+the results are very promising, but the lack of an
+experiment with a real robot is clear limitation.
+
+ABSTRACT
+Is generally informative, but very vague regarding the
+bi-articular design. Does not mention that his is only a
+simulation study.
+=> Fair enough. Let's change "The results demonstrate" to "A simulation study demonstrates"
+
+INTRODUCTION
+The introduction gives a good overview of the literature.
+Addtional references regarding hopping and actuation might
+be added (e.g., from groups of Vanderborght or Seyfarth).
+The reviewer recommends not to present the results in the
+introduction.
+=> Additional references would be great but we lack space, especially since we are constrained to 6 pages. Highlighting the main results is a good practice I find, since it makes the reader enthousiastic about what's to come and why what is being done is worth it.
+
+LEG DESIGN
+The leg design is well described. Yet, some details might
+be explained referring to Fig. 2.
+=> We can reorganise Sec. II-B a bit, particularly to move the reference to Fig. 2 to the top of that subsection. That will give the reader a better understanding of the figure as they'll be reading that subsec and looking at the figure that same time.
+
+MODELLING
+The inertia, gravitation, and coriolis matrices should be
+given. When optimizing for power and energy consumption, it
+is recommendable to consider the electrical dynamics of the
+actuator (see works by Verstraten).
+=> No space. Agreed on the electrical dynamics, we should be more precise with point 5 in Sec. VI, where we suggest a more sophisticated torque penalisation would be better to actually penalise energy consumption.
+
+DYNAMIC OPTIMISATION
+Explaining the section substructure is not require, please
+remove to give details elsewhere. The signs of the
+components of the objective function should be explained.
+=> We can remove the sentences after "We proceed as follows" to save 3 lines, indeed. Probably a good idea, but let's do all the modifications we want to do and then see where we can shave off lines.
+
+RESULTS
+While the observed trends are promising, it is hard to get
+trajectories from Fig. 4 or to understand Fig. 5 and,
+finally, the results are only vaguely described. More
+details would be helpful.
+=> We can consider removing Fig. 4, as it is not very informative. We can make a more horizontally aligned figure, or simply refer to the video (which we need to add it to). Removing this figure will give us a lot of space, in fact.
+
+DISCUSSION
+The results contained in the discussion section are very
+interesting, e.g., torque requirements according to Fig
+5g-5i. It appears that the separation between results and
+discussion might not be appropriate. A critical perspective
+is missing.
+=> This reviewer also suggests to merge Sec. V and VI. I would have liked to know with regards to what he wants to see a critical perspective, but we can have another read-through to see what's missing.
+
+CONCLUSIONS
+The paper is concluded well, a critical perspective is yet
+missing. Future works are meaningful.
+=> Same.
+
+Comments on the Video
+=====================
+
+Is informative, but too fast. Might benefit from more
+animation, especially the compared
+actuator/spring-mechanisms are hard to comprehend.
+=> I will add more slow motions to the video, and extend the overall length. Animations of the mechanisms would be too much work for this paper.
+
+

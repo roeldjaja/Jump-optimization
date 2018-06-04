@@ -1,0 +1,65 @@
+Reviewer 1 of BioRob 2018 submission 98
+
+Comments to the author
+======================
+
+In this paper, compliant actuation arrangements were
+compared in accordance with their success on the jumping
+motion.
+
+An optimization study is performed on the joint
+trajectories to get the highest jump result of each
+configuration.
+
+Major Comments:
+- The fundamental need for the explosive motions and the
+jumping capability is not justified in the introduction. I
+believe that this part particular part must be expanded.
+=> We state this pretty well in the first paragraph of Sec. I. We can ignore this.
+
+- Jumping level (height) highly depends on the specific
+trajectory. It is possible to exploit resonance frequency,
+for instance, to maximize the jumping motion; see Ugurlu et
+al. "Bipedal Hopping Pattern Generation for Passively
+Compliant Humanoids: Exploiting the Resonance", IEEE
+Transactions on Industrial Electronics.
+=> In a journal paper I would reply to the reviewer saying that this would come out of the optimisation naturally if such a strategy if efficient. At present I don't think it is useful to discuss this in the paper though as we are very space constrained.
+
+- Paper is based on the comparison of the 3 different
+structured robot legs, however, (other than the Fig. 2 and
+the brief operation principal's explanation no quantitative
+data (such as total mass, inertia, initial CoM position
+etc.) were given throughout the paper. Dynamic parameters
+of the each leg must be provided. 
+=> I would like to add this, if we can find the space. A smaller version of the table from the ICRA18 paper, with only the parameters of our robot. E.g. the following:
+\begin{table}
+	\begin{tabular}{l|l|l}
+		& \textbf{Length [m]} & \textbf{Mass [kg]} \\
+		\hline
+		Thigh & 0.350 & 2.79, 3.60, 4.24 \\
+		Shank & 0.350 & 3.08, 3.91, 3.20 \\
+		Foot & 0.063 & 1.70 \\
+	\end{tabular}
+	\caption{Dimensions and mass distribution of the robot considered in this paper, which are similar to the human limb. Note the foot dimension is height, not length. Mass values given as SEA only, monoarticulated, and biarticulated configurations, respectively.}
+	\label{table:designParameters}
+\end{table}
+
+Minor Comments:
+- In page 1 paragraph 2, SEA abbreviation is used for the
+first time and without an expansion.
+=> Yes needs to be fixed
+- Fig. 5 is not readable in a printed copy
+=> Some legends are pretty small indeed, but there isn't very much we can do. We can try doing some trickery in InkScape but let's see later.
+- Most of the sub figures' of Fig. 5 are not mentioned in
+the paper if these figures do not have any additional
+contribution to the paper, these sub-figures can be either
+removed from the paper or rearranged.
+=> Some more discussion tweaking would be good but I would refrain from removing any data
+- At page 6 paragraph 4, "Fig. 51" must be corrected.
+=> No this is fine, the reviewer seems to read "51" (fifty one) as opposed to "5l" (five L)
+
+Comments on the Video
+=====================
+
+Compared motions must be labeled for a clear understanding.
+=> Agreed (not sure why they aren't now). I will improve the video.
