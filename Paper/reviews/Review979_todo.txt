@@ -66,7 +66,7 @@ for better presentation.
 Section VI has to be separated to Section V and Section
 VII. Results have to go Section V and discussions has to go
 Section VII.
-=> I don't agree, it will make Sec. VII very hard to read, detailed analysis of results do not belong in a conclusions section. We can however consider to merge Sec. VI into V, to space space.
+=> I don't agree, it will make Sec. VII very hard to read, detailed analysis of results do not belong in a conclusions section. We can however consider to merge Sec. VI into V, to save space.
 
 The reviewer thinks this paper is fine to present at the
 conference but need to improve the quality of paper as

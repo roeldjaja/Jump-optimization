@@ -320,7 +320,6 @@ To ensure effective utilisation of elastic energy storage and minimised electric
 \begin{equation}
 	J_{torque}= \gamma_2 \: \| \boldsymbol{\tau}_a - \boldsymbol{\tau}_{ESB} \|_2^2
 \end{equation}
-Furthermore, the optimisation algorithm elaborated in Sec. \ref{subsec:algorithm} requires the SEA torques to stay within limits defined by the current limits of the physical system.
 
 \subsubsection{Stability}
 To ensure stable jumps, a stability criterion is introduced. This criterion minimises several terms: 1) Mean and final horizontal deviation of the CoM to ensure vertical jumping motion, and 2) Rotational momentum $L$ of the robot at the maximum CoM height.
@@ -341,7 +340,7 @@ where $N$ denotes the number of time segments, $t_0$ denotes starting time, and 
 
 \subsection{Algorithm}
 \label{subsec:algorithm}
-Having set up the forward and inverse dynamics and optimisation criteria, we proceed to describe the optimisation algorithm. The algorithm, shown in Algorithm \ref{algo}, takes a simple hand-tuned jumping trajectory as initial guess. Its control points serve as the algorithm input. Initial pretensions are set to $1 \cdot 10^{-4}$ m if present. Each simulation is concluded when the CoM reaches its highest point and the vertical CoM velocity turns negative for successful jumps, or when the leg has fallen over for unsuccessful jumps. 
+Having set up the forward and inverse dynamics and optimisation criteria, we proceed to describe the optimisation algorithm. The algorithm, shown in Algorithm \ref{algo}, takes a simple hand-tuned jumping trajectory as initial guess. Its control points serve as the algorithm input. Initial pretensions are set to $1 \cdot 10^{-4}$ m if present. Each simulation is concluded when the CoM reaches its highest point and the vertical CoM velocity turns negative for successful jumps, or when the leg has fallen over for unsuccessful jumps. Furthermore, the algorithm requires the SEA torques to stay within the limit $\tau_{SEA}^{max}$ defined by the current limits of the physical system.
 
 \begin{algorithm}[ht]
 	\caption{Algorithm for joint trajectory optimization} \label{algo}
@@ -355,7 +354,7 @@ Having set up the forward and inverse dynamics and optimisation criteria, we pro
 		\WHILE{$\dot y_{CoM} > 0$ \AND \textit{not fallen over}}
 			\STATE{Run simulation of motion through forward dynamics}
 		\ENDWHILE
-		\IF{\textit{not fallen over} \AND $\mathrm{max}(|\boldsymbol{\tau}(t)|) < \tau^{max} \quad \forall \: t$}
+		\IF{\textit{not fallen over} \AND $\mathrm{max}(|\boldsymbol{\tau}_{SEA}(t)|) < \tau_{SEA}^{max} \quad \forall \: t$}
 			\STATE{Continue}
 		\ELSE
 			\STATE Vary optimisation variables, \textbf{go to} \ref{algbegin}

@@ -23,7 +23,7 @@ for instance, to maximize the jumping motion; see Ugurlu et
 al. "Bipedal Hopping Pattern Generation for Passively
 Compliant Humanoids: Exploiting the Resonance", IEEE
 Transactions on Industrial Electronics.
-=> In a journal paper I would reply to the reviewer saying that this would come out of the optimisation naturally if such a strategy if efficient. At present I don't think it is useful to discuss this in the paper though as we are very space constrained.
+=> In a journal paper I would reply to the reviewer saying that this would come out of the optimisation naturally if such a strategy is efficient. At present I don't think it is useful to discuss this in the paper though as we are very space constrained.
 
 - Paper is based on the comparison of the 3 different
 structured robot legs, however, (other than the Fig. 2 and
