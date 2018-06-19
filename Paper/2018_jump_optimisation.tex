@@ -69,7 +69,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}
 
-This paper presents the optimisation of explosive jumping motions on a 3-DoF leg prototype. The leg is based on the recently introduced asymmetric compliant actuator scheme, in which a series-elastic main drive is augmented with a secondary parallel adjustable compliant branch with significantly different stiffness and energy storage capacity properties. The leg prototype implements two such actuation configurations, one of which includes a biarticulated branch, and they are compared to conventional series-elastic based actuation. An optimisation problem is formulated to optimise the joint trajectories and elastic element pretension to maximise jumping height. A simulation demonstrates that the biarticulated configuration yields maximum jumping height, and achieves the highest peak joint power. Compared to series-elastic based actuation, the augmented leg jumps 4\% higher with a monoarticulated parallel compliance configuration while using less energy, and over 10\% higher in biarticulated configuration.
+This paper presents the optimisation of explosive jumping motions on a 3-DoF leg prototype. The leg is based on the recently introduced asymmetric compliant actuator scheme, in which a series-elastic main drive is augmented with a secondary parallel adjustable compliant branch with significantly different stiffness and energy storage capacity properties. The leg prototype implements two such actuation configurations, one of which includes a biarticulated branch, and they are compared to conventional series-elastic based actuation. An optimisation problem is formulated to optimise the joint trajectories and elastic element pretension to maximise jumping height. A simulation study demonstrates that the biarticulated configuration yields maximum jumping height, and achieves the highest peak joint power. Compared to series-elastic based actuation, the augmented leg jumps 4\% higher with a monoarticulated parallel compliance configuration while using less energy, and over 10\% higher in biarticulated configuration.
 
 \end{abstract}
 
@@ -87,7 +87,7 @@ Several approaches have been investigated over the years to design robotic syste
 
 Recently, Roozing et al. \cite{roozing2016development, roozing2016design, roozing_design_2018} presented the development and control of a novel Asymmetric Compliant Actuation (\textit{ACA}) scheme characterised by large energy storage capacity, enabling efficient mobility, as well as a novel method to select design parameters of such structures to maximise energy efficiency of multi-DoF articulated robots using these concepts. This paper extends these works, contributing by using the \textit{ACA} concept to execute optimised jumping motions on the model of the recently developed 3-DoF leg prototype \cite{roozing_design_2018}. Two augmented actuation designs, one of which includes a biarticulated tendon spanning ankle and knee, are compared to state-of-the-art Series Elastic Actuation (\textit{SEA}). The augmented leg jumps 4\% higher in monoarticulated configuration while using less energy, and over 10\% higher in biarticulated configuration. Furthermore, the biarticulated case shows higher peak joint power and joint-to-joint power transfer. These results demonstrate significant benefits of such actuation approaches in explosive motions.
 
-This paper is structured as follows. Sec. \ref{sec:legDesign} describes the 3-DoF leg prototype, the actuation concepts, and the three different actuation configurations. Sec. \ref{sec:modelling} describes the forward and inverse dynamics of the leg. Sec. \ref{sec:dynamicOptimisation} introduces the optimisation problem, followed by the results and their discussion in Sec. \ref{sec:results}. Finally, conclusions can be found in Sec. \ref{sec:conclusions}.
+This paper is structured as follows. Sec. \ref{sec:legDesign} describes the 3-DoF leg prototype, the actuation concepts, and the three different actuation configurations. Sec. \ref{sec:modelling} describes the forward and inverse dynamics of the leg. Sec. \ref{sec:dynamicOptimisation} introduces the optimisation problem, followed by the results and their discussion in Sec. \ref{sec:results}. Finally, concluding remarks are given in Sec. \ref{sec:conclusions}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -96,8 +96,7 @@ This paper is structured as follows. Sec. \ref{sec:legDesign} describes the 3-Do
 
 \subsection{Asymmetric Compliant Actuation}
 \label{subsec:ACA}
-The Asymmetric Compliant Actuation (\textit{ACA}) concept consists of a combination of two parallel actuation branches with very different power and stiffness properties, as shown in Fig. \ref{fig:ACA}. The Power Branch (\textit{PB}) is a rotary \textit{SEA} which consists of a high power motor \textit{M1} in series with a torsional elastic element denoted as \textit{SE}. The Energy Storage Branch (\textit{ESB}) consists of a lower power motor \textit{M2}, with a high reduction linear transmission which transfers its power to the joint through a unidirectional series elastic element denoted as \textit{PE}. The \textit{ESB} elastic element can store an extensive amount of energy compared to the series-elastic element in the \textit{PB}.
- In biarticulated configurations (bottom of Fig. \ref{fig:ACA}), the \textit{PB} drives the joint directly, while the \textit{ESB} tendon spans a second joint by means of a free pulley, as depicted in Fig. \ref{fig:ACA}. As such, the tendon elongation depends on the configuration of both joints, and the tendon exerts torque on both joints.
+The Asymmetric Compliant Actuation (\textit{ACA}) concept consists of a combination of two parallel actuation branches with very different power and stiffness properties, as shown in Fig. \ref{fig:ACA}. The Power Branch (\textit{PB}) is a rotary \textit{SEA} which consists of a high power motor \textit{M1} in series with a torsional elastic element denoted as \textit{SE}. The Energy Storage Branch (\textit{ESB}) consists of a lower power motor \textit{M2}, with a high reduction linear transmission which transfers its power to the joint through a unidirectional series elastic element denoted as \textit{PE}. Compared to the series-elastic element in the \textit{PB}, the \textit{ESB} elastic element can store a significantly larger amount of energy. In biarticulated configurations (bottom of Fig. \ref{fig:ACA}), the \textit{PB} drives the joint directly, while the \textit{ESB} tendon spans a second joint by means of a free pulley, as depicted in Fig. \ref{fig:ACA}. As such, the tendon elongation depends on the configuration of both joints, and the tendon exerts torque on both joints.
 
 % Figure asymmetric compliant actuation branches
 \begin{figure}[ht]
@@ -108,7 +107,7 @@ The Asymmetric Compliant Actuation (\textit{ACA}) concept consists of a combinat
 \end{figure}
 
 \subsection{3-DoF Leg Prototype}
-The design of the 3-DoF leg prototype is inspired by the human lower limb. The dimensions and mass distribution of the human limb were investigated, and compared with those of existing humanoid designs such as WALK-MAN \cite{tsagarakis2017walk} to set specifications for a semi-anthropomorphic design. Fig. \ref{fig:configurations} shows a schematic of the leg design. The leg features three actuated degrees of freedom: ankle, knee and hip. Each joint is directly actuated by an \textit{SEA}, which are mounted above the joints for the knee and ankle, and transmit their forces through four bar linkages to decrease the leg’s moment of inertia with respect to the hip joint. The trunk is loaded with mass corresponding to that of a full humanoid robot in two-legged stance. The leg can be rapidly reconfigured into one of three actuation configurations:
+The design of the 3-DoF leg prototype is inspired by the human lower limb. The dimensions and mass distribution of the human limb were investigated, and compared with those of existing humanoid designs such as WALK-MAN \cite{tsagarakis2017walk} to set specifications for a semi-anthropomorphic design. Fig. \ref{fig:configurations} shows a schematic of the leg design in all three actuation configurations. The leg features three actuated degrees of freedom: ankle, knee and hip. Each joint is directly actuated by an \textit{SEA}, which are mounted above the joints for the knee and ankle, and transmit their forces through four bar linkages to decrease the leg’s moment of inertia with respect to the hip joint. The trunk is loaded with mass corresponding to that of a full humanoid robot in two-legged stance. The leg can be rapidly reconfigured into one of three actuation configurations:
 
 \begin{enumerate}
 	\item \textbf{SEA-only} based actuation, in which the parallel Elastic Storage Branch is not implemented, serving as a baseline state-of-the-art design for comparison.
@@ -116,7 +115,7 @@ The design of the 3-DoF leg prototype is inspired by the human lower limb. The d
 	\item \textbf{Biarticulated} configuration, in which the tendon for the ankle joint also spans the knee joint.
 \end{enumerate}
 
- Following the method presented in \cite{roozing2016design}, the design parameters for each configuration were optimised to select actuation parameters that yield high electrical energy efficiency and reduction in peak torque and electrical power requirements. Dimension and mass distribution of the robot are given in Table \ref{table:designParameters}. For more details on the hardware implementation, we refer the reader to \cite{roozing_design_2018}.
+Following the method presented in \cite{roozing2016design}, the design parameters for each configuration were optimised to select actuation parameters that yield high electrical energy efficiency and reduction in peak torque and electrical power requirements. Dimensions and mass distribution of the robot are given in Table \ref{table:designParameters}. For more details on the hardware implementation, we refer the reader to \cite{roozing_design_2018}.
 
 % Figure Actuation configurations
 \begin{figure}[ht]
@@ -340,7 +339,7 @@ where $N$ denotes the number of time segments, $t_0$ denotes starting time, and 
 
 \subsection{Algorithm}
 \label{subsec:algorithm}
-Having set up the forward and inverse dynamics and optimisation criteria, we proceed to describe the optimisation algorithm. The algorithm, shown in Algorithm \ref{algo}, takes a simple hand-tuned jumping trajectory as initial guess. Its control points serve as the algorithm input. Initial pretensions are set to $1 \cdot 10^{-4}$ m if present. Each simulation is concluded for successful jumps when the CoM reaches its highest point and the CoM velocity turns negative  or when the leg has fallen over for unsuccessful jumps. 
+Having set up the forward and inverse dynamics and optimisation criteria, we proceed to describe the optimisation algorithm. The algorithm, shown in Algorithm \ref{algo}, takes a simple hand-tuned jumping trajectory as initial guess. Its control points serve as the algorithm input. Initial pretensions are set to $1 \cdot 10^{-4}$ m if present. Each simulation is concluded when the CoM reaches its highest point and the vertical CoM velocity turns negative for successful jumps, or when the leg has fallen over for unsuccessful jumps. 
 
 \begin{algorithm}[ht]
 	\caption{Algorithm for joint trajectory optimization} \label{algo}
@@ -556,15 +555,6 @@ Results for all three actuation configurations are shown in Fig. \ref{fig:opt_re
 	\label{fig:opt_results}
 \end{figure*}
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%\textbf{TODO comments on the plots:}
-%\begin{itemize}
-%	\item The legend entries currently do not make sense; the symbols were never explained. I'm attaching a few scripts by email (the ones that generated the ICRA18 plots) which have text names for variables that you do not need to explain.
-%\end{itemize}
-%\textbf{TODO end plot comments}.
-
 One immediate observation from the results is that ankle extension is one of the primary contributors to vertical momentum, across all three configurations. This is evidenced by the significantly larger joint power compared to the knee (Fig. \ref{fig:noESB_P_q}--\ref{fig:bi_P_q}). We suspect the reason for this is the relatively large amount of ankle torque available (as identical SEAs are used for ankle and knee), combined with the 0.4\,s maximum duration which may not allow for a fully flexed knee at $t=0$. Although the movements for all three configurations are similar, some key differences can be observed:
 
 \begin{enumerate}
@@ -576,7 +566,7 @@ One immediate observation from the results is that ankle extension is one of the
 	
 	\item \textbf{Power transfer in biarticulation}: The biarticulated tendon is providing positive torque on the knee (i.e. flexing the knee) for the first 0.17\,s (Fig. \ref{fig:bi_q_2_torques}), while the knee is extending. As the stored energy in the biarticulated tendon stays roughly constant, this positive power is not stored but transferred to the ankle, aiding in ankle extension. This demonstrates the effectiveness of the biarticulated tendon.
 	
-	\item \textbf{Energy consumption}: While the monoarticulated case is able to reach a significant increase of 4\% in jumping height compared to the no \textit{ESB} case, it does so much more efficiently, reducing energy consumption by 30\%. However, in the biarticulated case, while $J_{\text{torque}}$ is further reduced, the consumed energy is increased. This suggests a more elaborate torque penalisation criterion which takes the electrical dynamics of the actuators into account can improve the results further.
+	\item \textbf{Energy consumption}: While the monoarticulated case is able to reach a significant increase of 4\% in jumping height compared to the no \textit{ESB} case, it does so much more efficiently, reducing energy consumption by 30\%. However, in the biarticulated case, while $J_{\text{torque}}$ is further reduced, the consumed energy is increased. This suggests a more elaborate effort penalisation criterion which takes the electrical dynamics of the actuators into account can improve the results further.
 \end{enumerate}
 
 
