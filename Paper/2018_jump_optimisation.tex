@@ -126,14 +126,16 @@ Following the method presented in \cite{roozing2016design}, the design parameter
 \end{figure}
 
 \begin{table}
-	\begin{tabular}{l|l|l}
+	\centering
+	\begin{tabular}{l|l|lll}
 		& \textbf{Length [m]} & \textbf{Mass [kg]} \\
+		& & SEA only & Mono. & Bi.\\
 		\hline
-		Thigh & 0.350 & 2.79, 3.60, 4.24 \\
-		Shank & 0.350 & 3.08, 3.91, 3.20 \\
-		Foot & 0.063 & 1.70 \\
+		Thigh & 0.350 & 2.79 & 3.60 & 4.24 \\
+		Shank & 0.350 & 3.08 & 3.91 & 3.20 \\
+		Foot & 0.063 & 1.70 & 1.70 & 1.70 \\
 	\end{tabular}
-	\caption{Dimensions and mass distribution of the robot considered in this paper, which are similar to the human limb. Note the foot dimension is height, not length. Mass values given as SEA only, monoarticulated, and biarticulated configurations, respectively.}
+	\caption{Dimensions and mass distribution of the robot considered in this paper, which are similar to the human limb. Note the foot dimension is height, not length.}
 	\label{table:designParameters}
 \end{table}
 
@@ -166,16 +168,16 @@ leading to:
 	\label{fig:Leg_3DoF_model}
 \end{figure}
 
-Here, the damping matrix is denoted by $D = \mathrm{diag} (0,0,0,d_1,d_2,d_3)$, the generalised actuation forces are denoted by $\boldsymbol{\tau} = [0,0,0,\tau_1,\tau_2,\tau_3]^T$, the generalised gravitational forces are denoted by $\mathbf{g(q)}$, and the Coriolis and generalised inertia matrices are denoted by $C\mathbf{(q, \dot q)}$ and $M(\mathbf{q})$, respectively. The Jacobian for the heel and toe is denoted by $J_{GRF}^T$, and the ground reaction forces (GRF) in generalised coordinates are subsequently expressed as $J_{GRF}^T \, \mathbf{f}_{GRF}$. Spring-dampers define $\mathbf{f}_{GRF}$ in the vertical direction and Coulomb and viscous friction define the horizontal component, proportionally to the vertical forces.
+Here, the damping matrix is denoted by $D = \mathrm{diag} \left(0,0,0,d_1,d_2,d_3\right)$, the generalised actuation forces are denoted by $\boldsymbol{\tau} = \left[0,0,0,\tau_1,\tau_2,\tau_3\right]^T$, the generalised gravitational forces are denoted by $\mathbf{g(q)}$, and the Coriolis and generalised inertia matrices are denoted by $C\mathbf{(q, \dot q)}$ and $M(\mathbf{q})$, respectively. The Jacobian for the heel and toe is denoted by $J_{GRF}^T$, and the ground reaction forces (GRF) in generalised coordinates are subsequently expressed as $J_{GRF}^T \, \mathbf{f}_{GRF}$. Spring-dampers define $\mathbf{f}_{GRF}$ in the vertical direction and Coulomb and viscous friction define the horizontal component, proportionally to the vertical forces.
 
 \subsection{Leg Model: Inverse Dynamics}
 For formulation of the optimisation problem described in Sec. \ref{sec:dynamicOptimisation}, we first derive the inverse dynamics of the system in order to compute the applied active torques \cite{nakanishi2007inverse}. The configuration vector $\mathbf{q}$ can be split in its passive and active joint components, $\mathbf{q}_p$ and $\mathbf{q}_a$, respectively:
 \begin{equation}
-\mathbf{q} =
-\begin{bmatrix}
-	\mathbf{q}_p \\
-	\mathbf{q}_a
-\end{bmatrix},
+	\mathbf{q} =
+	\begin{bmatrix}
+		\mathbf{q}_p \\
+		\mathbf{q}_a
+	\end{bmatrix},
 \end{equation}
 with
 \begin{equation}
@@ -187,24 +189,24 @@ Similarly, $\boldsymbol{\tau} = \left[\mathbf{0},\boldsymbol{\tau}_a\right]^T$. 
 \begin{equation}
 	\begin{aligned}
 		&\left[\begin{array}{cc}  
-		M_{pp} & M_{pa}\\
-		M_{ap} & M_{aa}
+			M_{pp} & M_{pa}\\
+			M_{ap} & M_{aa}
 		\end{array} \right]
 		\left[\begin{array}{c}  
-		\mathbf{\ddot q}_p\\
-		\mathbf{\ddot q}_a
+			\mathbf{\ddot q}_p\\
+			\mathbf{\ddot q}_a
 		\end{array} \right] +
 		\left[\begin{array}{c}  
-		\mathbf{b}_p \mathbf{(q,\dot q)}\\
-		\mathbf{b}_a \mathbf{(q,\dot q)}
+			\mathbf{b}_p \mathbf{(q,\dot q)}\\
+			\mathbf{b}_a \mathbf{(q,\dot q)}
 		\end{array} \right] 
 		=\\
 		&\left[\begin{array}{c}  
-		\mathbf{0}\\
-		\boldsymbol{\tau}_a
+			\mathbf{0}\\
+			\boldsymbol{\tau}_a
 		\end{array} \right] 
 		+
-		J_{GRF}^T \mathbf{f}_{GRF} \, \mathbf{(q, \dot q)},
+		J_{GRF}^T \, \mathbf{f}_{GRF} \left( \mathbf{q, \dot q} \right),
 	\end{aligned}
 	\label{eq:ik}
 \end{equation}		
@@ -213,21 +215,21 @@ Rearranging \eqref{eq:ik}:
 \begin{equation}
 	\begin{aligned}
 		&\left[\begin{array}{cc}  
-		M_{pp} & 0\\
-		M_{ap} &-I
+			M_{pp} & 0\\
+			M_{ap} &-I
 		\end{array} \right]
 		\left[\begin{array}{c}  
-		\mathbf{\ddot q}_p\\
-		\boldsymbol{\tau}_a
+			\mathbf{\ddot q}_p\\
+			\boldsymbol{\tau}_a
 		\end{array} \right] =\\ 
 		-&
 		\left[\begin{array}{c}  
-		M_{pa}\\
-		M_{aa}
+			M_{pa}\\
+			M_{aa}
 		\end{array} \right] 
 		\mathbf{\ddot q}_a-
 		\mathbf{b(q, \dot q)}+
-		J_{GRF}^T \mathbf{f}_{GRF}\mathbf{(q, \dot q)},
+		J_{GRF}^T \, \mathbf{f}_{GRF} \left( \mathbf{q, \dot q} \right),
 	\end{aligned}
 \end{equation}	
 where $I$ denotes the identity matrix, we obtain the passive joint accelerations $\mathbf{\ddot q}_p$ and active joint torques $\boldsymbol{\tau}_a$ by inversion of the left-hand side mass matrix.
@@ -237,10 +239,10 @@ where $I$ denotes the identity matrix, we obtain the passive joint accelerations
 \label{subsec:actuationModel}
 As described in Section \ref{sec:legDesign}, three different actuation configurations are considered. In the general monoarticulated ESB case shown in Fig. \ref{fig:ACA}, let $r_p$ denote pulley radius (with sign indicating positive direction) and let $p$ denote the position of motor M2. Given a joint configuration $q$, the elongation of the \textit{ESB} elastic element is given by $\Delta_p = p + r_p q$. Note that the element, with stiffness $k_p$ and damping $d_p$, only applies elastic force under extension as it is of a rubber type material:
 \begin{equation}
-	F_p =	\left\lbrace
+	F_p = \left\lbrace
 	\begin{array}{ll}
-	k_p \, \Delta_p + d_p \, \dot{\Delta}_p	\hspace{0.4cm} & \Delta_p > 0\\
-	d_p \, \dot{\Delta}_p & \text{otherwise}
+		k_p \, \Delta_p + d_p \, \dot{\Delta}_p	\hspace{0.4cm} & \Delta_p > 0\\
+		d_p \, \dot{\Delta}_p & \text{otherwise}
 	\end{array}
 	\right.
 	\label{eq:F_p}
@@ -248,8 +250,8 @@ As described in Section \ref{sec:legDesign}, three different actuation configura
 As such, the \textit{ESB} generates a torque on the joint equal to $\tau_p = -r_p \, F_p$. From this follows the ankle and knee joint torques for the monoarticulated leg in Fig. \ref{fig:configurations}:
 \begin{equation}
 	\begin{aligned}
-		\tau_1 &= \tau_{SEA,1} - r_{ankle} \, F_{p,1}(p_1,q_1), \\
-		\tau_2 &= \tau_{SEA,2} - r_{knee} \, F_{p,2}(p_2,q_2), \\
+		\tau_1 &= \tau_{SEA,1} - r_{ankle} \, F_{p,1} \left( p_1,q_1 \right), \\
+		\tau_2 &= \tau_{SEA,2} - r_{knee} \, F_{p,2} \left( p_2,q_2 \right), \\
 	\end{aligned}
 \end{equation}
 where $\tau_{SEA,i}$ denote contributions from the SEAs, $r_\circ$ denote pulley radii, $F_{p,\circ}$ denote linear tendon forces, and $p_i$ denote the respective pretension positions of the \textit{ESB} motors.
@@ -262,8 +264,8 @@ For the biarticulated leg configuration shown in Fig. \ref{fig:configurations}, 
 where $r_{knee,bi}$ denotes the free pulley on the knee. This leads to the ankle and knee torques for the biarticulated case:
 \begin{equation}
 	\begin{aligned}
-		\tau_1 &= \tau_{SEA,1} - r_{ankle} \, F_{p,1}(p_1,q_1,q_2), \\
-		\tau_2 &= \tau_{SEA,2} - r_{knee} \, F_{p,2}(p_2,q_2) - r_{knee,bi} \, F_{p,1}(p_1,q_1,q_2).
+		\tau_1 &= \tau_{SEA,1} - r_{ankle} \, F_{p,1} \left( p_1, q_1, q_2 \right), \\
+		\tau_2 &= \tau_{SEA,2} - r_{knee} F_{p,2} \left( p_2, q_2 \right) - r_{knee,bi} F_{p,1} \left( p_1, q_1, q_2 \right).
 	\end{aligned}
 \end{equation}
 Observe that the linear tendon force $F_{p,1}$ is dependent on the configuration of both the knee and ankle joints, and that the tendon applies torque on both joints.
