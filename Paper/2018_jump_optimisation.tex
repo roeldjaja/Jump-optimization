@@ -275,7 +275,8 @@ Note that in simulation we model both actuation branches using full motor models
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Dynamic Optimisation} 
 \label{sec:dynamicOptimisation}
-Finding an optimal motion requires finding the active joint trajectories over time. Expressing these trajectories over time directly poses an extremely high dimensional problem. Hence, we reformulate it from a large scale optimal control problem into a low dimensional parameter optimisation problem \cite{kaphle2008optimality}. We proceed as follows. Sec. \ref{subsec:trajectoryParametrization} describes parametrisation of the joint trajectories, and Sec. \ref{subsec:objectiveCriteria} describes the objective criteria. Lastly, the optimisation algorithm is described in Section \ref{subsec:algorithm}.
+Finding an optimal motion requires finding the active joint trajectories over time. Expressing these trajectories over time directly poses an extremely high dimensional problem. Hence, we reformulate it from a large scale optimal control problem into a low dimensional parameter optimisation problem \cite{kaphle2008optimality}. We proceed as follows. 
+%Sec. \ref{subsec:trajectoryParametrization} describes parametrisation of the joint trajectories, and Sec. \ref{subsec:objectiveCriteria} describes the objective criteria. Lastly, the optimisation algorithm is described in Section \ref{subsec:algorithm}.
 
 \subsection{Trajectory Parametrization} 
 \label{subsec:trajectoryParametrization}
@@ -371,19 +372,17 @@ Having set up the forward and inverse dynamics and optimisation criteria, we pro
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results \& Discussion} \label{sec:results}
-The optimisation was performed using a maximum duration of 0.4 seconds, with initial trajectory shown in Fig. \ref{fig:seq}. Computations were performed in MATLAB R2016b, with \texttt{fmincon} as the optimiser function. The weighing constants $\gamma_1 \dots \gamma_5$ were chosen as $\gamma_1=5 \cdot 10^{2} \,, \gamma_2=1.5 \cdot 10^{-4} \,, \gamma_3=1.5 \cdot 10^{3} \,, \gamma_4 = 1\cdot 10^{2}\,$, and $\gamma_5 = 1$.
+The optimisation was performed using a maximum duration of 0.4 seconds with a simple vertical jump as an initial trajectory. Computations were performed in MATLAB R2016b, with \texttt{fmincon} as the optimiser function. The weighing constants $\gamma_1 \dots \gamma_5$ were chosen as $\gamma_1=5 \cdot 10^{2} \,, \gamma_2=1.5 \cdot 10^{-4} \,, \gamma_3=1.5 \cdot 10^{3} \,, \gamma_4 = 1\cdot 10^{2}\,$, and $\gamma_5 = 1$. Results for all three actuation configurations are shown in Fig. \ref{fig:opt_results}, which reports the objective criterion evolution and resulting joint trajectories, torques, power and \textit{ESB} tendon energy storage over time. The results are summarised numerically in Table \ref{table:maxheight}, showing maximum and change in CoM height, pretension positions, cost function $f$ and criteria values, and consumed energy $E_{\text{consumed}}$. The video that accompanies this paper visualises the initial trajectory and the optimised jumping motions of all three actuation configurations.
 
-Results for all three actuation configurations are shown in Fig. \ref{fig:opt_results}, which reports the objective criterion evolution and resulting joint trajectories, torques, power and \textit{ESB} tendon energy storage over time. The results are summarised numerically in Table \ref{table:maxheight}, showing maximum and change in CoM height, pretension positions, cost function $f$ and criteria values, and consumed energy $E_{\text{consumed}}$. The video that accompanies this paper visualises the optimised jumping motions of all three actuation configurations.
-
-% initial guess
-\begin{figure}[ht]
-	\centering
-	%      \framebox{\parbox{3in}
-	{\includegraphics[width=0.55\linewidth]{initialguess_edited}
-	}%}	
-	\caption{Initial motion used as starting value for the optimisation.}
-	\label{fig:seq}	
-\end{figure}
+%% initial guess
+%\begin{figure}[ht]
+%	\centering
+%	%      \framebox{\parbox{3in}
+%	{\includegraphics[width=0.55\linewidth]{initialguess_edited}
+%	}%}	
+%	\caption{Initial motion used as starting value for the optimisation.}
+%	\label{fig:seq}	
+%\end{figure}
 
 \begin{table*}[ht]
 	\caption{Jumping optimization results for SEA only, monoarticulated, and biarticulated configurations, respectively.}
@@ -559,7 +558,7 @@ Results for all three actuation configurations are shown in Fig. \ref{fig:opt_re
 One immediate observation from the results is that ankle extension is one of the primary contributors to vertical momentum, across all three configurations. This is evidenced by the significantly larger joint power compared to the knee (Fig. \ref{fig:noESB_P_q}--\ref{fig:bi_P_q}). We suspect the reason for this is the relatively large amount of ankle torque available (as identical SEAs are used for ankle and knee), combined with the 0.4\,s maximum duration which may not allow for a fully flexed knee at $t=0$. Although the movements for all three configurations are similar, some key differences can be observed:
 
 \begin{enumerate}
-	\item \textbf{Joint trajectories}: While the mono- and biarticulated configurations use knee extension at approximately 0.2 seconds into the motion to obtain additional vertical momentum of the CoM, knee extension is nearly absent for the configuration without \textit{ESB}. This is likely due to the torque costs for doing so. Furthermore, the no-\textit{ESB} and monoarticulated configurations use hip extension extensively during the early stages of the jump, whereas the biarticulated extends its hip at the end of the upwards motion to increase its CoM height.
+	\item \textbf{Joint trajectories}: Fig. \ref{fig:noESB_traj}--\ref{fig:bi_traj} and the video show that while the mono- and biarticulated configurations use knee extension at approximately 0.2 seconds into the motion to obtain additional vertical momentum of the CoM, knee extension is nearly absent for the configuration without \textit{ESB}. This is likely due to the torque costs for doing so. Furthermore, the no-\textit{ESB} and monoarticulated configurations use hip extension extensively during the early stages of the jump, whereas the biarticulated extends its hip at the end of the upwards motion to increase its CoM height.
 
 	\item \textbf{Ankle torque}: Fig. \ref{fig:noESB_q_1_torques}--\ref{fig:bi_q_1_torques} show that the \textit{PB} ankle torque used by the biarticulated configuration is significantly lower than that of the other configurations, but due to the biarticulated tendon it achieves the highest net ankle torque during extension.
 	
@@ -567,15 +566,13 @@ One immediate observation from the results is that ankle extension is one of the
 	
 	\item \textbf{Power transfer in biarticulation}: The biarticulated tendon is providing positive torque on the knee (i.e. flexing the knee) for the first 0.17\,s (Fig. \ref{fig:bi_q_2_torques}), while the knee is extending. As the stored energy in the biarticulated tendon stays roughly constant, this positive power is not stored but transferred to the ankle, aiding in ankle extension. This demonstrates the effectiveness of the biarticulated tendon.
 	
-	\item \textbf{Energy consumption}: While the monoarticulated case is able to reach a significant increase of 4\% in jumping height compared to the no \textit{ESB} case, it does so much more efficiently, reducing energy consumption by 30\%. However, in the biarticulated case, while $J_{\text{torque}}$ is further reduced, the consumed energy is increased. This suggests a more elaborate effort penalisation criterion which takes the electrical dynamics of the actuators into account can improve the results further.
+	\item \textbf{Energy consumption}: While the monoarticulated case is able to reach a significant increase of 4\% in jumping height compared to the no \textit{ESB} case, it does so much more efficiently, reducing energy consumption by 30\%  as shown in Table \ref{table:maxheight}. However, Fig. \ref{fig:noESB_crit_high}--\ref{fig:bi_crit_high} show that only in the biarticulated case, while $J_{\text{torque}}$ is further reduced, the consumed energy is increased. This suggests a more elaborate effort penalisation criterion which takes the electrical dynamics of the actuators into account can improve the results further.
 \end{enumerate}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusions} \label{sec:conclusions} 
-This paper has presented the optimisation of explosive jumping motions of a 3-DoF leg prototype using both series and parallel compliant articulated actuation. Monoarticulated and biarticulated configurations which are augmented with articulated and adjustable parallel compliance were compared to a state-of-the-art Series-Elastic based actuation structure. The optimisation results show jumps 4\% higher in monoarticulated configuration and over 10\% higher in biarticulated configuration, and reduced torque requirements of the main actuators. Furthermore, the biarticulated case demonstrates the potential of multiarticulated compliance, in terms of higher peak joint power and joint-to-joint power transfer.
-
-While these results are promising, experiments with the recently developed hardware prototype are still underway. Furthermore, in this work only fixed pretension positions of the parallel branches were used. Time-varying pretension positions may improve performance further. These developments and their results will be considered in future works.
+This paper has presented the optimisation of simulated explosive jumping motions of a 3-DoF leg prototype using both series and parallel compliant articulated actuation. Monoarticulated and biarticulated configurations which are augmented with articulated and adjustable parallel compliance were compared to a state-of-the-art Series-Elastic based actuation structure. The optimised simulation results show jumps 4\% higher in monoarticulated configuration and over 10\% higher in biarticulated configuration, and reduced torque requirements of the main actuators. Furthermore, the biarticulated case demonstrates the potential of multiarticulated compliance, in terms of higher peak joint power and joint-to-joint power transfer. While these results are promising, experiments with the recently developed hardware prototype are still underway. Furthermore, in this work only fixed pretension positions of the parallel branches were used. Time-varying pretension positions may improve performance further. These developments and their results will be considered in future works.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
