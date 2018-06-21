@@ -11,7 +11,7 @@
   <property name="mlt_service">kdenlivetitle</property>
   <property name="kdenlive:clipname">Title</property>
   <property name="kdenlive:folderid">-1</property>
-  <property name="xmldata">&lt;kdenlivetitle width="1280" duration="150" out="150" height="720" LC_NUMERIC="en_AU.UTF-8">
+  <property name="xmldata">&lt;kdenlivetitle width="1280" duration="150" out="150" height="720" LC_NUMERIC="en_GB.UTF-8">
  &lt;item z-index="10" type="QGraphicsTextItem">
   &lt;position x="408" y="288">
    &lt;transform>1,0,0,0,1,0,0,0,1&lt;/transform>
@@ -81,10 +81,10 @@ Italian Institute of Technology, Genova, Italy
 &lt;/content>
  &lt;/item>
  &lt;item z-index="0" type="QGraphicsTextItem">
-  &lt;position x="243" y="113">
+  &lt;position x="234" y="113">
    &lt;transform>1,0,0,0,1,0,0,0,1&lt;/transform>
   &lt;/position>
-  &lt;content font-italic="0" letter-spacing="0" font-weight="50" box-height="86" shadow="0;#ff000000;0;0;0" font="Sans Serif" font-underline="0" font-pixel-size="37" box-width="792.813" font-color="255,255,255,255" alignment="4">Explosive Motion with Compliant Actuation
+  &lt;content font-italic="0" letter-spacing="0" font-weight="50" box-height="86" shadow="0;#ff000000;0;0;0" font="Sans Serif" font-underline="0" font-pixel-size="37" box-width="812.078" font-color="255,255,255,255" alignment="4">Explosive Motions with Compliant Actuation
 Arrangements in Articulated Robots&lt;/content>
  &lt;/item>
  &lt;startviewport rect="0,0,1280,720"/>
@@ -476,7 +476,7 @@ for optimisation&lt;/content>
   <property name="kdenlive:docproperties.generateimageproxy">0</property>
   <property name="kdenlive:docproperties.generateproxy">0</property>
   <property name="kdenlive:docproperties.kdenliveversion">17.12.3</property>
-  <property name="kdenlive:docproperties.position">897</property>
+  <property name="kdenlive:docproperties.position">40</property>
   <property name="kdenlive:docproperties.previewchunks"/>
   <property name="kdenlive:docproperties.previewextension"/>
   <property name="kdenlive:docproperties.previewparameters"/>
