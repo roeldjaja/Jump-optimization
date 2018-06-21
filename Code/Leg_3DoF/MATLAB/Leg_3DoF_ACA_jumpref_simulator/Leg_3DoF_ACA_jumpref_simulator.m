@@ -388,9 +388,9 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
             x_l = this.data.xlist;
             cutoff = find(~any(x_l, 2));
             if isempty(cutoff) ==1
-                tfinal = this.params.t(end);
+                tfinal = this.data.t(end);
             else
-                tfinal = this.params.t(cutoff(1)-1);
+                tfinal = this.data.t(cutoff(1)-1);
             end
             
             % Get variables from data
@@ -573,7 +573,27 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
 %                                 'Leg joints/tracking',  ...
 %                                 'Leg joints/tracking'   );
 %             paperSave(savePlots, [plotPath 'leg_joints.pdf']);
-%             
+
+            % Leg joints/tracking
+            % NOTE: Version for paper without references or x-label,
+            % smaller height, and custom XTicks.
+            figure(1); clf; hold on; grid on;
+            resizeFig(gcf, figSize(1), 0.8*figSize(2));
+            plot(t, q_joints(1,:));
+            plot(t, q_joints(2,:));
+            plot(t, q_joints(3,:));
+            ylim([-1 1.36]);
+            xlim([0 tfinal]);
+            set(gca, 'XTick', 0:0.05:1);
+            paperModeLegend(    paperMode, ...
+                                {'$q_1$', '$q_2$', '$q_3$'},    ...
+                                {'q_1', 'q_2', 'q_3'}           );
+            paperModeAxisLabels(paperMode, {'', '[rad]'}, {'t [s]', '[rad]'});
+            paperModeTitle(     showTitleInPaperMode, paperMode, ...
+                                'Leg joints/tracking',  ...
+                                'Leg joints/tracking'   );
+            paperSave(savePlots, [plotPath 'leg_joints.pdf']);
+            
 %             % Joint velocities
 %             figure(2); clf; hold on; grid on;
 %             resizeFig(gcf, figSize(1), figSize(2));
@@ -632,7 +652,7 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
                                     'Joint 1 torques (noESB)',  ...
                                     'Joint 1 torques (noESB)'   );
             end
-            ylim([-100 150])
+            ylim([-100 150]);
             xlim([0 tfinal]);
             paperModeAxisLabels(paperMode, {'', '[N m]'}, {'t [s]', '[N m]'});
             paperSave(savePlots, [plotPath 'q_1_torques.pdf']);
@@ -680,7 +700,7 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
                                     'Joint 2 torques (noESB)',  ...
                                     'Joint 2 torques (noESB)'   );
             end
-            ylim([-100 100])
+            ylim([-100 100]);
             xlim([0 tfinal]);
             paperModeAxisLabels(paperMode, {'', '[N m]'}, {'t [s]', '[N m]'});
             paperSave(savePlots, [plotPath 'q_2_torques.pdf']);
@@ -691,7 +711,7 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
 %             plot(t, tau_ref(3,:), '--', 'Color', C.BLK);
             plot(t, tau_pb_3, 'Color', C.B);
             %plot(t, tau(3,:), 'Color', C.BLK);
-            ylim([-50 100])
+            ylim([-50 100]);
             xlim([0 tfinal]);
             paperModeLegend(    paperMode, ...
                             	{ '$\tau_{PB,A3}$'},    ...
@@ -850,7 +870,8 @@ classdef Leg_3DoF_ACA_jumpref_simulator < handle
                                 {'$E_{ESB,1}$', '$E_{ESB,2}$'},    ...
                                 {'E_{p,1}', 'E_{p,2}'}           );
             paperModeAxisLabels(paperMode, {'$t$ [s]', 'Energy [J]'}, {'t [s]', 'Energy [J]'});
-            ylim([0 60]);xlim([0 tfinal]);%
+            ylim([0 60]);
+            xlim([0 tfinal]);
             paperModeTitle(     showTitleInPaperMode, paperMode, ...
                                 'ESB stored energy',  ...
                                 'ESB stored energy'   );
