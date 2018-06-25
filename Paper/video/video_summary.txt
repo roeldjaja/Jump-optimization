@@ -1,0 +1,4 @@
+The video attachment "2018_jump_optimisation_video.mp4" contains the following:
+- Summary of what is presented in this work;
+- Videos showing the initial guess and optimised motions for all actuation configurations;
+- Highlights of the most important results.
